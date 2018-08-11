@@ -1,0 +1,17 @@
+<library path="lib/librqt_state_machine">
+  <class name="rqt_state_machine/StateMachineController" type="rqt_state_machine::StateMachineController" base_class_type="rqt_gui_cpp::Plugin">
+    <description>
+      A GUI plugin to control state machine.
+    </description>
+    <qtgui>
+      <group>
+        <label>Robot Tools</label>
+        <icon type="theme">folder</icon>
+        <statustip>Plugins related to state machine control.</statustip>
+      </group>
+      <label>State Machine Controller</label>
+      <icon type="theme">applications-other</icon>
+      <statustip>A GUI plugin to control state machine.</statustip>
+    </qtgui>
+  </class>
+</library>
