@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(rqt_state_machine)
 
+add_compile_options(-std=c++11)
+
 find_package(catkin REQUIRED COMPONENTS
   rqt_gui
   rqt_gui_cpp
   std_msgs
+  state_machine_msgs
+  freespace_ros
 )
 
 find_package(Qt5Widgets REQUIRED)

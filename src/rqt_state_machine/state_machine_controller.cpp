@@ -1,6 +1,7 @@
 #include "rqt_state_machine/state_machine_controller.h"
 #include <pluginlib/class_list_macros.h>
 #include <QStringList>
+#include <QMessageBox>
 
 namespace rqt_state_machine {
 
@@ -24,6 +25,9 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   ui_.setupUi(widget_);
   // add widget to the user interface
   context.addWidget(widget_);
+
+  connect(ui_.startFreespace, SIGNAL(clicked()), this, SLOT(onFreespaceStart()));
+  connect(ui_.stopFreespace, SIGNAL(clicked()), this, SLOT(onFreespaceStop()));
 }
 
 void StateMachineController::shutdownPlugin()
@@ -41,6 +45,41 @@ void StateMachineController::restoreSettings(const qt_gui_cpp::Settings& plugin_
 {
   // TODO restore intrinsic configuration, usually using:
   // v = instance_settings.value(k)
+}
+
+// freespace state control functions
+void StateMachineController::onFreespaceStart()
+{
+  freespace_ros::FreespaceControl srv;
+  srv.request.action.module = 1;
+  srv.request.action.command = 1;
+
+  if (ros::service::call("freespace_state_control", srv))
+  {
+    QMessageBox::information(widget_, "start", "Succeed to start freespace!");
+  }
+  else
+  {
+    QMessageBox::warning(widget_, "start", "Failed to start freespace!");
+    return;
+  }
+}
+
+void StateMachineController::onFreespaceStop()
+{
+  freespace_ros::FreespaceControl srv;
+  srv.request.action.module = 1;
+  srv.request.action.command = 0;
+
+  if (ros::service::call("freespace_state_control", srv))
+  {
+    QMessageBox::information(widget_, "stop", "Succeed to stop freespace!");
+  }
+  else
+  {
+    QMessageBox::warning(widget_, "stop", "Failed to stop freespace!");
+    return;
+  }
 }
 
 /*bool hasConfiguration() const
