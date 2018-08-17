@@ -196,36 +196,36 @@ void StateMachineController::onSlamResetMapping()
 // freespace state control functions
 void StateMachineController::onFreespaceStart()
 {
-  freespace_ros::FreespaceControl srv;
-  srv.request.action.module = 1;
-  srv.request.action.command = 1;
+//  freespace_ros::FreespaceControl srv;
+//  srv.request.action.module = 1;
+//  srv.request.action.command = 1;
 
-  if (ros::service::call("freespace_state_control", srv))
-  {
-    QMessageBox::information(widget_, "start", "Succeed to start freespace!");
-  }
-  else
-  {
-    QMessageBox::warning(widget_, "start", "Failed to start freespace!");
-    return;
-  }
+//  if (ros::service::call("freespace_state_control", srv))
+//  {
+//    QMessageBox::information(widget_, "start", "Succeed to start freespace!");
+//  }
+//  else
+//  {
+//    QMessageBox::warning(widget_, "start", "Failed to start freespace!");
+//    return;
+//  }
 }
 
 void StateMachineController::onFreespaceStop()
 {
-  freespace_ros::FreespaceControl srv;
-  srv.request.action.module = 1;
-  srv.request.action.command = 0;
+//  freespace_ros::FreespaceControl srv;
+//  srv.request.action.module = 1;
+//  srv.request.action.command = 0;
 
-  if (ros::service::call("freespace_state_control", srv))
-  {
-    QMessageBox::information(widget_, "stop", "Succeed to stop freespace!");
-  }
-  else
-  {
-    QMessageBox::warning(widget_, "stop", "Failed to stop freespace!");
-    return;
-  }
+//  if (ros::service::call("freespace_state_control", srv))
+//  {
+//    QMessageBox::information(widget_, "stop", "Succeed to stop freespace!");
+//  }
+//  else
+//  {
+//    QMessageBox::warning(widget_, "stop", "Failed to stop freespace!");
+//    return;
+//  }
 }
 
 /*bool hasConfiguration() const
