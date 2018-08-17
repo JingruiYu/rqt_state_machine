@@ -20,18 +20,21 @@
   <build_depend>rqt_gui_cpp</build_depend>
   <build_depend>std_msgs</build_depend>
   <build_depend>state_machine_msgs</build_depend>
+  <build_depend>orb_slam_2_ros</build_depend>
   <build_depend>freespace_ros</build_depend>
 
   <build_export_depend>rqt_gui</build_export_depend>
   <build_export_depend>rqt_gui_cpp</build_export_depend>
   <build_export_depend>std_msgs</build_export_depend>
   <build_export_depend>state_machine_msgs</build_export_depend>
+  <build_export_depend>orb_slam_2_ros</build_export_depend>
   <build_export_depend>freespace_ros</build_export_depend>
 
   <exec_depend>rqt_gui</exec_depend>
   <exec_depend>rqt_gui_cpp</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>state_machine_msgs</exec_depend>
+  <exec_depend>orb_slam_2_ros</exec_depend>
   <exec_depend>freespace_ros</exec_depend>
 
 

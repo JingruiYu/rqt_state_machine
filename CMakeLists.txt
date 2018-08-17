@@ -8,7 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   rqt_gui_cpp
   std_msgs
   state_machine_msgs
-  freespace_ros
+#  freespace_ros
 )
 
 find_package(Qt5Widgets REQUIRED)

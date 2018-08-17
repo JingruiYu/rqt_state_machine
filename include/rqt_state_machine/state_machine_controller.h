@@ -7,6 +7,7 @@
 
 // service server for each module
 #include <freespace_ros/FreespaceControl.h>
+#include <orb_slam_2_ros/SlamControl.h>
 
 namespace rqt_state_machine
 {
@@ -23,6 +24,16 @@ public:
   virtual void restoreSettings(const qt_gui_cpp::Settings& plugin_settings,
                                const qt_gui_cpp::Settings& instance_settings);
 protected slots:
+  // slam state control functions
+  virtual void onSlamStart();
+  virtual void onSlamStop();
+  virtual void onSlamRecordPathStart();
+  virtual void onSlamRecordPathStop();
+  virtual void onSlamSaveMapPath();
+  virtual void onSlamSwitchToMapping();
+  virtual void onSlamSwitchToLocalization();
+  virtual void onSlamResetMapping();
+
   // freespace state control functions
   virtual void onFreespaceStart();
   virtual void onFreespaceStop();

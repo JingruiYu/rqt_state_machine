@@ -33,35 +33,149 @@
     <widget class="QWidget" name="toolbar_widget" native="true">
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QGroupBox" name="groupBox">
-        <property name="title">
-         <string>Freespace</string>
+       <widget class="QTabWidget" name="tabWidget">
+        <property name="currentIndex">
+         <number>0</number>
         </property>
-        <widget class="QPushButton" name="startFreespace">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>90</y>
-           <width>407</width>
-           <height>25</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Start Freespace</string>
-         </property>
+        <widget class="QWidget" name="tab">
+         <attribute name="title">
+          <string>SLAM</string>
+         </attribute>
+         <widget class="QPushButton" name="startSlam">
+          <property name="geometry">
+           <rect>
+            <x>40</x>
+            <y>20</y>
+            <width>131</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Start SLAM</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="stopSlam">
+          <property name="geometry">
+           <rect>
+            <x>230</x>
+            <y>20</y>
+            <width>131</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Stop SLAM</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="startRecordPath">
+          <property name="geometry">
+           <rect>
+            <x>40</x>
+            <y>70</y>
+            <width>131</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Start Record Path</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="stopRecordPath">
+          <property name="geometry">
+           <rect>
+            <x>230</x>
+            <y>70</y>
+            <width>131</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Stop Record Path</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="saveMapPath">
+          <property name="geometry">
+           <rect>
+            <x>40</x>
+            <y>110</y>
+            <width>321</width>
+            <height>51</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Save Map and Path</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="switchMapping">
+          <property name="geometry">
+           <rect>
+            <x>40</x>
+            <y>170</y>
+            <width>151</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Switch to Mapping</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="switchLocalization">
+          <property name="geometry">
+           <rect>
+            <x>200</x>
+            <y>170</y>
+            <width>161</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Switch to Localization</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="resetMapping">
+          <property name="geometry">
+           <rect>
+            <x>40</x>
+            <y>210</y>
+            <width>151</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Reset Mapping</string>
+          </property>
+         </widget>
         </widget>
-        <widget class="QPushButton" name="stopFreespace">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>180</y>
-           <width>407</width>
-           <height>25</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Stop Freespace</string>
-         </property>
+        <widget class="QWidget" name="tabFreespace">
+         <attribute name="title">
+          <string>Freespace</string>
+         </attribute>
+         <widget class="QPushButton" name="startFreespace">
+          <property name="geometry">
+           <rect>
+            <x>130</x>
+            <y>40</y>
+            <width>131</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Start Freespace</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="stopFreespace">
+          <property name="geometry">
+           <rect>
+            <x>130</x>
+            <y>110</y>
+            <width>131</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Stop Freespace</string>
+          </property>
+         </widget>
         </widget>
        </widget>
       </item>
