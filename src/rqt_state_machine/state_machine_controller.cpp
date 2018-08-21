@@ -257,6 +257,45 @@ void StateMachineController::onFreespaceStop()
   }
 }
 
+// vehicle control state control functions
+void StateMachineController::onVehicleControlEnable()
+{
+  vehicle_control::VehicleControl srv;
+  srv.request.action.module = 4;
+  srv.request.action.command = 1;
+
+  if (ros::service::call("vehicle_control_state_control", srv))
+  {
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "enable",
+                           "Failed to enable vehicle_control!");
+  }
+  else
+    QMessageBox::warning(widget_, "enable",
+                         "Failed to call enable vehicle_control service!");
+
+  return;
+}
+
+void StateMachineController::onVehicleControlDisable()
+{
+  vehicle_control::VehicleControl srv;
+  srv.request.action.module = 4;
+  srv.request.action.command = 0;
+
+  if (ros::service::call("vehicle_control_state_control", srv))
+  {
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "diable",
+                           "Failed to diable vehicle_control!");
+  }
+  else
+    QMessageBox::warning(widget_, "diable",
+                         "Failed to call diable vehicle_control service!");
+
+  return;
+}
+
 /*bool hasConfiguration() const
 {
   return true;
