@@ -3,11 +3,11 @@
 #include <QStringList>
 #include <QMessageBox>
 
-namespace rqt_state_machine {
+namespace rqt_state_machine
+{
 
 StateMachineController::StateMachineController()
-  : rqt_gui_cpp::Plugin()
-  , widget_(0)
+    : rqt_gui_cpp::Plugin(), widget_(0)
 {
   // Constructor is called first before initPlugin function, needless to say.
 
@@ -28,15 +28,26 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
 
   connect(ui_.startSlam, SIGNAL(clicked()), this, SLOT(onSlamStart()));
   connect(ui_.stopSlam, SIGNAL(clicked()), this, SLOT(onSlamStop()));
-  connect(ui_.startRecordPath, SIGNAL(clicked()), this, SLOT(onSlamRecordPathStart()));
-  connect(ui_.stopRecordPath, SIGNAL(clicked()), this, SLOT(onSlamRecordPathStop()));
+  connect(ui_.startRecordPath, SIGNAL(clicked()), this,
+          SLOT(onSlamRecordPathStart()));
+  connect(ui_.stopRecordPath, SIGNAL(clicked()), this,
+          SLOT(onSlamRecordPathStop()));
   connect(ui_.saveMapPath, SIGNAL(clicked()), this, SLOT(onSlamSaveMapPath()));
-  connect(ui_.switchMapping, SIGNAL(clicked()), this, SLOT(onSlamSwitchToMapping()));
-  connect(ui_.switchLocalization, SIGNAL(clicked()), this, SLOT(onSlamSwitchToLocalization()));
-  connect(ui_.resetMapping, SIGNAL(clicked()), this, SLOT(onSlamResetMapping()));
+  connect(ui_.switchMapping, SIGNAL(clicked()), this,
+          SLOT(onSlamSwitchToMapping()));
+  connect(ui_.switchLocalization, SIGNAL(clicked()), this,
+          SLOT(onSlamSwitchToLocalization()));
+  connect(ui_.resetMapping, SIGNAL(clicked()), this,
+          SLOT(onSlamResetMapping()));
 
-  connect(ui_.startFreespace, SIGNAL(clicked()), this, SLOT(onFreespaceStart()));
+  connect(ui_.startFreespace, SIGNAL(clicked()), this,
+          SLOT(onFreespaceStart()));
   connect(ui_.stopFreespace, SIGNAL(clicked()), this, SLOT(onFreespaceStop()));
+
+  connect(ui_.enableVehicleControl, SIGNAL(clicked()), this,
+          SLOT(onVehicleControlEnable()));
+  connect(ui_.disableVehicleControl, SIGNAL(clicked()), this,
+          SLOT(onVehicleControlDisable()));
 }
 
 void StateMachineController::shutdownPlugin()
@@ -44,13 +55,17 @@ void StateMachineController::shutdownPlugin()
   // TODO unregister all publishers here
 }
 
-void StateMachineController::saveSettings(qt_gui_cpp::Settings& plugin_settings, qt_gui_cpp::Settings& instance_settings) const
+void StateMachineController::saveSettings(
+    qt_gui_cpp::Settings& plugin_settings,
+    qt_gui_cpp::Settings& instance_settings) const
 {
   // TODO save intrinsic configuration, usually using:
   // instance_settings.setValue(k, v)
 }
 
-void StateMachineController::restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings)
+void StateMachineController::restoreSettings(
+    const qt_gui_cpp::Settings& plugin_settings,
+    const qt_gui_cpp::Settings& instance_settings)
 {
   // TODO restore intrinsic configuration, usually using:
   // v = instance_settings.value(k)
@@ -69,7 +84,8 @@ void StateMachineController::onSlamStart()
       QMessageBox::warning(widget_, "start", "Failed to start slam!");
   }
   else
-    QMessageBox::warning(widget_, "start", "Failed to call start freespace service!");
+    QMessageBox::warning(widget_, "start",
+                         "Failed to call start freespace service!");
 
   return;
 }
@@ -86,7 +102,8 @@ void StateMachineController::onSlamStop()
       QMessageBox::warning(widget_, "stop", "Failed to stop slam!");
   }
   else
-    QMessageBox::warning(widget_, "stop", "Failed to call stop freespace service!");
+    QMessageBox::warning(widget_, "stop",
+                         "Failed to call stop freespace service!");
 
   return;
 }
@@ -100,10 +117,12 @@ void StateMachineController::onSlamRecordPathStart()
   if (ros::service::call("slam_state_control", srv))
   {
     if (!srv.response.feedback)
-      QMessageBox::warning(widget_, "record path", "Failed to start recording path!");
+      QMessageBox::warning(widget_, "record path",
+                           "Failed to start recording path!");
   }
   else
-    QMessageBox::warning(widget_, "record path", "Failed to call start recording path service!");
+    QMessageBox::warning(widget_, "record path",
+                         "Failed to call start recording path service!");
 
   return;
 }
@@ -117,10 +136,12 @@ void StateMachineController::onSlamRecordPathStop()
   if (ros::service::call("slam_state_control", srv))
   {
     if (!srv.response.feedback)
-      QMessageBox::warning(widget_, "record path", "Failed to stop recording path!");
+      QMessageBox::warning(widget_, "record path",
+                           "Failed to stop recording path!");
   }
   else
-    QMessageBox::warning(widget_, "record path", "Failed to call stop recording path service!");
+    QMessageBox::warning(widget_, "record path",
+                         "Failed to call stop recording path service!");
 
   return;
 }
@@ -134,10 +155,12 @@ void StateMachineController::onSlamSaveMapPath()
   if (ros::service::call("slam_state_control", srv))
   {
     if (!srv.response.feedback)
-      QMessageBox::warning(widget_, "save map and path", "Failed to save map and path!");
+      QMessageBox::warning(widget_, "save map and path",
+                           "Failed to save map and path!");
   }
   else
-    QMessageBox::warning(widget_, "save map and path", "Failed to call save map and path service!");
+    QMessageBox::warning(widget_, "save map and path",
+                         "Failed to call save map and path service!");
 
   return;
 }
@@ -151,10 +174,12 @@ void StateMachineController::onSlamSwitchToMapping()
   if (ros::service::call("slam_state_control", srv))
   {
     if (!srv.response.feedback)
-      QMessageBox::warning(widget_, "switch to mapping", "Failed to switch to mapping!");
+      QMessageBox::warning(widget_, "switch to mapping",
+                           "Failed to switch to mapping!");
   }
   else
-    QMessageBox::warning(widget_, "switch to mapping", "Failed to call switch to mapping service!");
+    QMessageBox::warning(widget_, "switch to mapping",
+                         "Failed to call switch to mapping service!");
 
   return;
 }
@@ -168,10 +193,12 @@ void StateMachineController::onSlamSwitchToLocalization()
   if (ros::service::call("slam_state_control", srv))
   {
     if (!srv.response.feedback)
-      QMessageBox::warning(widget_, "switch to localization", "Failed to switch to localization!");
+      QMessageBox::warning(widget_, "switch to localization",
+                           "Failed to switch to localization!");
   }
   else
-    QMessageBox::warning(widget_, "switch to localization", "Failed to call switch to localization service!");
+    QMessageBox::warning(widget_, "switch to localization",
+                         "Failed to call switch to localization service!");
 
   return;
 }
@@ -185,10 +212,12 @@ void StateMachineController::onSlamResetMapping()
   if (ros::service::call("slam_state_control", srv))
   {
     if (!srv.response.feedback)
-      QMessageBox::warning(widget_, "reset mapping", "Failed to reset mapping!");
+      QMessageBox::warning(widget_, "reset mapping",
+                           "Failed to reset mapping!");
   }
   else
-    QMessageBox::warning(widget_, "reset mapping", "Failed to call reset mapping service!");
+    QMessageBox::warning(widget_, "reset mapping",
+                         "Failed to call reset mapping service!");
 
   return;
 }
@@ -239,4 +268,6 @@ void triggerConfiguration()
 }*/
 
 } // namespace
-PLUGINLIB_DECLARE_CLASS(rqt_state_machine, StateMachineController, rqt_state_machine::StateMachineController, rqt_gui_cpp::Plugin)
+PLUGINLIB_DECLARE_CLASS(rqt_state_machine, StateMachineController,
+                        rqt_state_machine::StateMachineController,
+                        rqt_gui_cpp::Plugin)

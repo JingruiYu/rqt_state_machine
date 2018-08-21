@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   state_machine_msgs
   orb_slam_2_ros
   freespace_ros
+  vehicle_control
 )
 
 find_package(Qt5Widgets REQUIRED)
