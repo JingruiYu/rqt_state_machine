@@ -8,6 +8,7 @@
 // service server for each module
 //#include <freespace_ros/FreespaceControl.h>
 #include <orb_slam_2_ros/SlamControl.h>
+#include <vehicle_control/VehicleControl.h>
 
 namespace rqt_state_machine
 {
@@ -37,6 +38,10 @@ protected slots:
   // freespace state control functions
   virtual void onFreespaceStart();
   virtual void onFreespaceStop();
+
+  // vehicle control state control functions
+  virtual void onVehicleControlEnable();
+  virtual void onVehicleControlDisable();
 
   // Comment in to signal that the plugin has a way to configure it
   // bool hasConfiguration() const;
