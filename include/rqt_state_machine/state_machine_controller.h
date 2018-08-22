@@ -7,7 +7,7 @@
 
 // service server for each module
 //#include <freespace_ros/FreespaceControl.h>
-#include <orb_slam_2_ros/SlamControl.h>
+//#include <orb_slam_2_ros/SlamControl.h>
 
 namespace rqt_state_machine
 {
