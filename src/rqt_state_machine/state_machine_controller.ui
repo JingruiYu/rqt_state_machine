@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>408</width>
-    <height>336</height>
+    <width>417</width>
+    <height>436</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -143,12 +143,40 @@
            <rect>
             <x>40</x>
             <y>210</y>
-            <width>151</width>
+            <width>321</width>
             <height>31</height>
            </rect>
           </property>
           <property name="text">
            <string>Reset Mapping</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="startRecordPathInLocalization">
+          <property name="geometry">
+           <rect>
+            <x>40</x>
+            <y>250</y>
+            <width>131</width>
+            <height>51</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Start Record Path 
+ in Localization</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="stopRecordPathInLocalization">
+          <property name="geometry">
+           <rect>
+            <x>230</x>
+            <y>250</y>
+            <width>131</width>
+            <height>51</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Stop Record Path 
+in Localization</string>
           </property>
          </widget>
         </widget>

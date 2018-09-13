@@ -34,6 +34,8 @@ protected slots:
   virtual void onSlamSwitchToMapping();
   virtual void onSlamSwitchToLocalization();
   virtual void onSlamResetMapping();
+  virtual void onSlamRecordPathInLocalizationStart();
+  virtual void onSlamRecordPathInLocalizationStop();
 
   // freespace state control functions
   virtual void onFreespaceStart();
