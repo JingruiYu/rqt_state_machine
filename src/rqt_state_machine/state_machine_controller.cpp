@@ -49,6 +49,10 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(onVehicleControlEnable()));
   connect(ui_.disableVehicleControl, SIGNAL(clicked()), this,
           SLOT(onVehicleControlDisable()));
+  connect(ui_.startRecordPathInLocalization, SIGNAL(clicked()), this,
+          SLOT(onSlamRecordPathInLocalizationStart()));
+  connect(ui_.stopRecordPathInLocalization, SIGNAL(clicked()), this,
+          SLOT(onSlamRecordPathInLocalizationStop()));
 }
 
 void StateMachineController::shutdownPlugin()
@@ -235,6 +239,48 @@ void StateMachineController::onSlamResetMapping()
   else
     QMessageBox::warning(widget_, "reset mapping",
                          "Failed to call reset mapping service!");
+
+  return;
+}
+
+void StateMachineController::onSlamRecordPathInLocalizationStart()
+{
+  orb_slam_2_ros::SlamControl srv;
+  srv.request.action.module = 0;
+  srv.request.action.command = 8;
+
+  if (ros::service::call("slam_state_control", srv))
+  {
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "record path in localization",
+                           "Failed to record path in localization!");
+    else
+      ui_.status->setText("Status: Record path in localization!");
+  }
+  else
+    QMessageBox::warning(widget_, "record path in localization",
+                         "Failed to call record path in localization service!");
+
+  return;
+}
+
+void StateMachineController::onSlamRecordPathInLocalizationStop()
+{
+  orb_slam_2_ros::SlamControl srv;
+  srv.request.action.module = 0;
+  srv.request.action.command = 9;
+
+  if (ros::service::call("slam_state_control", srv))
+  {
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "record path in localization",
+                           "Failed to stop recording path in localization!");
+    else
+      ui_.status->setText("Status: Stop recording path in localization!");
+  }
+  else
+    QMessageBox::warning(widget_, "record path in localization",
+                         "Failed to call stop recording path in localization service!");
 
   return;
 }
