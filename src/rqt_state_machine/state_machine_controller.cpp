@@ -82,10 +82,12 @@ void StateMachineController::onSlamStart()
   {
     if (!srv.response.feedback)
       QMessageBox::warning(widget_, "start", "Failed to start slam!");
+    else
+      ui_.status->setText("Status: Slam started!");
   }
   else
     QMessageBox::warning(widget_, "start",
-                         "Failed to call start freespace service!");
+                         "Failed to call start slam service!");
 
   return;
 }
@@ -100,10 +102,12 @@ void StateMachineController::onSlamStop()
   {
     if (!srv.response.feedback)
       QMessageBox::warning(widget_, "stop", "Failed to stop slam!");
+    else
+      ui_.status->setText("Status: Slam stopped!");
   }
   else
     QMessageBox::warning(widget_, "stop",
-                         "Failed to call stop freespace service!");
+                         "Failed to call stop slam service!");
 
   return;
 }
@@ -119,6 +123,8 @@ void StateMachineController::onSlamRecordPathStart()
     if (!srv.response.feedback)
       QMessageBox::warning(widget_, "record path",
                            "Failed to start recording path!");
+    else
+      ui_.status->setText("Status: Start to record path!");
   }
   else
     QMessageBox::warning(widget_, "record path",
@@ -138,6 +144,8 @@ void StateMachineController::onSlamRecordPathStop()
     if (!srv.response.feedback)
       QMessageBox::warning(widget_, "record path",
                            "Failed to stop recording path!");
+    else
+      ui_.status->setText("Status: Stop recording path!");
   }
   else
     QMessageBox::warning(widget_, "record path",
@@ -157,6 +165,8 @@ void StateMachineController::onSlamSaveMapPath()
     if (!srv.response.feedback)
       QMessageBox::warning(widget_, "save map and path",
                            "Failed to save map and path!");
+    else
+      ui_.status->setText("Status: Map and path saved!");
   }
   else
     QMessageBox::warning(widget_, "save map and path",
@@ -176,6 +186,8 @@ void StateMachineController::onSlamSwitchToMapping()
     if (!srv.response.feedback)
       QMessageBox::warning(widget_, "switch to mapping",
                            "Failed to switch to mapping!");
+    else
+      ui_.status->setText("Status: Switch to mapping!");
   }
   else
     QMessageBox::warning(widget_, "switch to mapping",
@@ -195,6 +207,8 @@ void StateMachineController::onSlamSwitchToLocalization()
     if (!srv.response.feedback)
       QMessageBox::warning(widget_, "switch to localization",
                            "Failed to switch to localization!");
+    else
+      ui_.status->setText("Status: Switch to localization!");
   }
   else
     QMessageBox::warning(widget_, "switch to localization",
@@ -214,6 +228,8 @@ void StateMachineController::onSlamResetMapping()
     if (!srv.response.feedback)
       QMessageBox::warning(widget_, "reset mapping",
                            "Failed to reset mapping!");
+    else
+      ui_.status->setText("Status: Reset mapping!");
   }
   else
     QMessageBox::warning(widget_, "reset mapping",
@@ -270,6 +286,8 @@ void StateMachineController::onVehicleControlEnable()
     if (!srv.response.feedback)
       QMessageBox::warning(widget_, "enable",
                            "Failed to enable vehicle_control!");
+    else
+      ui_.status->setText("Status: Enable vehicle control!");
   }
   else
     QMessageBox::warning(widget_, "enable",
@@ -289,6 +307,8 @@ void StateMachineController::onVehicleControlDisable()
     if (!srv.response.feedback)
       QMessageBox::warning(widget_, "diable",
                            "Failed to diable vehicle_control!");
+    else
+      ui_.status->setText("Status: Disable vehicle control!");
   }
   else
     QMessageBox::warning(widget_, "diable",
