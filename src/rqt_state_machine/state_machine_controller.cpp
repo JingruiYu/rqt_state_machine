@@ -23,6 +23,7 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   widget_ = new QWidget();
   // extend the widget with all attributes and children from UI file
   ui_.setupUi(widget_);
+  ui_.tabWidget->setCurrentWidget(ui_.tabSlam);
   // add widget to the user interface
   context.addWidget(widget_);
 
