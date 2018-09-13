@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>425</width>
-    <height>300</height>
+    <width>408</width>
+    <height>336</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -31,11 +31,17 @@
    </property>
    <item>
     <widget class="QWidget" name="toolbar_widget" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>300</height>
+      </size>
+     </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
        <widget class="QTabWidget" name="tabWidget">
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tabSlam">
          <attribute name="title">
@@ -208,6 +214,13 @@
           </property>
          </widget>
         </widget>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="status">
+        <property name="text">
+         <string>Status:</string>
+        </property>
        </widget>
       </item>
      </layout>
