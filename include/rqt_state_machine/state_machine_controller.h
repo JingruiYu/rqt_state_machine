@@ -9,9 +9,22 @@
 //#include <freespace_ros/FreespaceControl.h>
 #include <orb_slam_2_ros/SlamControl.h>
 #include <vehicle_control/VehicleControl.h>
+#include <parkinglot_msgs/ParkingLotDetectionCtrlStamped.h>
 
 namespace rqt_state_machine
 {
+
+class StateMachineStatus
+{
+public:
+  enum class ParkingPlanning
+  {
+    RUNNING,      //!< Module is started and running.
+    IDLE,         //!< Module is waiting or stopped.
+    ERROR,        //!< Some error occured.
+    TRACKING      //!< Tracking current parking lot.
+  };
+};
 
 class StateMachineController : public rqt_gui_cpp::Plugin
 {
@@ -49,8 +62,22 @@ protected slots:
   // bool hasConfiguration() const;
   // void triggerConfiguration();
 private:
+  // initialize status of different modules
+  void initStateMachineStatus();
+
+  void parkinglotCtrlCB(
+      const parkinglot_msgs::ParkingLotDetectionCtrlStamped::ConstPtr msg);
+
   Ui::StateMachineControllerWidget ui_;
   QWidget* widget_;
+
+  // ros topics
+  ros::NodeHandle nh_;
+  ros::Subscriber parkinglot_ctrl_sub_;
+
+  // state machine
+  // -- parking planning
+  StateMachineStatus::ParkingPlanning parking_status_;
 
 };
 } // namespace

@@ -53,6 +53,13 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(onSlamRecordPathInLocalizationStart()));
   connect(ui_.stopRecordPathInLocalization, SIGNAL(clicked()), this,
           SLOT(onSlamRecordPathInLocalizationStop()));
+
+  // subscribe to ros topics
+  parkinglot_ctrl_sub_ = nh_.subscribe("/deepps/parkinglot_ctrl", 100, &StateMachineController::parkinglotCtrlCB, this);
+
+  // init state machine status of every module
+  parking_status_ = StateMachineStatus::ParkingPlanning::IDLE;
+  ui_.statusParking->setText("Idle");
 }
 
 void StateMachineController::shutdownPlugin()
@@ -360,6 +367,50 @@ void StateMachineController::onVehicleControlDisable()
   else
     QMessageBox::warning(widget_, "diable",
                          "Failed to call diable vehicle_control service!");
+
+  return;
+}
+
+void StateMachineController::parkinglotCtrlCB(
+    const parkinglot_msgs::ParkingLotDetectionCtrlStamped::ConstPtr msg
+    )
+{
+  ui_.status->setText("Status: parking lot ctrl received!");
+
+  if (msg->isParkinglotTrackingFuncEnable)
+    parking_status_ = StateMachineStatus::ParkingPlanning::TRACKING;
+  else
+    parking_status_ = StateMachineStatus::ParkingPlanning::IDLE;
+
+  switch (parking_status_){
+
+    case StateMachineStatus::ParkingPlanning::RUNNING:
+    {
+      ui_.statusParking->setText("Running...");
+      break;
+    }
+
+    case StateMachineStatus::ParkingPlanning::IDLE:
+    {
+      ui_.statusParking->setText("Idle");
+      break;
+    }
+
+    case StateMachineStatus::ParkingPlanning::ERROR:
+    {
+      ui_.statusParking->setText("ERROR!");
+      break;
+    }
+
+    case StateMachineStatus::ParkingPlanning::TRACKING:
+    {
+      ui_.statusParking->setText("Tracking...");
+      break;
+    }
+
+    default:
+      break;
+  }
 
   return;
 }
