@@ -41,7 +41,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget">
         <property name="currentIndex">
-         <number>0</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="tabSlam">
          <attribute name="title">
@@ -239,6 +239,37 @@ in Localization</string>
           </property>
           <property name="text">
            <string>Disable Control</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="tabAuto">
+         <attribute name="title">
+          <string>Auto</string>
+         </attribute>
+         <widget class="QLabel" name="labelParking">
+          <property name="geometry">
+           <rect>
+            <x>70</x>
+            <y>30</y>
+            <width>67</width>
+            <height>17</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Parking:</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="statusParking">
+          <property name="geometry">
+           <rect>
+            <x>140</x>
+            <y>30</y>
+            <width>181</width>
+            <height>17</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string/>
           </property>
          </widget>
         </widget>
