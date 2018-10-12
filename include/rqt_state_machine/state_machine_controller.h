@@ -9,6 +9,7 @@
 #include <freespace_ros/FreespaceControl.h>
 #include <orb_slam_2_ros/SlamControl.h>
 #include <vehicle_control/VehicleControl.h>
+#include <parkinglot_msgs/ParkingLotDetectionStatusStamped.h>
 #include <parkinglot_msgs/ParkingLotDetectionCtrlStamped.h>
 
 namespace rqt_state_machine
@@ -17,6 +18,12 @@ namespace rqt_state_machine
 class StateMachineStatus
 {
 public:
+  enum class Deepps
+  {
+    RUNNING,      //!< Module is started and running.
+    IDLE,         //!< Module is waiting or stopped.
+    ERROR         //!< Some error occured.
+  };
   enum class ParkingPlanning
   {
     RUNNING,      //!< Module is started and running.
@@ -65,6 +72,8 @@ private:
   // initialize status of different modules
   void initStateMachineStatus();
 
+  void parkinglotStatusCB(
+      const parkinglot_msgs::ParkingLotDetectionStatusStamped::ConstPtr msg);
   void parkinglotCtrlCB(
       const parkinglot_msgs::ParkingLotDetectionCtrlStamped::ConstPtr msg);
 
@@ -73,10 +82,12 @@ private:
 
   // ros topics
   ros::NodeHandle nh_;
+  ros::Subscriber parkinglot_status_sub_;
   ros::Subscriber parkinglot_ctrl_sub_;
 
   // state machine
   // -- parking planning
+  StateMachineStatus::Deepps deepps_status_;
   StateMachineStatus::ParkingPlanning parking_status_;
 
 };

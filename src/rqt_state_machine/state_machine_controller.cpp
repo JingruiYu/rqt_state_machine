@@ -55,9 +55,16 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(onSlamRecordPathInLocalizationStop()));
 
   // subscribe to ros topics
-  parkinglot_ctrl_sub_ = nh_.subscribe("/deepps/parkinglot_ctrl", 100, &StateMachineController::parkinglotCtrlCB, this);
+  parkinglot_status_sub_ = nh_.subscribe("/deepps/parkinglot_status", 100,
+                                         &StateMachineController::parkinglotStatusCB, this);
+  parkinglot_ctrl_sub_ = nh_.subscribe("/deepps/parkinglot_ctrl", 100,
+                                       &StateMachineController::parkinglotCtrlCB, this);
 
   // init state machine status of every module
+  // -- deepps
+  deepps_status_ = StateMachineStatus::Deepps::IDLE;
+  ui_.statusDeepps->setText("Idle");
+  // -- parking
   parking_status_ = StateMachineStatus::ParkingPlanning::IDLE;
   ui_.statusParking->setText("Idle");
 }
@@ -366,6 +373,43 @@ void StateMachineController::onVehicleControlDisable()
   else
     QMessageBox::warning(widget_, "diable",
                          "Failed to call diable vehicle_control service!");
+
+  return;
+}
+
+void StateMachineController::parkinglotStatusCB(
+    const parkinglot_msgs::ParkingLotDetectionStatusStamped::ConstPtr msg)
+{
+  ui_.status->setText("Status: parking lot status received!");
+
+  if (msg->ParkinglotSearchEnabled)
+    deepps_status_ = StateMachineStatus::Deepps::RUNNING;
+  else
+    deepps_status_ = StateMachineStatus::Deepps::IDLE;
+
+  switch (deepps_status_){
+
+    case StateMachineStatus::Deepps::RUNNING:
+    {
+      ui_.statusDeepps->setText("Running...");
+      break;
+    }
+
+    case StateMachineStatus::Deepps::IDLE:
+    {
+      ui_.statusDeepps->setText("Idle");
+      break;
+    }
+
+    case StateMachineStatus::Deepps::ERROR:
+    {
+      ui_.statusDeepps->setText("ERROR!");
+      break;
+    }
+
+    default:
+      break;
+  }
 
   return;
 }
