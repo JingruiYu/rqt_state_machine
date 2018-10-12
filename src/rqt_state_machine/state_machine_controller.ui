@@ -250,7 +250,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>70</x>
-            <y>30</y>
+            <y>80</y>
             <width>67</width>
             <height>17</height>
            </rect>
@@ -263,13 +263,39 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>140</x>
-            <y>30</y>
+            <y>80</y>
             <width>181</width>
             <height>17</height>
            </rect>
           </property>
           <property name="text">
            <string/>
+          </property>
+         </widget>
+         <widget class="QLabel" name="statusDeepps">
+          <property name="geometry">
+           <rect>
+            <x>140</x>
+            <y>50</y>
+            <width>181</width>
+            <height>17</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+         <widget class="QLabel" name="labelDeepps">
+          <property name="geometry">
+           <rect>
+            <x>70</x>
+            <y>50</y>
+            <width>67</width>
+            <height>17</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Deepps:</string>
           </property>
          </widget>
         </widget>
