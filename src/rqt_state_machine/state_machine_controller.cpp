@@ -49,24 +49,31 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(onVehicleControlEnable()));
   connect(ui_.disableVehicleControl, SIGNAL(clicked()), this,
           SLOT(onVehicleControlDisable()));
+  connect(ui_.eStopVehicleControl, SIGNAL(clicked()), this,
+          SLOT(onVehicleControlEStop()));
   connect(ui_.startRecordPathInLocalization, SIGNAL(clicked()), this,
           SLOT(onSlamRecordPathInLocalizationStart()));
   connect(ui_.stopRecordPathInLocalization, SIGNAL(clicked()), this,
           SLOT(onSlamRecordPathInLocalizationStop()));
 
-  // subscribe to ros topics
-  parkinglot_status_sub_ = nh_.subscribe("/deepps/parkinglot_status", 100,
-                                         &StateMachineController::parkinglotStatusCB, this);
-  parkinglot_ctrl_sub_ = nh_.subscribe("/deepps/parkinglot_ctrl", 100,
-                                       &StateMachineController::parkinglotCtrlCB, this);
+  connect(ui_.startAuto, SIGNAL(clicked()), this, SLOT(startStateMachine()));
+  connect(ui_.stopAuto, SIGNAL(clicked()), this, SLOT(stopStateMachine()));
 
-  // init state machine status of every module
-  // -- deepps
-  deepps_status_ = StateMachineStatus::Deepps::IDLE;
-  ui_.statusDeepps->setText("Idle");
-  // -- parking
-  parking_status_ = StateMachineStatus::ParkingPlanning::IDLE;
-  ui_.statusParking->setText("Idle");
+  // subscribe to ros topics
+  parkinglot_status_sub_ =
+      nh_.subscribe("/deepps/parkinglot_status", 100,
+                    &StateMachineController::parkinglotStatusCB, this);
+  parkinglot_ctrl_sub_ =
+      nh_.subscribe("/deepps/parkinglot_ctrl", 100,
+                    &StateMachineController::parkinglotCtrlCB, this);
+
+  // Advertising state control service
+  state_feedback_service_ = nh_.advertiseService(
+      "state_machine_feedback",
+      &StateMachineController::updateStateMachineStates, this);
+
+  // initialize status of different modules
+  initStateMachineStatus();
 }
 
 void StateMachineController::shutdownPlugin()
@@ -88,6 +95,88 @@ void StateMachineController::restoreSettings(
 {
   // TODO restore intrinsic configuration, usually using:
   // v = instance_settings.value(k)
+}
+
+// initialize status of different modules
+void StateMachineController::initStateMachineStatus()
+{
+  // init state machine status of every module
+  // -- slam
+  slam_status_ = StateMachineStatus::Slam::IDLE;
+  ui_.statusSlam->setText("Idle");
+  // -- navigation
+  navi_status_ = StateMachineStatus::Navigation::IDLE;
+  ui_.statusNavi->setText("Idle");
+  // -- vehicle control
+  vehicle_ctrl_status_ = StateMachineStatus::VehicleControl::IDLE;
+  ui_.statusCtrl->setText("Idle");
+  // -- freespace
+  freespace_status_ = StateMachineStatus::Freespace::IDLE;
+  ui_.statusFreespace->setText("Idle");
+  // -- ssd
+  ssd_status_ = StateMachineStatus::Ssd::IDLE;
+  ui_.statusSsd->setText("Idle");
+  // -- deepps
+  deepps_status_ = StateMachineStatus::Deepps::IDLE;
+  ui_.statusDeepps->setText("Idle");
+  // -- parking
+  parking_status_ = StateMachineStatus::ParkingPlanning::IDLE;
+  ui_.statusParking->setText("Idle");
+}
+
+// start running state machine
+void StateMachineController::startStateMachine()
+{
+  ui_.status->setText("Status: State machine started!");
+
+  // start slam
+  onSlamStart();
+}
+
+// stop running state machine
+void StateMachineController::stopStateMachine()
+{
+  ui_.status->setText("Status: State machine stopped!");
+}
+
+// update state machine states
+bool StateMachineController::updateStateMachineStates(
+    StateFeedback::Request& req, StateFeedback::Response& res)
+{
+  switch (req.state.module)
+  {
+  case 0: // slam
+  {
+    ui_.status->setText("Status: slam feedback received");
+    break;
+  }
+  case 1: // freespace
+  {
+    ui_.status->setText("Status: freespace feedback received");
+    break;
+  }
+  case 2: // deepps
+  {
+    ui_.status->setText("Status: deepps feedback received");
+    break;
+  }
+  case 3: // ssd
+  {
+    ui_.status->setText("Status: ssd feedback received");
+    break;
+  }
+  case 4: // vehicle control
+  {
+    ui_.status->setText("Status: vehicle control feedback received");
+    break;
+  }
+  default:
+    break;
+  }
+
+  res.feedback = 1;
+
+  return true;
 }
 
 // slam state control functions
@@ -125,8 +214,7 @@ void StateMachineController::onSlamStop()
       ui_.status->setText("Status: Slam stopped!");
   }
   else
-    QMessageBox::warning(widget_, "stop",
-                         "Failed to call stop slam service!");
+    QMessageBox::warning(widget_, "stop", "Failed to call stop slam service!");
 
   return;
 }
@@ -293,8 +381,9 @@ void StateMachineController::onSlamRecordPathInLocalizationStop()
       ui_.status->setText("Status: Stop recording path in localization!");
   }
   else
-    QMessageBox::warning(widget_, "record path in localization",
-                         "Failed to call stop recording path in localization service!");
+    QMessageBox::warning(
+        widget_, "record path in localization",
+        "Failed to call stop recording path in localization service!");
 
   return;
 }
@@ -378,6 +467,27 @@ void StateMachineController::onVehicleControlDisable()
   return;
 }
 
+void StateMachineController::onVehicleControlEStop()
+{
+  vehicle_control::VehicleControl srv;
+  srv.request.action.module = 4;
+  srv.request.action.command = 2;
+
+  if (ros::service::call("vehicle_control_state_control", srv))
+  {
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "diable",
+                           "Failed to E-Stop vehicle_control!");
+    else
+      ui_.status->setText("Status: E-Stop vehicle control!");
+  }
+  else
+    QMessageBox::warning(widget_, "diable",
+                         "Failed to call E-Stop vehicle_control service!");
+
+  return;
+}
+
 void StateMachineController::parkinglotStatusCB(
     const parkinglot_msgs::ParkingLotDetectionStatusStamped::ConstPtr msg)
 {
@@ -388,36 +498,36 @@ void StateMachineController::parkinglotStatusCB(
   else
     deepps_status_ = StateMachineStatus::Deepps::IDLE;
 
-  switch (deepps_status_){
+  switch (deepps_status_)
+  {
 
-    case StateMachineStatus::Deepps::RUNNING:
-    {
-      ui_.statusDeepps->setText("Running...");
-      break;
-    }
+  case StateMachineStatus::Deepps::RUNNING:
+  {
+    ui_.statusDeepps->setText("Running...");
+    break;
+  }
 
-    case StateMachineStatus::Deepps::IDLE:
-    {
-      ui_.statusDeepps->setText("Idle");
-      break;
-    }
+  case StateMachineStatus::Deepps::IDLE:
+  {
+    ui_.statusDeepps->setText("Idle");
+    break;
+  }
 
-    case StateMachineStatus::Deepps::ERROR:
-    {
-      ui_.statusDeepps->setText("ERROR!");
-      break;
-    }
+  case StateMachineStatus::Deepps::ERROR:
+  {
+    ui_.statusDeepps->setText("ERROR!");
+    break;
+  }
 
-    default:
-      break;
+  default:
+    break;
   }
 
   return;
 }
 
 void StateMachineController::parkinglotCtrlCB(
-    const parkinglot_msgs::ParkingLotDetectionCtrlStamped::ConstPtr msg
-    )
+    const parkinglot_msgs::ParkingLotDetectionCtrlStamped::ConstPtr msg)
 {
   ui_.status->setText("Status: parking lot ctrl received!");
 
@@ -426,34 +536,35 @@ void StateMachineController::parkinglotCtrlCB(
   else
     parking_status_ = StateMachineStatus::ParkingPlanning::IDLE;
 
-  switch (parking_status_){
+  switch (parking_status_)
+  {
 
-    case StateMachineStatus::ParkingPlanning::RUNNING:
-    {
-      ui_.statusParking->setText("Running...");
-      break;
-    }
+  case StateMachineStatus::ParkingPlanning::RUNNING:
+  {
+    ui_.statusParking->setText("Running...");
+    break;
+  }
 
-    case StateMachineStatus::ParkingPlanning::IDLE:
-    {
-      ui_.statusParking->setText("Idle");
-      break;
-    }
+  case StateMachineStatus::ParkingPlanning::IDLE:
+  {
+    ui_.statusParking->setText("Idle");
+    break;
+  }
 
-    case StateMachineStatus::ParkingPlanning::ERROR:
-    {
-      ui_.statusParking->setText("ERROR!");
-      break;
-    }
+  case StateMachineStatus::ParkingPlanning::ERROR:
+  {
+    ui_.statusParking->setText("ERROR!");
+    break;
+  }
 
-    case StateMachineStatus::ParkingPlanning::TRACKING:
-    {
-      ui_.statusParking->setText("Tracking...");
-      break;
-    }
+  case StateMachineStatus::ParkingPlanning::TRACKING:
+  {
+    ui_.statusParking->setText("Tracking...");
+    break;
+  }
 
-    default:
-      break;
+  default:
+    break;
   }
 
   return;

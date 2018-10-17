@@ -11,6 +11,7 @@
 #include <vehicle_control/VehicleControl.h>
 #include <parkinglot_msgs/ParkingLotDetectionStatusStamped.h>
 #include <parkinglot_msgs/ParkingLotDetectionCtrlStamped.h>
+#include <rqt_state_machine/StateFeedback.h>
 
 namespace rqt_state_machine
 {
@@ -18,6 +19,36 @@ namespace rqt_state_machine
 class StateMachineStatus
 {
 public:
+  enum class Slam
+  {
+    RUNNING,      //!< Module is started and running.
+    IDLE,         //!< Module is waiting or stopped.
+    ERROR         //!< Some error occured.
+  };
+  enum class Navigation
+  {
+    RUNNING,      //!< Module is started and running.
+    IDLE,         //!< Module is waiting or stopped.
+    ERROR         //!< Some error occured.
+  };
+  enum class VehicleControl
+  {
+    RUNNING,      //!< Module is started and running.
+    IDLE,         //!< Module is waiting or stopped.
+    ERROR         //!< Some error occured.
+  };
+  enum class Freespace
+  {
+    RUNNING,      //!< Module is started and running.
+    IDLE,         //!< Module is waiting or stopped.
+    ERROR         //!< Some error occured.
+  };
+  enum class Ssd
+  {
+    RUNNING,      //!< Module is started and running.
+    IDLE,         //!< Module is waiting or stopped.
+    ERROR         //!< Some error occured.
+  };
   enum class Deepps
   {
     RUNNING,      //!< Module is started and running.
@@ -64,13 +95,23 @@ protected slots:
   // vehicle control state control functions
   virtual void onVehicleControlEnable();
   virtual void onVehicleControlDisable();
+  virtual void onVehicleControlEStop();
+
+  // state machine
+  // -- initialize status of different modules
+  virtual void initStateMachineStatus();
+  // -- start running
+  virtual void startStateMachine();
+  // -- stop running
+  virtual void stopStateMachine();
 
   // Comment in to signal that the plugin has a way to configure it
   // bool hasConfiguration() const;
   // void triggerConfiguration();
 private:
-  // initialize status of different modules
-  void initStateMachineStatus();
+  // state machine
+  // -- update states
+  bool updateStateMachineStates(StateFeedback::Request &req, StateFeedback::Response &res);
 
   void parkinglotStatusCB(
       const parkinglot_msgs::ParkingLotDetectionStatusStamped::ConstPtr msg);
@@ -85,11 +126,18 @@ private:
   ros::Subscriber parkinglot_status_sub_;
   ros::Subscriber parkinglot_ctrl_sub_;
 
+  // ros service
+  ros::ServiceServer state_feedback_service_;
+
   // state machine
-  // -- parking planning
+  // -- module status
+  StateMachineStatus::Slam slam_status_;
+  StateMachineStatus::Navigation navi_status_;
+  StateMachineStatus::VehicleControl vehicle_ctrl_status_;
+  StateMachineStatus::Freespace freespace_status_;
+  StateMachineStatus::Ssd ssd_status_;
   StateMachineStatus::Deepps deepps_status_;
   StateMachineStatus::ParkingPlanning parking_status_;
-
 };
 } // namespace
 

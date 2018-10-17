@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>417</width>
+    <width>502</width>
     <height>436</height>
    </rect>
   </property>
@@ -41,7 +41,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget">
         <property name="currentIndex">
-         <number>3</number>
+         <number>4</number>
         </property>
         <widget class="QWidget" name="tabSlam">
          <attribute name="title">
@@ -241,62 +241,249 @@ in Localization</string>
            <string>Disable Control</string>
           </property>
          </widget>
+         <widget class="QPushButton" name="eStopVehicleControl">
+          <property name="geometry">
+           <rect>
+            <x>140</x>
+            <y>180</y>
+            <width>131</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>E-Stop</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="tabParking">
+         <attribute name="title">
+          <string>Parking</string>
+         </attribute>
+         <widget class="QPushButton" name="enableVehicleControl_2">
+          <property name="geometry">
+           <rect>
+            <x>130</x>
+            <y>40</y>
+            <width>131</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Enable Deepps</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="enableVehicleControl_3">
+          <property name="geometry">
+           <rect>
+            <x>130</x>
+            <y>90</y>
+            <width>131</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Disable Deepps</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="enableVehicleControl_4">
+          <property name="geometry">
+           <rect>
+            <x>130</x>
+            <y>170</y>
+            <width>131</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Enable Parking</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="enableVehicleControl_5">
+          <property name="geometry">
+           <rect>
+            <x>130</x>
+            <y>220</y>
+            <width>131</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Disable Parking</string>
+          </property>
+         </widget>
         </widget>
         <widget class="QWidget" name="tabAuto">
          <attribute name="title">
           <string>Auto</string>
          </attribute>
-         <widget class="QLabel" name="labelParking">
+         <widget class="QPushButton" name="startAuto">
           <property name="geometry">
            <rect>
             <x>70</x>
-            <y>80</y>
-            <width>67</width>
-            <height>17</height>
+            <y>30</y>
+            <width>121</width>
+            <height>41</height>
            </rect>
           </property>
           <property name="text">
-           <string>Parking:</string>
+           <string>Start</string>
           </property>
          </widget>
-         <widget class="QLabel" name="statusParking">
+         <widget class="QPushButton" name="stopAuto">
           <property name="geometry">
            <rect>
-            <x>140</x>
-            <y>80</y>
+            <x>260</x>
+            <y>30</y>
+            <width>121</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Stop</string>
+          </property>
+         </widget>
+         <widget class="QWidget" name="">
+          <property name="geometry">
+           <rect>
+            <x>80</x>
+            <y>130</y>
+            <width>110</width>
+            <height>157</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="labelAuto">
+           <item>
+            <widget class="QLabel" name="labelSlam">
+             <property name="text">
+              <string>Slam:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="labelNavi">
+             <property name="text">
+              <string>Navigation:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="labelCtrl">
+             <property name="text">
+              <string>Vehicle Control:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="labelFreespace">
+             <property name="text">
+              <string>Freespace:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="labelSsd">
+             <property name="text">
+              <string>Ssd:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="labelDeepps">
+             <property name="text">
+              <string>Deepps:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="labelParking">
+             <property name="text">
+              <string>Parking:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="">
+          <property name="geometry">
+           <rect>
+            <x>210</x>
+            <y>130</y>
             <width>181</width>
-            <height>17</height>
+            <height>157</height>
            </rect>
           </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-         <widget class="QLabel" name="statusDeepps">
-          <property name="geometry">
-           <rect>
-            <x>140</x>
-            <y>50</y>
-            <width>181</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-         <widget class="QLabel" name="labelDeepps">
-          <property name="geometry">
-           <rect>
-            <x>70</x>
-            <y>50</y>
-            <width>67</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Deepps:</string>
-          </property>
+          <layout class="QVBoxLayout" name="statusAuto">
+           <item>
+            <widget class="QLabel" name="statusSlam">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="statusNavi">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="statusCtrl">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="statusFreespace">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="statusSsd">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="statusDeepps">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="statusParking">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </widget>
        </widget>
