@@ -1,0 +1,3 @@
+state_machine_msgs/StateFeedbackStamped state
+---
+int8 feedback

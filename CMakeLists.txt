@@ -35,6 +35,16 @@ if(NOT EXISTS "${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_INCLUDE_DESTINATION}")
   file(MAKE_DIRECTORY "${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_INCLUDE_DESTINATION}")
 endif()
 
+add_service_files(
+  FILES
+  StateFeedback.srv
+)
+
+generate_messages(
+  DEPENDENCIES
+  state_machine_msgs
+)
+
 catkin_package(
   INCLUDE_DIRS ${rqt_state_machine_INCLUDE_DIRECTORIES}
   LIBRARIES ${PROJECT_NAME}
