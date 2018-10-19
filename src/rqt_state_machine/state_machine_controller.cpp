@@ -45,12 +45,23 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(onFreespaceStart()));
   connect(ui_.stopFreespace, SIGNAL(clicked()), this, SLOT(onFreespaceStop()));
 
-  connect(ui_.enableVehicleControl, SIGNAL(clicked()), this,
+  connect(ui_.enableVehicleControlManually, SIGNAL(clicked()), this,
           SLOT(onVehicleControlEnable()));
-  connect(ui_.disableVehicleControl, SIGNAL(clicked()), this,
+  connect(ui_.disableVehicleControlManually, SIGNAL(clicked()), this,
           SLOT(onVehicleControlDisable()));
-  connect(ui_.eStopVehicleControl, SIGNAL(clicked()), this,
+  connect(ui_.eStopVehicleControlManually, SIGNAL(clicked()), this,
           SLOT(onVehicleControlEStop()));
+
+  connect(ui_.startFollowing, SIGNAL(clicked()), this,
+          SLOT(onVehicleControlEnable()));
+
+  connect(ui_.startDeeppsManually, SIGNAL(clicked()), this,
+          SLOT(onDeeppsStart()));
+  connect(ui_.stopDeeppsManually, SIGNAL(clicked()), this,
+          SLOT(onDeeppsStop()));
+
+  connect(ui_.startDeepps, SIGNAL(clicked()), this, SLOT(onDeeppsStart()));
+
   connect(ui_.startRecordPathInLocalization, SIGNAL(clicked()), this,
           SLOT(onSlamRecordPathInLocalizationStart()));
   connect(ui_.stopRecordPathInLocalization, SIGNAL(clicked()), this,
@@ -136,6 +147,18 @@ void StateMachineController::startStateMachine()
 // stop running state machine
 void StateMachineController::stopStateMachine()
 {
+  // stop vehicle control
+  onVehicleControlDisable();
+
+  // stop slam
+  onSlamStop();
+
+  // stop deepps
+  onDeeppsStop();
+
+  // stop freespace
+  onFreespaceStop();
+
   ui_.status->setText("Status: State machine stopped!");
 }
 
@@ -148,6 +171,20 @@ bool StateMachineController::updateStateMachineStates(
   case 0: // slam
   {
     ui_.status->setText("Status: slam feedback received");
+    switch (req.state.state)
+    {
+    case 0: // tracking status
+    {
+      int8_t traking_status = req.state.data;
+      if (traking_status == 0)
+        ui_.statusSlam->setText("Tracking succeed");
+      else if (traking_status == 1)
+        ui_.statusSlam->setText("Tracking failed");
+      break;
+    }
+    default:
+      break;
+    }
     break;
   }
   case 1: // freespace
@@ -182,7 +219,7 @@ bool StateMachineController::updateStateMachineStates(
 // slam state control functions
 void StateMachineController::onSlamStart()
 {
-  orb_slam_2_ros::SlamControl srv;
+  state_machine_msgs::ActionControl srv;
   srv.request.action.module = 0;
   srv.request.action.command = 1;
 
@@ -202,7 +239,7 @@ void StateMachineController::onSlamStart()
 
 void StateMachineController::onSlamStop()
 {
-  orb_slam_2_ros::SlamControl srv;
+  state_machine_msgs::ActionControl srv;
   srv.request.action.module = 0;
   srv.request.action.command = 0;
 
@@ -221,7 +258,7 @@ void StateMachineController::onSlamStop()
 
 void StateMachineController::onSlamRecordPathStart()
 {
-  orb_slam_2_ros::SlamControl srv;
+  state_machine_msgs::ActionControl srv;
   srv.request.action.module = 0;
   srv.request.action.command = 3;
 
@@ -242,7 +279,7 @@ void StateMachineController::onSlamRecordPathStart()
 
 void StateMachineController::onSlamRecordPathStop()
 {
-  orb_slam_2_ros::SlamControl srv;
+  state_machine_msgs::ActionControl srv;
   srv.request.action.module = 0;
   srv.request.action.command = 4;
 
@@ -263,7 +300,7 @@ void StateMachineController::onSlamRecordPathStop()
 
 void StateMachineController::onSlamSaveMapPath()
 {
-  orb_slam_2_ros::SlamControl srv;
+  state_machine_msgs::ActionControl srv;
   srv.request.action.module = 0;
   srv.request.action.command = 2;
 
@@ -284,7 +321,7 @@ void StateMachineController::onSlamSaveMapPath()
 
 void StateMachineController::onSlamSwitchToMapping()
 {
-  orb_slam_2_ros::SlamControl srv;
+  state_machine_msgs::ActionControl srv;
   srv.request.action.module = 0;
   srv.request.action.command = 5;
 
@@ -305,7 +342,7 @@ void StateMachineController::onSlamSwitchToMapping()
 
 void StateMachineController::onSlamSwitchToLocalization()
 {
-  orb_slam_2_ros::SlamControl srv;
+  state_machine_msgs::ActionControl srv;
   srv.request.action.module = 0;
   srv.request.action.command = 6;
 
@@ -326,7 +363,7 @@ void StateMachineController::onSlamSwitchToLocalization()
 
 void StateMachineController::onSlamResetMapping()
 {
-  orb_slam_2_ros::SlamControl srv;
+  state_machine_msgs::ActionControl srv;
   srv.request.action.module = 0;
   srv.request.action.command = 7;
 
@@ -347,7 +384,7 @@ void StateMachineController::onSlamResetMapping()
 
 void StateMachineController::onSlamRecordPathInLocalizationStart()
 {
-  orb_slam_2_ros::SlamControl srv;
+  state_machine_msgs::ActionControl srv;
   srv.request.action.module = 0;
   srv.request.action.command = 8;
 
@@ -368,7 +405,7 @@ void StateMachineController::onSlamRecordPathInLocalizationStart()
 
 void StateMachineController::onSlamRecordPathInLocalizationStop()
 {
-  orb_slam_2_ros::SlamControl srv;
+  state_machine_msgs::ActionControl srv;
   srv.request.action.module = 0;
   srv.request.action.command = 9;
 
@@ -391,42 +428,52 @@ void StateMachineController::onSlamRecordPathInLocalizationStop()
 // freespace state control functions
 void StateMachineController::onFreespaceStart()
 {
-  freespace_ros::FreespaceControl srv;
+  state_machine_msgs::ActionControl srv;
   srv.request.action.module = 1;
   srv.request.action.command = 1;
 
   if (ros::service::call("freespace_state_control", srv))
   {
-    QMessageBox::information(widget_, "start", "Succeed to start freespace!");
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "start", "Failed to start freespace!");
+    else
+    {
+      freespace_status_ = StateMachineStatus::Freespace::RUNNING;
+      updateFreespaceStatusUI();
+      ui_.status->setText("Status: Start freespace detection!");
+    }
   }
   else
-  {
-    QMessageBox::warning(widget_, "start", "Failed to start freespace!");
-    return;
-  }
+    QMessageBox::warning(widget_, "start",
+                         "Failed to call start freespace service!");
 }
 
 void StateMachineController::onFreespaceStop()
 {
-  freespace_ros::FreespaceControl srv;
+  state_machine_msgs::ActionControl srv;
   srv.request.action.module = 1;
   srv.request.action.command = 0;
 
   if (ros::service::call("freespace_state_control", srv))
   {
-    QMessageBox::information(widget_, "stop", "Succeed to stop freespace!");
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "stop", "Failed to stop freespace!");
+    else
+    {
+      freespace_status_ = StateMachineStatus::Freespace::IDLE;
+      updateFreespaceStatusUI();
+      ui_.status->setText("Status: Stop freespace detection!");
+    }
   }
   else
-  {
-    QMessageBox::warning(widget_, "stop", "Failed to stop freespace!");
-    return;
-  }
+    QMessageBox::warning(widget_, "stop",
+                         "Failed to call start freespace service!");
 }
 
 // vehicle control state control functions
 void StateMachineController::onVehicleControlEnable()
 {
-  vehicle_control::VehicleControl srv;
+  state_machine_msgs::ActionControl srv;
   srv.request.action.module = 4;
   srv.request.action.command = 1;
 
@@ -436,7 +483,11 @@ void StateMachineController::onVehicleControlEnable()
       QMessageBox::warning(widget_, "enable",
                            "Failed to enable vehicle_control!");
     else
+    {
+      vehicle_ctrl_status_ = StateMachineStatus::VehicleControl::RUNNING;
+      updateCtrlStatusUI();
       ui_.status->setText("Status: Enable vehicle control!");
+    }
   }
   else
     QMessageBox::warning(widget_, "enable",
@@ -447,7 +498,7 @@ void StateMachineController::onVehicleControlEnable()
 
 void StateMachineController::onVehicleControlDisable()
 {
-  vehicle_control::VehicleControl srv;
+  state_machine_msgs::ActionControl srv;
   srv.request.action.module = 4;
   srv.request.action.command = 0;
 
@@ -457,7 +508,11 @@ void StateMachineController::onVehicleControlDisable()
       QMessageBox::warning(widget_, "diable",
                            "Failed to diable vehicle_control!");
     else
+    {
+      vehicle_ctrl_status_ = StateMachineStatus::VehicleControl::IDLE;
+      updateCtrlStatusUI();
       ui_.status->setText("Status: Disable vehicle control!");
+    }
   }
   else
     QMessageBox::warning(widget_, "diable",
@@ -468,7 +523,7 @@ void StateMachineController::onVehicleControlDisable()
 
 void StateMachineController::onVehicleControlEStop()
 {
-  vehicle_control::VehicleControl srv;
+  state_machine_msgs::ActionControl srv;
   srv.request.action.module = 4;
   srv.request.action.command = 2;
 
@@ -478,11 +533,63 @@ void StateMachineController::onVehicleControlEStop()
       QMessageBox::warning(widget_, "diable",
                            "Failed to E-Stop vehicle_control!");
     else
+    {
+      vehicle_ctrl_status_ = StateMachineStatus::VehicleControl::IDLE;
+      updateCtrlStatusUI();
       ui_.status->setText("Status: E-Stop vehicle control!");
+    }
   }
   else
     QMessageBox::warning(widget_, "diable",
                          "Failed to call E-Stop vehicle_control service!");
+
+  return;
+}
+
+void StateMachineController::onDeeppsStart()
+{
+  state_machine_msgs::ActionControl srv;
+  srv.request.action.module = 2;
+  srv.request.action.command = 1;
+
+  if (ros::service::call("deepps_state_control", srv))
+  {
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "start", "Failed to start deepps!");
+    else
+    {
+      deepps_status_ = StateMachineStatus::Deepps::RUNNING;
+      updateDeeppsStatusUI();
+      ui_.status->setText("Status: Start parking lot detection!");
+    }
+  }
+  else
+    QMessageBox::warning(widget_, "start",
+                         "Failed to call start deepps service!");
+
+  return;
+}
+
+void StateMachineController::onDeeppsStop()
+{
+  state_machine_msgs::ActionControl srv;
+  srv.request.action.module = 2;
+  srv.request.action.command = 0;
+
+  if (ros::service::call("deepps_state_control", srv))
+  {
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "stop", "Failed to stop deepps!");
+    else
+    {
+      deepps_status_ = StateMachineStatus::Deepps::IDLE;
+      updateDeeppsStatusUI();
+      ui_.status->setText("Status: Stop parking lot detection!");
+    }
+  }
+  else
+    QMessageBox::warning(widget_, "stop",
+                         "Failed to call stop deepps service!");
 
   return;
 }
@@ -497,6 +604,86 @@ void StateMachineController::parkinglotStatusCB(
   else
     deepps_status_ = StateMachineStatus::Deepps::IDLE;
 
+  // update UI
+  updateDeeppsStatusUI();
+
+  return;
+}
+
+void StateMachineController::parkinglotCtrlCB(
+    const parkinglot_msgs::ParkingLotDetectionCtrlStamped::ConstPtr msg)
+{
+  ui_.status->setText("Status: parking lot ctrl received!");
+
+  if (msg->isParkinglotTrackingFuncEnable)
+    parking_status_ = StateMachineStatus::ParkingPlanning::TRACKING;
+  else
+    parking_status_ = StateMachineStatus::ParkingPlanning::IDLE;
+
+  // update UI
+  updateParkingStatusUI();
+
+  return;
+}
+
+void StateMachineController::updateSlamStatusUI()
+{
+  switch (slam_status_)
+  {
+
+  case StateMachineStatus::Slam::RUNNING:
+  {
+    ui_.statusSlam->setText("Running...");
+    break;
+  }
+
+  case StateMachineStatus::Slam::IDLE:
+  {
+    ui_.statusSlam->setText("Idle");
+    break;
+  }
+
+  case StateMachineStatus::Slam::ERROR:
+  {
+    ui_.statusSlam->setText("ERROR!");
+    break;
+  }
+
+  default:
+    break;
+  }
+}
+
+void StateMachineController::updateCtrlStatusUI()
+{
+  switch (vehicle_ctrl_status_)
+  {
+
+  case StateMachineStatus::VehicleControl::RUNNING:
+  {
+    ui_.statusCtrl->setText("Running...");
+    break;
+  }
+
+  case StateMachineStatus::VehicleControl::IDLE:
+  {
+    ui_.statusCtrl->setText("Idle");
+    break;
+  }
+
+  case StateMachineStatus::VehicleControl::ERROR:
+  {
+    ui_.statusCtrl->setText("ERROR!");
+    break;
+  }
+
+  default:
+    break;
+  }
+}
+
+void StateMachineController::updateDeeppsStatusUI()
+{
   switch (deepps_status_)
   {
 
@@ -521,20 +708,10 @@ void StateMachineController::parkinglotStatusCB(
   default:
     break;
   }
-
-  return;
 }
 
-void StateMachineController::parkinglotCtrlCB(
-    const parkinglot_msgs::ParkingLotDetectionCtrlStamped::ConstPtr msg)
+void StateMachineController::updateParkingStatusUI()
 {
-  ui_.status->setText("Status: parking lot ctrl received!");
-
-  if (msg->isParkinglotTrackingFuncEnable)
-    parking_status_ = StateMachineStatus::ParkingPlanning::TRACKING;
-  else
-    parking_status_ = StateMachineStatus::ParkingPlanning::IDLE;
-
   switch (parking_status_)
   {
 
@@ -565,8 +742,6 @@ void StateMachineController::parkinglotCtrlCB(
   default:
     break;
   }
-
-  return;
 }
 
 /*bool hasConfiguration() const
