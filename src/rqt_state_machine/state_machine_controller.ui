@@ -215,7 +215,7 @@ in Localization</string>
          <attribute name="title">
           <string>Vehicle Control</string>
          </attribute>
-         <widget class="QPushButton" name="enableVehicleControl">
+         <widget class="QPushButton" name="enableVehicleControlManually">
           <property name="geometry">
            <rect>
             <x>140</x>
@@ -228,7 +228,7 @@ in Localization</string>
            <string>Enable Control</string>
           </property>
          </widget>
-         <widget class="QPushButton" name="disableVehicleControl">
+         <widget class="QPushButton" name="disableVehicleControlManually">
           <property name="geometry">
            <rect>
             <x>140</x>
@@ -241,7 +241,7 @@ in Localization</string>
            <string>Disable Control</string>
           </property>
          </widget>
-         <widget class="QPushButton" name="eStopVehicleControl">
+         <widget class="QPushButton" name="eStopVehicleControlManually">
           <property name="geometry">
            <rect>
             <x>140</x>
@@ -259,7 +259,7 @@ in Localization</string>
          <attribute name="title">
           <string>Parking</string>
          </attribute>
-         <widget class="QPushButton" name="enableVehicleControl_2">
+         <widget class="QPushButton" name="startDeeppsManually">
           <property name="geometry">
            <rect>
             <x>130</x>
@@ -269,10 +269,10 @@ in Localization</string>
            </rect>
           </property>
           <property name="text">
-           <string>Enable Deepps</string>
+           <string>Start Deepps</string>
           </property>
          </widget>
-         <widget class="QPushButton" name="enableVehicleControl_3">
+         <widget class="QPushButton" name="stopDeeppsManually">
           <property name="geometry">
            <rect>
             <x>130</x>
@@ -282,10 +282,10 @@ in Localization</string>
            </rect>
           </property>
           <property name="text">
-           <string>Disable Deepps</string>
+           <string>Stop Deepps</string>
           </property>
          </widget>
-         <widget class="QPushButton" name="enableVehicleControl_4">
+         <widget class="QPushButton" name="startParkingManually">
           <property name="geometry">
            <rect>
             <x>130</x>
@@ -295,10 +295,10 @@ in Localization</string>
            </rect>
           </property>
           <property name="text">
-           <string>Enable Parking</string>
+           <string>Start Parking</string>
           </property>
          </widget>
-         <widget class="QPushButton" name="enableVehicleControl_5">
+         <widget class="QPushButton" name="stopParkingManually">
           <property name="geometry">
            <rect>
             <x>130</x>
@@ -308,7 +308,7 @@ in Localization</string>
            </rect>
           </property>
           <property name="text">
-           <string>Disable Parking</string>
+           <string>Stop Parking</string>
           </property>
          </widget>
         </widget>
@@ -326,7 +326,7 @@ in Localization</string>
            </rect>
           </property>
           <property name="text">
-           <string>Start</string>
+           <string>Start Auto</string>
           </property>
          </widget>
          <widget class="QPushButton" name="stopAuto">
@@ -339,14 +339,14 @@ in Localization</string>
            </rect>
           </property>
           <property name="text">
-           <string>Stop</string>
+           <string>Stop Auto</string>
           </property>
          </widget>
-         <widget class="QWidget" name="">
+         <widget class="QWidget" name="layoutWidget">
           <property name="geometry">
            <rect>
             <x>80</x>
-            <y>130</y>
+            <y>190</y>
             <width>110</width>
             <height>157</height>
            </rect>
@@ -424,11 +424,11 @@ in Localization</string>
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="">
+         <widget class="QWidget" name="layoutWidget">
           <property name="geometry">
            <rect>
             <x>210</x>
-            <y>130</y>
+            <y>190</y>
             <width>181</width>
             <height>157</height>
            </rect>
@@ -484,6 +484,33 @@ in Localization</string>
             </widget>
            </item>
           </layout>
+         </widget>
+         <widget class="QPushButton" name="startFollowing">
+          <property name="geometry">
+           <rect>
+            <x>70</x>
+            <y>110</y>
+            <width>121</width>
+            <height>51</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Start Following</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="startDeepps">
+          <property name="geometry">
+           <rect>
+            <x>260</x>
+            <y>110</y>
+            <width>121</width>
+            <height>51</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Start Parking Lot
+ Detection</string>
+          </property>
          </widget>
         </widget>
        </widget>

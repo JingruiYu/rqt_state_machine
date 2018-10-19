@@ -7,8 +7,7 @@
 
 // service server for each module
 //#include <freespace_ros/FreespaceControl.h>
-#include <orb_slam_2_ros/SlamControl.h>
-#include <vehicle_control/VehicleControl.h>
+#include <state_machine_msgs/ActionControl.h>
 #include <parkinglot_msgs/ParkingLotDetectionStatusStamped.h>
 #include <parkinglot_msgs/ParkingLotDetectionCtrlStamped.h>
 #include <rqt_state_machine/StateFeedback.h>
@@ -97,6 +96,10 @@ protected slots:
   virtual void onVehicleControlDisable();
   virtual void onVehicleControlEStop();
 
+  // deepps state control function
+  virtual void onDeeppsStart();
+  virtual void onDeeppsStop();
+
   // state machine
   // -- initialize status of different modules
   virtual void initStateMachineStatus();
@@ -117,6 +120,15 @@ private:
       const parkinglot_msgs::ParkingLotDetectionStatusStamped::ConstPtr msg);
   void parkinglotCtrlCB(
       const parkinglot_msgs::ParkingLotDetectionCtrlStamped::ConstPtr msg);
+
+  // update module status in UI
+  void updateSlamStatusUI();
+  void updateNaviStatusUI();
+  void updateCtrlStatusUI();
+  void updateFreespaceStatusUI();
+  void updateSsdStatusUI();
+  void updateDeeppsStatusUI();
+  void updateParkingStatusUI();
 
   Ui::StateMachineControllerWidget ui_;
   QWidget* widget_;
