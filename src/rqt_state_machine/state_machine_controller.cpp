@@ -40,6 +40,8 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(onSlamSwitchToLocalization()));
   connect(ui_.resetMapping, SIGNAL(clicked()), this,
           SLOT(onSlamResetMapping()));
+  connect(ui_.recordDeeppsStartPos, SIGNAL(clicked()), this,
+          SLOT(onSlamRecordDeeppsStartPos()));
 
   connect(ui_.startFreespace, SIGNAL(clicked()), this,
           SLOT(onFreespaceStart()));
@@ -421,6 +423,27 @@ void StateMachineController::onSlamRecordPathInLocalizationStop()
     QMessageBox::warning(
         widget_, "record path in localization",
         "Failed to call stop recording path in localization service!");
+
+  return;
+}
+
+void StateMachineController::onSlamRecordDeeppsStartPos()
+{
+  state_machine_msgs::ActionControl srv;
+  srv.request.action.module = 0;
+  srv.request.action.command = 10;
+
+  if (ros::service::call("slam_state_control", srv))
+  {
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "record deepps start position",
+                           "Failed to record deepps start position!");
+    else
+      ui_.status->setText("Status: Record deepps start position!");
+  }
+  else
+    QMessageBox::warning(widget_, "record deepps start position",
+                         "Failed to call record deepps start position service!");
 
   return;
 }
