@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   state_machine_msgs
   message_generation
+  tf
 )
 
 find_package(Qt5Widgets REQUIRED)

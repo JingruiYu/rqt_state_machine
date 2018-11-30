@@ -1,9 +1,12 @@
 #ifndef STATE_MACHINE_CONTROLLER_H
 #define STATE_MACHINE_CONTROLLER_H
 #include <ros/ros.h>
+#include <tf/transform_datatypes.h>
+#include <tf/transform_listener.h>
 #include <rqt_gui_cpp/plugin.h>
 #include <ui_state_machine_controller.h>
 #include <QWidget>
+#include <QTimer>
 
 // service server for each module
 //#include <freespace_ros/FreespaceControl.h>
@@ -113,6 +116,9 @@ protected slots:
   // -- stop running
   virtual void stopStateMachine();
 
+  // state checking for modules
+  virtual void stateChecking();
+
   // Comment in to signal that the plugin has a way to configure it
   // bool hasConfiguration() const;
   // void triggerConfiguration();
@@ -155,6 +161,12 @@ private:
   StateMachineStatus::Ssd ssd_status_;
   StateMachineStatus::Deepps deepps_status_;
   StateMachineStatus::ParkingPlanning parking_status_;
+
+  // modules related variables
+  tf::Point deepps_start_pos_;
+
+  // Timer to check states of some modules
+  QTimer stateCheckingTimer_;
 };
 } // namespace
 

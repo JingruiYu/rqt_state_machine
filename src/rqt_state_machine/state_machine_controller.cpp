@@ -72,6 +72,10 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   connect(ui_.startAuto, SIGNAL(clicked()), this, SLOT(startStateMachine()));
   connect(ui_.stopAuto, SIGNAL(clicked()), this, SLOT(stopStateMachine()));
 
+  // Start periodic state checking
+  connect(&stateCheckingTimer_, SIGNAL(timeout()), this, SLOT(stateChecking()));
+  stateCheckingTimer_.setInterval(50);
+
   // subscribe to ros topics
   parkinglot_status_sub_ =
       nh_.subscribe("/deepps/parkinglot_status", 100,
@@ -92,6 +96,9 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
 void StateMachineController::shutdownPlugin()
 {
   // TODO unregister all publishers here
+
+  stateCheckingTimer_.stop();
+  disconnect(&stateCheckingTimer_, SIGNAL(timeout()), this, SLOT(stateChecking()));
 }
 
 void StateMachineController::saveSettings(
@@ -144,6 +151,19 @@ void StateMachineController::startStateMachine()
 
   // start slam
   onSlamStart();
+
+  // get deepps start position
+  double x, y;
+  if (nh_.getParam("/orb_slam_2_ros_node/deepps_start_pos_x", x) &&
+      nh_.getParam("/orb_slam_2_ros_node/deepps_start_pos_y", y))
+  {
+    deepps_start_pos_.setX(x);
+    deepps_start_pos_.setY(y);
+  }
+  else
+    QMessageBox::warning(widget_, "warning", "Failed to get deepps start position!");
+
+  return;
 }
 
 // stop running state machine
@@ -822,6 +842,40 @@ void StateMachineController::updateParkingStatusUI()
   default:
     break;
   }
+}
+
+void StateMachineController::stateChecking()
+{
+  if (navi_status_ == StateMachineStatus::Navigation::RUNNING &&
+      deepps_status_ == StateMachineStatus::Deepps::IDLE)
+  {// check if deepps start position has been reached
+
+    // get transform of footprint to map
+    tf::TransformListener tf_listener;
+    tf::StampedTransform tf_footprint2map_stamp;
+    try{
+      tf_listener.lookupTransform("map", "base_footprint", ros::Time(0), tf_footprint2map_stamp);
+    }
+    catch (tf::TransformException ex){
+      ROS_ERROR_THROTTLE(1, "%s",ex.what());
+      return;
+    }
+
+    // get current pose
+    double x = tf_footprint2map_stamp.getOrigin().getX();
+    double y = tf_footprint2map_stamp.getOrigin().getY();
+
+    // tolerance
+    double tol = 1.0;
+
+    if (std::hypot(x, y) < tol)
+    {
+      // start deepps
+      onDeeppsStart();
+    }
+  }
+
+  return;
 }
 
 /*bool hasConfiguration() const
