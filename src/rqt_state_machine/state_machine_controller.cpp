@@ -55,7 +55,7 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(onVehicleControlEStop()));
 
   connect(ui_.startFollowing, SIGNAL(clicked()), this,
-          SLOT(onVehicleControlEnable()));
+          SLOT(onNavigationStart()));
 
   connect(ui_.startDeeppsManually, SIGNAL(clicked()), this,
           SLOT(onDeeppsStart()));
@@ -149,8 +149,8 @@ void StateMachineController::startStateMachine()
 // stop running state machine
 void StateMachineController::stopStateMachine()
 {
-  // stop vehicle control
-  onVehicleControlDisable();
+  // stop navigation
+  onNavigationStop();
 
   // stop slam
   onSlamStop();
@@ -444,6 +444,35 @@ void StateMachineController::onSlamRecordDeeppsStartPos()
   else
     QMessageBox::warning(widget_, "record deepps start position",
                          "Failed to call record deepps start position service!");
+
+  return;
+}
+
+// navigation state control functions
+void StateMachineController::onNavigationStart()
+{
+  // enable vehicle control
+  onVehicleControlEnable();
+
+  if (vehicle_ctrl_status_ == StateMachineStatus::VehicleControl::RUNNING)
+  { // update navi status after vehicle control enabled
+    navi_status_ = StateMachineStatus::Navigation::RUNNING;
+    updateNaviStatusUI();
+  }
+
+  return;
+}
+
+void StateMachineController::onNavigationStop()
+{
+  // disable vehicle control
+  onVehicleControlDisable();
+
+  if (vehicle_ctrl_status_ == StateMachineStatus::VehicleControl::IDLE)
+  { // update navi status after vehicle control disabled
+    navi_status_ = StateMachineStatus::Navigation::IDLE;
+    updateNaviStatusUI();
+  }
 
   return;
 }

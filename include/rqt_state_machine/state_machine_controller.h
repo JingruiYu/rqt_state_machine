@@ -92,6 +92,10 @@ protected slots:
   virtual void onFreespaceStart();
   virtual void onFreespaceStop();
 
+  // navigation state control functions
+  virtual void onNavigationStart();
+  virtual void onNavigationStop();
+
   // vehicle control state control functions
   virtual void onVehicleControlEnable();
   virtual void onVehicleControlDisable();
