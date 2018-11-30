@@ -677,6 +677,34 @@ void StateMachineController::updateSlamStatusUI()
   }
 }
 
+void StateMachineController::updateFreespaceStatusUI()
+{
+  switch (freespace_status_)
+  {
+
+  case StateMachineStatus::Freespace::RUNNING:
+  {
+    ui_.statusFreespace->setText("Running...");
+    break;
+  }
+
+  case StateMachineStatus::Freespace::IDLE:
+  {
+    ui_.statusFreespace->setText("Idle");
+    break;
+  }
+
+  case StateMachineStatus::Freespace::ERROR:
+  {
+    ui_.statusFreespace->setText("ERROR!");
+    break;
+  }
+
+  default:
+    break;
+  }
+}
+
 void StateMachineController::updateCtrlStatusUI()
 {
   switch (vehicle_ctrl_status_)
