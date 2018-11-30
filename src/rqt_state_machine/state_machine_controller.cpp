@@ -754,6 +754,34 @@ void StateMachineController::updateFreespaceStatusUI()
   }
 }
 
+void StateMachineController::updateNaviStatusUI()
+{
+  switch (navi_status_)
+  {
+
+  case StateMachineStatus::Navigation::RUNNING:
+  {
+    ui_.statusNavi->setText("Running...");
+    break;
+  }
+
+  case StateMachineStatus::Navigation::IDLE:
+  {
+    ui_.statusNavi->setText("Idle");
+    break;
+  }
+
+  case StateMachineStatus::Navigation::ERROR:
+  {
+    ui_.statusNavi->setText("ERROR!");
+    break;
+  }
+
+  default:
+    break;
+  }
+}
+
 void StateMachineController::updateCtrlStatusUI()
 {
   switch (vehicle_ctrl_status_)
