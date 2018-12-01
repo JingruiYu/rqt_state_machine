@@ -71,6 +71,7 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
 
   connect(ui_.startAuto, SIGNAL(clicked()), this, SLOT(startStateMachine()));
   connect(ui_.stopAuto, SIGNAL(clicked()), this, SLOT(stopStateMachine()));
+  connect(ui_.statusReset, SIGNAL(clicked()), this, SLOT(resetStatusUI()));
 
   // Start periodic state checking
   connect(&stateCheckingTimer_, SIGNAL(timeout()), this, SLOT(stateChecking()));
@@ -870,6 +871,19 @@ void StateMachineController::updateParkingStatusUI()
   default:
     break;
   }
+}
+
+void StateMachineController::resetStatusUI()
+{
+  ui_.statusSlam->setText("Idle");
+  ui_.statusNavi->setText("Idle");
+  ui_.statusCtrl->setText("Idle");
+  ui_.statusFreespace->setText("Idle");
+  ui_.statusSsd->setText("Idle");
+  ui_.statusDeepps->setText("Idle");
+  ui_.statusParking->setText("Idle");
+
+  ui_.status->setText("Status: Reset status.");
 }
 
 void StateMachineController::stateChecking()

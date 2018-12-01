@@ -119,6 +119,9 @@ protected slots:
   // state checking for modules
   virtual void stateChecking();
 
+  // reset the ui status of each module
+  virtual void resetStatusUI();
+
   // Comment in to signal that the plugin has a way to configure it
   // bool hasConfiguration() const;
   // void triggerConfiguration();
