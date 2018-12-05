@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>502</width>
+    <width>539</width>
     <height>489</height>
    </rect>
   </property>
@@ -41,8 +41,216 @@
       <item>
        <widget class="QTabWidget" name="tabWidget">
         <property name="currentIndex">
-         <number>4</number>
+         <number>0</number>
         </property>
+        <widget class="QWidget" name="tabLaunch">
+         <attribute name="title">
+          <string>Launch</string>
+         </attribute>
+         <widget class="QWidget" name="horizontalLayoutWidget">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>80</y>
+            <width>501</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QPushButton" name="launchFileSlam">
+             <property name="text">
+              <string>SLAM</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="launchFilePathSlam"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="launchSlam">
+             <property name="text">
+              <string>Launch!</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="horizontalLayoutWidget_2">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>230</y>
+            <width>501</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QPushButton" name="launchFileNavigation">
+             <property name="text">
+              <string>Navigation</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="launchFilePathNavigation"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="launchNavigation">
+             <property name="text">
+              <string>Launch!</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="horizontalLayoutWidget_3">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>30</y>
+            <width>501</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="QPushButton" name="launchFileBringup">
+             <property name="text">
+              <string>Bringup</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="launchFilePathBringup"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="launchBringup">
+             <property name="text">
+              <string>Launch!</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="horizontalLayoutWidget_4">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>130</y>
+            <width>501</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <widget class="QPushButton" name="launchFileFreespace">
+             <property name="text">
+              <string>Freespace</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="launchFilePathFreespace"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="launchFreespace">
+             <property name="text">
+              <string>Launch!</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="horizontalLayoutWidget_5">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>280</y>
+            <width>501</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="QPushButton" name="launchFileDeepps">
+             <property name="text">
+              <string>Deepps</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="launchFilePathDeepps"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="launchDeepps">
+             <property name="text">
+              <string>Launch!</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="horizontalLayoutWidget_6">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>180</y>
+            <width>501</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QPushButton" name="launchFileSsd">
+             <property name="text">
+              <string>SSD</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="launchFilePathSsd"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="launchSsd">
+             <property name="text">
+              <string>Launch!</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="horizontalLayoutWidget_7">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>330</y>
+            <width>501</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <item>
+            <widget class="QPushButton" name="launchFileParking">
+             <property name="text">
+              <string>Parking</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="launchFilePathParking"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="launchParking">
+             <property name="text">
+              <string>Launch!</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
         <widget class="QWidget" name="tabSlam">
          <attribute name="title">
           <string>SLAM</string>

@@ -1,12 +1,14 @@
 #ifndef STATE_MACHINE_CONTROLLER_H
 #define STATE_MACHINE_CONTROLLER_H
 #include <ros/ros.h>
+#include <ros/package.h>
 #include <tf/transform_datatypes.h>
 #include <tf/transform_listener.h>
 #include <rqt_gui_cpp/plugin.h>
 #include <ui_state_machine_controller.h>
 #include <QWidget>
 #include <QTimer>
+#include <QFileDialog>
 
 // service server for each module
 //#include <freespace_ros/FreespaceControl.h>
@@ -17,6 +19,11 @@
 
 namespace rqt_state_machine
 {
+
+static const char* PACKAGE_BRINGUP = "saic_bringup";
+static const char* PACKAGE_SLAM = "orb_slam_2_ros";
+static const char* PACKAGE_FREESPACE = "freespace_ros";
+static const char* PACKAGE_NAVIGATION = "navigation_launch";
 
 class StateMachineStatus
 {
@@ -121,6 +128,18 @@ protected slots:
 
   // reset the ui status of each module
   virtual void resetStatusUI();
+
+  // open and get the paths to launch files of modules
+  virtual void getLaunchFilePathBringup();
+  virtual void getLaunchFilePathSlam();
+  virtual void getLaunchFilePathFreespace();
+  virtual void getLaunchFilePathNavigation();
+
+  // launch modules
+  virtual void launchBringup();
+  virtual void launchSlam();
+  virtual void launchFreespace();
+  virtual void launchNavigation();
 
   // Comment in to signal that the plugin has a way to configure it
   // bool hasConfiguration() const;

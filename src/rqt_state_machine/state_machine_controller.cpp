@@ -23,7 +23,7 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   widget_ = new QWidget();
   // extend the widget with all attributes and children from UI file
   ui_.setupUi(widget_);
-  ui_.tabWidget->setCurrentWidget(ui_.tabSlam);
+  ui_.tabWidget->setCurrentWidget(ui_.tabLaunch);
   // add widget to the user interface
   context.addWidget(widget_);
 
@@ -72,6 +72,16 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   connect(ui_.startAuto, SIGNAL(clicked()), this, SLOT(startStateMachine()));
   connect(ui_.stopAuto, SIGNAL(clicked()), this, SLOT(stopStateMachine()));
   connect(ui_.statusReset, SIGNAL(clicked()), this, SLOT(resetStatusUI()));
+
+  connect(ui_.launchFileBringup, SIGNAL(clicked()), this, SLOT(getLaunchFilePathBringup()));
+  connect(ui_.launchFileSlam, SIGNAL(clicked()), this, SLOT(getLaunchFilePathSlam()));
+  connect(ui_.launchFileFreespace, SIGNAL(clicked()), this, SLOT(getLaunchFilePathFreespace()));
+  connect(ui_.launchFileNavigation, SIGNAL(clicked()), this, SLOT(getLaunchFilePathNavigation()));
+
+  connect(ui_.launchBringup, SIGNAL(clicked()), this, SLOT(launchBringup()));
+  connect(ui_.launchSlam, SIGNAL(clicked()), this, SLOT(launchSlam()));
+  connect(ui_.launchFreespace, SIGNAL(clicked()), this, SLOT(launchFreespace()));
+  connect(ui_.launchNavigation, SIGNAL(clicked()), this, SLOT(launchNavigation()));
 
   // Start periodic state checking
   connect(&stateCheckingTimer_, SIGNAL(timeout()), this, SLOT(stateChecking()));
@@ -917,6 +927,110 @@ void StateMachineController::stateChecking()
     }
   }
 
+  return;
+}
+
+void StateMachineController::getLaunchFilePathBringup()
+{
+  std::string package_path = ros::package::getPath(PACKAGE_BRINGUP);
+  package_path += "/launch";
+
+  QString file = QFileDialog::getOpenFileName(widget_,
+                                                  tr("Open Bringup launch file"),
+                                                  QString::fromStdString(package_path),
+                                                  tr("ROS Launch Files (*.launch)"));
+  ui_.launchFilePathBringup->setText(file);
+  return;
+}
+
+void StateMachineController::getLaunchFilePathSlam()
+{
+  std::string package_path = ros::package::getPath(PACKAGE_SLAM);
+  package_path += "/launch";
+
+  QString file = QFileDialog::getOpenFileName(widget_,
+                                              tr("Open Slam launch file"),
+                                              QString::fromStdString(package_path),
+                                              tr("ROS Launch Files (*.launch)"));
+  ui_.launchFilePathSlam->setText(file);
+  return;
+}
+
+void StateMachineController::getLaunchFilePathFreespace()
+{
+  std::string package_path = ros::package::getPath(PACKAGE_FREESPACE);
+  package_path += "/launch";
+
+  QString file = QFileDialog::getOpenFileName(widget_,
+                                              tr("Open Freespace launch file"),
+                                              QString::fromStdString(package_path),
+                                              tr("ROS Launch Files (*.launch)"));
+  ui_.launchFilePathFreespace->setText(file);
+  return;
+}
+
+void StateMachineController::getLaunchFilePathNavigation()
+{
+  std::string package_path = ros::package::getPath(PACKAGE_NAVIGATION);
+  package_path += "/launch";
+
+  QString file = QFileDialog::getOpenFileName(widget_,
+                                              tr("Open Navigation launch file"),
+                                              QString::fromStdString(package_path),
+                                              tr("ROS Launch Files (*.launch)"));
+  ui_.launchFilePathNavigation->setText(file);
+  return;
+}
+
+void StateMachineController::launchBringup()
+{
+  QString path = ui_.launchFilePathBringup->text();
+  if (!path.isEmpty())
+  {
+    QString cmd = "gnome-terminal -x sh -c 'roslaunch ";
+    cmd+= path + "'";
+    system(cmd.toLocal8Bit().data());
+    ui_.status->setText("Status: Bringup launched!");
+  }
+  return;
+}
+
+void StateMachineController::launchSlam()
+{
+  QString path = ui_.launchFilePathSlam->text();
+  if (!path.isEmpty())
+  {
+    QString cmd = "gnome-terminal -x sh -c 'roslaunch ";
+    cmd+= path + "'";
+    system(cmd.toLocal8Bit().data());
+    ui_.status->setText("Status: Slam launched!");
+  }
+  return;
+}
+
+void StateMachineController::launchFreespace()
+{
+  QString path = ui_.launchFilePathFreespace->text();
+  if (!path.isEmpty())
+  {
+    QString cmd = "gnome-terminal -x sh -c 'roslaunch ";
+    cmd+= path + "'";
+    system(cmd.toLocal8Bit().data());
+    ui_.status->setText("Status: Freespace launched!");
+  }
+  return;
+}
+
+void StateMachineController::launchNavigation()
+{
+  QString path = ui_.launchFilePathNavigation->text();
+  if (!path.isEmpty())
+  {
+    QString cmd = "gnome-terminal -x sh -c 'roslaunch ";
+    cmd+= path + "'";
+    system(cmd.toLocal8Bit().data());
+    ui_.status->setText("Status: Navigation launched!");
+  }
   return;
 }
 
