@@ -125,6 +125,11 @@ protected slots:
   virtual void onVehicleControlEStop();
 
   virtual void changeLcmMonitorState();
+  virtual void changeLcmAckermannCmdState();
+  virtual void changeLcmAckermannOdomState();
+  virtual void changeLcmSensorSonarState();
+  virtual void changeLcmSensorImuState();
+  virtual void changeLcmSensorEgomotionState();
   virtual void resetLcmOutput();
 
   virtual void updateAckermannCmdLcm(const lcm::ReceiveBuffer* rbuf,
@@ -235,6 +240,12 @@ private:
   lcm::Subscription* sensor_imu_lcm_sub_;
   lcm::Subscription* sensor_egomotion_lcm_sub_;
   bool lcmMonitorEnabled_;
+  bool lcmAckermannCmdEnabled_;
+  bool lcmAckermannOdomEnabled_;
+  bool lcmSensorSonarEnabled_;
+  bool lcmSensorImuEnabled_;
+  bool lcmSensorEgomotionEnabled_;
+
 };
 } // namespace
 

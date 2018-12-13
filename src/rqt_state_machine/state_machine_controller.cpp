@@ -91,11 +91,21 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
 
   connect(ui_.enableLcmMonitor, SIGNAL(stateChanged(int)), this,
           SLOT(changeLcmMonitorState()));
+  connect(ui_.enableLcmAckermannCmd, SIGNAL(stateChanged(int)), this,
+          SLOT(changeLcmAckermannCmdState()));
+  connect(ui_.enableLcmAckermannOdom, SIGNAL(stateChanged(int)), this,
+          SLOT(changeLcmAckermannOdomState()));
+  connect(ui_.enableLcmSensorSonar, SIGNAL(stateChanged(int)), this,
+          SLOT(changeLcmSensorSonarState()));
+  connect(ui_.enableLcmSensorImu, SIGNAL(stateChanged(int)), this,
+          SLOT(changeLcmSensorImuState()));
+  connect(ui_.enableLcmSensorEgomotion, SIGNAL(stateChanged(int)), this,
+          SLOT(changeLcmSensorEgomotionState()));
   connect(ui_.resetLcmOutput, SIGNAL(clicked()), this, SLOT(resetLcmOutput()));
 
   // start periodic state checking
   connect(&stateCheckingTimer_, SIGNAL(timeout()), this, SLOT(stateChecking()));
-  stateCheckingTimer_.setInterval(50);
+  stateCheckingTimer_.setInterval(20);
   stateCheckingTimer_.start();
 
   // subscribe to ros topics
@@ -663,41 +673,93 @@ void StateMachineController::changeLcmMonitorState()
 {
   if (ui_.enableLcmMonitor->isChecked())
   {
+    lcmMonitorEnabled_ = true;
     ui_.status->setText("Status: Enable LCM monitoring.");
-
-    ackermann_cmd_lcm_sub_ =
-        lcm_->subscribe(LCM_CHANNEL_ACKERMANN_CMD,
-                        &StateMachineController::updateAckermannCmdLcm, this);
-
-    ackermann_odom_lcm_sub_ =
-        lcm_->subscribe(LCM_CHANNEL_ACKERMANN_ODOM,
-                        &StateMachineController::updateAckermannOdomLcm, this);
-
-    sensor_sonar_lcm_sub_ =
-        lcm_->subscribe(LCM_CHANNEL_SENSOR_SONAR,
-                        &StateMachineController::updateSensorSonarLcm, this);
-
-    sensor_imu_lcm_sub_ =
-        lcm_->subscribe(LCM_CHANNEL_SENSOR_IMU,
-                        &StateMachineController::updateSensorImuLcm, this);
-
-    sensor_egomotion_lcm_sub_ = lcm_->subscribe(
-        LCM_CHANNEL_SENSOR_EGOMOTION,
-        &StateMachineController::updateSensorEgomotionLcm, this);
-
-    lcmMonitorEnabled = true;
   }
   else
   {
+    lcmMonitorEnabled_ = false;
     ui_.status->setText("Status: Disable LCM monitoring.");
+  }
+}
 
+void StateMachineController::changeLcmAckermannCmdState()
+{
+  if (ui_.enableLcmAckermannCmd->isChecked())
+  {
+    ackermann_cmd_lcm_sub_ =
+        lcm_->subscribe(LCM_CHANNEL_ACKERMANN_CMD,
+                        &StateMachineController::updateAckermannCmdLcm, this);
+    ui_.status->setText("Status: Enable LCM Ackermann Cmd.");
+  }
+  else
+  {
     lcm_->unsubscribe(ackermann_cmd_lcm_sub_);
-    lcm_->unsubscribe(ackermann_odom_lcm_sub_);
-    lcm_->unsubscribe(sensor_sonar_lcm_sub_);
-    lcm_->unsubscribe(sensor_imu_lcm_sub_);
-    lcm_->unsubscribe(sensor_egomotion_lcm_sub_);
+    ui_.status->setText("Status: Disable LCM Ackermann Cmd.");
+  }
+}
 
-    lcmMonitorEnabled = false;
+void StateMachineController::changeLcmAckermannOdomState()
+{
+  if (ui_.enableLcmAckermannOdom->isChecked())
+  {
+    ackermann_odom_lcm_sub_ =
+        lcm_->subscribe(LCM_CHANNEL_ACKERMANN_ODOM,
+                        &StateMachineController::updateAckermannOdomLcm, this);
+    ui_.status->setText("Status: Enable LCM Ackermann Odom.");
+  }
+  else
+  {
+    lcm_->unsubscribe(ackermann_odom_lcm_sub_);
+    ui_.status->setText("Status: Disable LCM Ackermann Odom.");
+  }
+}
+
+void StateMachineController::changeLcmSensorSonarState()
+{
+  if (ui_.enableLcmSensorSonar->isChecked())
+  {
+    sensor_sonar_lcm_sub_ =
+        lcm_->subscribe(LCM_CHANNEL_SENSOR_SONAR,
+                        &StateMachineController::updateSensorSonarLcm, this);
+    ui_.status->setText("Status: Enable LCM Sensor Sonar.");
+  }
+  else
+  {
+    lcm_->unsubscribe(sensor_sonar_lcm_sub_);
+    ui_.status->setText("Status: Disable LCM Sensor Sonar.");
+  }
+}
+
+void StateMachineController::changeLcmSensorImuState()
+{
+  if (ui_.enableLcmSensorImu->isChecked())
+  {
+    sensor_imu_lcm_sub_ =
+        lcm_->subscribe(LCM_CHANNEL_SENSOR_IMU,
+                        &StateMachineController::updateSensorImuLcm, this);
+    ui_.status->setText("Status: Enable LCM Sensor Imu.");
+  }
+  else
+  {
+    lcm_->unsubscribe(sensor_imu_lcm_sub_);
+    ui_.status->setText("Status: Disable LCM Sensor Imu.");
+  }
+}
+
+void StateMachineController::changeLcmSensorEgomotionState()
+{
+  if (ui_.enableLcmSensorEgomotion->isChecked())
+  {
+    sensor_egomotion_lcm_sub_ = lcm_->subscribe(
+        LCM_CHANNEL_SENSOR_EGOMOTION,
+        &StateMachineController::updateSensorEgomotionLcm, this);
+    ui_.status->setText("Status: Enable LCM Sensor Egomotion.");
+  }
+  else
+  {
+    lcm_->unsubscribe(sensor_egomotion_lcm_sub_);
+    ui_.status->setText("Status: Disable LCM Sensor Egomotion.");
   }
 }
 
