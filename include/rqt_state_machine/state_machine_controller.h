@@ -11,7 +11,6 @@
 #include <QFileDialog>
 
 // service server for each module
-//#include <freespace_ros/FreespaceControl.h>
 #include <state_machine_msgs/ActionControl.h>
 #include <parkinglot_msgs/ParkingLotDetectionStatusStamped.h>
 #include <parkinglot_msgs/ParkingLotDetectionCtrlStamped.h>
@@ -30,46 +29,46 @@ class StateMachineStatus
 public:
   enum class Slam
   {
-    RUNNING,      //!< Module is started and running.
-    IDLE,         //!< Module is waiting or stopped.
-    ERROR         //!< Some error occured.
+    RUNNING, //!< Module is started and running.
+    IDLE,    //!< Module is waiting or stopped.
+    ERROR    //!< Some error occured.
   };
   enum class Navigation
   {
-    RUNNING,      //!< Module is started and running.
-    IDLE,         //!< Module is waiting or stopped.
-    ERROR         //!< Some error occured.
+    RUNNING, //!< Module is started and running.
+    IDLE,    //!< Module is waiting or stopped.
+    ERROR    //!< Some error occured.
   };
   enum class VehicleControl
   {
-    RUNNING,      //!< Module is started and running.
-    IDLE,         //!< Module is waiting or stopped.
-    ERROR         //!< Some error occured.
+    RUNNING, //!< Module is started and running.
+    IDLE,    //!< Module is waiting or stopped.
+    ERROR    //!< Some error occured.
   };
   enum class Freespace
   {
-    RUNNING,      //!< Module is started and running.
-    IDLE,         //!< Module is waiting or stopped.
-    ERROR         //!< Some error occured.
+    RUNNING, //!< Module is started and running.
+    IDLE,    //!< Module is waiting or stopped.
+    ERROR    //!< Some error occured.
   };
   enum class Ssd
   {
-    RUNNING,      //!< Module is started and running.
-    IDLE,         //!< Module is waiting or stopped.
-    ERROR         //!< Some error occured.
+    RUNNING, //!< Module is started and running.
+    IDLE,    //!< Module is waiting or stopped.
+    ERROR    //!< Some error occured.
   };
   enum class Deepps
   {
-    RUNNING,      //!< Module is started and running.
-    IDLE,         //!< Module is waiting or stopped.
-    ERROR         //!< Some error occured.
+    RUNNING, //!< Module is started and running.
+    IDLE,    //!< Module is waiting or stopped.
+    ERROR    //!< Some error occured.
   };
   enum class ParkingPlanning
   {
-    RUNNING,      //!< Module is started and running.
-    IDLE,         //!< Module is waiting or stopped.
-    ERROR,        //!< Some error occured.
-    TRACKING      //!< Tracking current parking lot.
+    RUNNING, //!< Module is started and running.
+    IDLE,    //!< Module is waiting or stopped.
+    ERROR,   //!< Some error occured.
+    TRACKING //!< Tracking current parking lot.
   };
 };
 
@@ -147,7 +146,8 @@ protected slots:
 private:
   // state machine
   // -- update states
-  bool updateStateMachineStates(StateFeedback::Request &req, StateFeedback::Response &res);
+  bool updateStateMachineStates(StateFeedback::Request& req,
+                                StateFeedback::Response& res);
 
   void parkinglotStatusCB(
       const parkinglot_msgs::ParkingLotDetectionStatusStamped::ConstPtr msg);

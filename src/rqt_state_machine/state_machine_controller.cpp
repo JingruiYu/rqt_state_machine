@@ -73,15 +73,21 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   connect(ui_.stopAuto, SIGNAL(clicked()), this, SLOT(stopStateMachine()));
   connect(ui_.statusReset, SIGNAL(clicked()), this, SLOT(resetStatusUI()));
 
-  connect(ui_.launchFileBringup, SIGNAL(clicked()), this, SLOT(getLaunchFilePathBringup()));
-  connect(ui_.launchFileSlam, SIGNAL(clicked()), this, SLOT(getLaunchFilePathSlam()));
-  connect(ui_.launchFileFreespace, SIGNAL(clicked()), this, SLOT(getLaunchFilePathFreespace()));
-  connect(ui_.launchFileNavigation, SIGNAL(clicked()), this, SLOT(getLaunchFilePathNavigation()));
+  connect(ui_.launchFileBringup, SIGNAL(clicked()), this,
+          SLOT(getLaunchFilePathBringup()));
+  connect(ui_.launchFileSlam, SIGNAL(clicked()), this,
+          SLOT(getLaunchFilePathSlam()));
+  connect(ui_.launchFileFreespace, SIGNAL(clicked()), this,
+          SLOT(getLaunchFilePathFreespace()));
+  connect(ui_.launchFileNavigation, SIGNAL(clicked()), this,
+          SLOT(getLaunchFilePathNavigation()));
 
   connect(ui_.launchBringup, SIGNAL(clicked()), this, SLOT(launchBringup()));
   connect(ui_.launchSlam, SIGNAL(clicked()), this, SLOT(launchSlam()));
-  connect(ui_.launchFreespace, SIGNAL(clicked()), this, SLOT(launchFreespace()));
-  connect(ui_.launchNavigation, SIGNAL(clicked()), this, SLOT(launchNavigation()));
+  connect(ui_.launchFreespace, SIGNAL(clicked()), this,
+          SLOT(launchFreespace()));
+  connect(ui_.launchNavigation, SIGNAL(clicked()), this,
+          SLOT(launchNavigation()));
 
   // Start periodic state checking
   connect(&stateCheckingTimer_, SIGNAL(timeout()), this, SLOT(stateChecking()));
@@ -173,7 +179,8 @@ void StateMachineController::startStateMachine()
     deepps_start_pos_.setY(y);
   }
   else
-    QMessageBox::warning(widget_, "warning", "Failed to get deepps start position!");
+    QMessageBox::warning(widget_, "warning",
+                         "Failed to get deepps start position!");
 
   return;
 }
@@ -474,8 +481,9 @@ void StateMachineController::onSlamRecordDeeppsStartPos()
       ui_.status->setText("Status: Record deepps start position!");
   }
   else
-    QMessageBox::warning(widget_, "record deepps start position",
-                         "Failed to call record deepps start position service!");
+    QMessageBox::warning(
+        widget_, "record deepps start position",
+        "Failed to call record deepps start position service!");
 
   return;
 }
@@ -901,30 +909,32 @@ void StateMachineController::stateChecking()
 {
   if (navi_status_ == StateMachineStatus::Navigation::RUNNING &&
       deepps_status_ == StateMachineStatus::Deepps::IDLE)
-  {// check if deepps start position has been reached
+  { // check if deepps start position has been reached
 
     // get transform of footprint to map
     tf::TransformListener tf_listener;
     tf::StampedTransform tf_footprint2map_stamp;
-    try{
-      tf_listener.lookupTransform("map", "base_footprint", ros::Time(0), tf_footprint2map_stamp);
-    }
-    catch (tf::TransformException ex){
-      ROS_ERROR_THROTTLE(1, "%s",ex.what());
-      return;
-    }
-
-    // get current pose
-    double x = tf_footprint2map_stamp.getOrigin().getX();
-    double y = tf_footprint2map_stamp.getOrigin().getY();
-
-    // tolerance
-    double tol = 1.0;
-
-    if (std::hypot(x, y) < tol)
+    try
     {
-      // start deepps
-      onDeeppsStart();
+      tf_listener.lookupTransform("map", "base_footprint", ros::Time(0),
+                                  tf_footprint2map_stamp);
+
+      // get current pose
+      double x = tf_footprint2map_stamp.getOrigin().getX();
+      double y = tf_footprint2map_stamp.getOrigin().getY();
+
+      // tolerance
+      double tol = 1.0;
+
+      if (std::hypot(x, y) < tol)
+      {
+        // start deepps
+        onDeeppsStart();
+      }
+    }
+    catch (tf::TransformException ex)
+    {
+      ui_.status->setText(ex.what());
     }
   }
 
@@ -936,10 +946,9 @@ void StateMachineController::getLaunchFilePathBringup()
   std::string package_path = ros::package::getPath(PACKAGE_BRINGUP);
   package_path += "/launch";
 
-  QString file = QFileDialog::getOpenFileName(widget_,
-                                                  tr("Open Bringup launch file"),
-                                                  QString::fromStdString(package_path),
-                                                  tr("ROS Launch Files (*.launch)"));
+  QString file = QFileDialog::getOpenFileName(
+      widget_, tr("Open Bringup launch file"),
+      QString::fromStdString(package_path), tr("ROS Launch Files (*.launch)"));
   ui_.launchFilePathBringup->setText(file);
   return;
 }
@@ -949,10 +958,9 @@ void StateMachineController::getLaunchFilePathSlam()
   std::string package_path = ros::package::getPath(PACKAGE_SLAM);
   package_path += "/launch";
 
-  QString file = QFileDialog::getOpenFileName(widget_,
-                                              tr("Open Slam launch file"),
-                                              QString::fromStdString(package_path),
-                                              tr("ROS Launch Files (*.launch)"));
+  QString file = QFileDialog::getOpenFileName(
+      widget_, tr("Open Slam launch file"),
+      QString::fromStdString(package_path), tr("ROS Launch Files (*.launch)"));
   ui_.launchFilePathSlam->setText(file);
   return;
 }
@@ -962,10 +970,9 @@ void StateMachineController::getLaunchFilePathFreespace()
   std::string package_path = ros::package::getPath(PACKAGE_FREESPACE);
   package_path += "/launch";
 
-  QString file = QFileDialog::getOpenFileName(widget_,
-                                              tr("Open Freespace launch file"),
-                                              QString::fromStdString(package_path),
-                                              tr("ROS Launch Files (*.launch)"));
+  QString file = QFileDialog::getOpenFileName(
+      widget_, tr("Open Freespace launch file"),
+      QString::fromStdString(package_path), tr("ROS Launch Files (*.launch)"));
   ui_.launchFilePathFreespace->setText(file);
   return;
 }
@@ -975,10 +982,9 @@ void StateMachineController::getLaunchFilePathNavigation()
   std::string package_path = ros::package::getPath(PACKAGE_NAVIGATION);
   package_path += "/launch";
 
-  QString file = QFileDialog::getOpenFileName(widget_,
-                                              tr("Open Navigation launch file"),
-                                              QString::fromStdString(package_path),
-                                              tr("ROS Launch Files (*.launch)"));
+  QString file = QFileDialog::getOpenFileName(
+      widget_, tr("Open Navigation launch file"),
+      QString::fromStdString(package_path), tr("ROS Launch Files (*.launch)"));
   ui_.launchFilePathNavigation->setText(file);
   return;
 }
@@ -989,7 +995,7 @@ void StateMachineController::launchBringup()
   if (!path.isEmpty())
   {
     QString cmd = "gnome-terminal -x sh -c 'roslaunch ";
-    cmd+= path + "'";
+    cmd += path + "'";
     system(cmd.toLocal8Bit().data());
     ui_.status->setText("Status: Bringup launched!");
   }
@@ -1002,7 +1008,7 @@ void StateMachineController::launchSlam()
   if (!path.isEmpty())
   {
     QString cmd = "gnome-terminal -x sh -c 'roslaunch ";
-    cmd+= path + "'";
+    cmd += path + "'";
     system(cmd.toLocal8Bit().data());
     ui_.status->setText("Status: Slam launched!");
   }
@@ -1015,7 +1021,7 @@ void StateMachineController::launchFreespace()
   if (!path.isEmpty())
   {
     QString cmd = "gnome-terminal -x sh -c 'roslaunch ";
-    cmd+= path + "'";
+    cmd += path + "'";
     system(cmd.toLocal8Bit().data());
     ui_.status->setText("Status: Freespace launched!");
   }
@@ -1028,7 +1034,7 @@ void StateMachineController::launchNavigation()
   if (!path.isEmpty())
   {
     QString cmd = "gnome-terminal -x sh -c 'roslaunch ";
-    cmd+= path + "'";
+    cmd += path + "'";
     system(cmd.toLocal8Bit().data());
     ui_.status->setText("Status: Navigation launched!");
   }
