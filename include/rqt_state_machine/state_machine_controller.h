@@ -234,7 +234,7 @@ private:
   lcm::Subscription* sensor_sonar_lcm_sub_;
   lcm::Subscription* sensor_imu_lcm_sub_;
   lcm::Subscription* sensor_egomotion_lcm_sub_;
-  bool lcmMonitorEnabled;
+  bool lcmMonitorEnabled_;
 };
 } // namespace
 

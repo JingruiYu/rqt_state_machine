@@ -180,7 +180,7 @@ void StateMachineController::initLcm()
     QMessageBox::warning(widget_, "LCM", "LCM is not ok!");
   }
 
-  lcmMonitorEnabled = false;
+  lcmMonitorEnabled_ = false;
 }
 
 // start running state machine
@@ -718,8 +718,8 @@ void StateMachineController::updateAckermannCmdLcm(
 {
   QString data;
   data += "enable: " + QString::number(msg->ros_planner_enabled, 'f', 0);
-  data += " speed: " + QString::number(msg->speed, 'f', 1);
-  data += " angle: " + QString::number(msg->steering_angle, 'f', 1);
+  data += " speed: " + QString::number(msg->speed, 'f', 2);
+  data += " angle: " + QString::number(msg->steering_angle, 'f', 2);
 
   ui_.dataAckermannCmd->setText(data);
 }
@@ -729,12 +729,12 @@ void StateMachineController::updateAckermannOdomLcm(
     const vel_conversion::ackermann_odom* msg)
 {
   QString data;
-  data += "speed: " + QString::number(msg->speed, 'f', 1);
-  data += " left speed: " + QString::number(msg->left_speed, 'f', 1);
-  data += " right speed: " + QString::number(msg->right_speed, 'f', 1);
-  data += " angle: " + QString::number(msg->steering_angle, 'f', 1);
+  data += "speed: " + QString::number(msg->speed, 'f', 2);
+  data += " left speed: " + QString::number(msg->left_speed, 'f', 2);
+  data += " right speed: " + QString::number(msg->right_speed, 'f', 2);
+  data += " angle: " + QString::number(msg->steering_angle, 'f', 2);
 
-  ui_.dataAckermannCmd->setText(data);
+  ui_.dataAckermannOdom->setText(data);
 }
 
 void StateMachineController::updateSensorSonarLcm(
@@ -743,9 +743,9 @@ void StateMachineController::updateSensorSonarLcm(
 {
   QString data;
   for (int i = 0; i < 12; i++)
-    data += QString::number(msg->measurement[i], 'f', 1) + ' ';
+    data += QString::number(msg->measurement[i], 'f', 2) + ' ';
 
-  ui_.dataAckermannCmd->setText(data);
+  ui_.dataSensorSonar->setText(data);
 }
 
 void StateMachineController::updateSensorImuLcm(const lcm::ReceiveBuffer* rbuf,
@@ -755,13 +755,13 @@ void StateMachineController::updateSensorImuLcm(const lcm::ReceiveBuffer* rbuf,
   QString data;
   data += "acc: ";
   for (int i = 0; i < 3; i++)
-    data += QString::number(msg->acc[i], 'f', 1) + ' ';
+    data += QString::number(msg->acc[i], 'f', 2) + ' ';
 
   data += " gyro: ";
   for (int i = 0; i < 3; i++)
-    data += QString::number(msg->gyro[i], 'f', 1) + ' ';
+    data += QString::number(msg->gyro[i], 'f', 2) + ' ';
 
-  ui_.dataAckermannCmd->setText(data);
+  ui_.dataSensorImu->setText(data);
 }
 
 void StateMachineController::updateSensorEgomotionLcm(
@@ -769,14 +769,14 @@ void StateMachineController::updateSensorEgomotionLcm(
     const sensor::egomotion_fusion* msg)
 {
   QString data;
-  data += QString::number(msg->longitude, 'f', 1) + ' ';
-  data += QString::number(msg->latitude, 'f', 1) + ' ';
+  data += QString::number(msg->longitude, 'f', 2) + ' ';
+  data += QString::number(msg->latitude, 'f', 2) + ' ';
   data += "rpy: ";
-  data += QString::number(msg->roll, 'f', 1) + ' ';
-  data += QString::number(msg->pitch, 'f', 1) + ' ';
-  data += QString::number(msg->yaw, 'f', 1);
+  data += QString::number(msg->roll, 'f', 2) + ' ';
+  data += QString::number(msg->pitch, 'f', 2) + ' ';
+  data += QString::number(msg->yaw, 'f', 2);
 
-  ui_.dataAckermannCmd->setText(data);
+  ui_.dataSensorEgomotion->setText(data);
 }
 
 void StateMachineController::onDeeppsStart()
@@ -1080,7 +1080,7 @@ void StateMachineController::stateChecking()
   }
 
   // handle lcm message
-  if (lcmMonitorEnabled)
+  if (lcmMonitorEnabled_)
     lcm_->handleTimeout(10);
 
   return;
