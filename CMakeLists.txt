@@ -34,6 +34,9 @@ if(NOT EXISTS "${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_INCLUDE_DESTINATION}")
   file(MAKE_DIRECTORY "${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_INCLUDE_DESTINATION}")
 endif()
 
+set(LCM_INCLUDEDIR include)
+set(LCM_LINK_LIBRARAY lib)
+
 add_service_files(
   FILES
   StateFeedback.srv
@@ -60,11 +63,14 @@ qt5_wrap_ui(rqt_state_machine_UIS_H ${rqt_state_machine_UIS})
 
 set(CMAKE_CURRENT_BINARY_DIR "${_cmake_current_binary_dir}")
 
-include_directories(${rqt_state_machine_INCLUDE_DIRECTORIES} ${catkin_INCLUDE_DIRS})
+include_directories(${rqt_state_machine_INCLUDE_DIRECTORIES} ${catkin_INCLUDE_DIRS} ${LCM_INCLUDEDIR})
+
+link_directories(${LCM_LINK_LIBRARAY})
 
 add_library(${PROJECT_NAME} ${rqt_state_machine_SRCS} ${rqt_state_machine_MOCS} ${rqt_state_machine_UIS_H})
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets)
+target_link_libraries(${PROJECT_NAME} lcm)
 
 find_package(class_loader)
 class_loader_hide_library_symbols(${PROJECT_NAME})

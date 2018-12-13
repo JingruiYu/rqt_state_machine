@@ -16,6 +16,14 @@
 #include <parkinglot_msgs/ParkingLotDetectionCtrlStamped.h>
 #include <rqt_state_machine/StateFeedback.h>
 
+// lcm
+#include <lcm/lcm-cpp.hpp>
+#include <vel_conversion/ackermann_cmd.hpp>
+#include <vel_conversion/ackermann_odom.hpp>
+#include <sensor/sonar.hpp>
+#include <sensor/imu.hpp>
+#include <sensor/egomotion_fusion.hpp>
+
 namespace rqt_state_machine
 {
 
@@ -23,6 +31,12 @@ static const char* PACKAGE_BRINGUP = "saic_bringup";
 static const char* PACKAGE_SLAM = "orb_slam_2_ros";
 static const char* PACKAGE_FREESPACE = "freespace_ros";
 static const char* PACKAGE_NAVIGATION = "navigation_launch";
+
+static const char* LCM_CHANNEL_ACKERMANN_CMD = "ACKERMANN_CMD";
+static const char* LCM_CHANNEL_ACKERMANN_ODOM = "ACKERMANN_ODOM";
+static const char* LCM_CHANNEL_SENSOR_SONAR = "SENSOR_SONAR";
+static const char* LCM_CHANNEL_SENSOR_IMU = "SENSOR_IMU";
+static const char* LCM_CHANNEL_SENSOR_EGOMOTION = "SENSOR_EGOMOTION";
 
 class StateMachineStatus
 {
@@ -110,6 +124,26 @@ protected slots:
   virtual void onVehicleControlDisable();
   virtual void onVehicleControlEStop();
 
+  virtual void changeLcmMonitorState();
+  virtual void resetLcmOutput();
+
+  virtual void updateAckermannCmdLcm(const lcm::ReceiveBuffer* rbuf,
+                                     const std::string& chan,
+                                     const vel_conversion::ackermann_cmd* msg);
+  virtual void
+  updateAckermannOdomLcm(const lcm::ReceiveBuffer* rbuf,
+                         const std::string& chan,
+                         const vel_conversion::ackermann_odom* msg);
+  virtual void updateSensorSonarLcm(const lcm::ReceiveBuffer* rbuf,
+                                    const std::string& chan,
+                                    const sensor::sonar* msg);
+  virtual void updateSensorImuLcm(const lcm::ReceiveBuffer* rbuf,
+                                  const std::string& chan,
+                                  const sensor::imu* msg);
+  virtual void updateSensorEgomotionLcm(const lcm::ReceiveBuffer* rbuf,
+                                        const std::string& chan,
+                                        const sensor::egomotion_fusion* msg);
+
   // deepps state control function
   virtual void onDeeppsStart();
   virtual void onDeeppsStop();
@@ -163,6 +197,9 @@ private:
   void updateDeeppsStatusUI();
   void updateParkingStatusUI();
 
+  // initialize lcm
+  void initLcm();
+
   Ui::StateMachineControllerWidget ui_;
   QWidget* widget_;
 
@@ -189,6 +226,15 @@ private:
 
   // Timer to check states of some modules
   QTimer stateCheckingTimer_;
+
+  // lcm
+  std::shared_ptr<lcm::LCM> lcm_;
+  lcm::Subscription* ackermann_cmd_lcm_sub_;
+  lcm::Subscription* ackermann_odom_lcm_sub_;
+  lcm::Subscription* sensor_sonar_lcm_sub_;
+  lcm::Subscription* sensor_imu_lcm_sub_;
+  lcm::Subscription* sensor_egomotion_lcm_sub_;
+  bool lcmMonitorEnabled;
 };
 } // namespace
 

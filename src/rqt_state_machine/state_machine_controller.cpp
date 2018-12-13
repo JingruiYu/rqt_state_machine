@@ -89,7 +89,11 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   connect(ui_.launchNavigation, SIGNAL(clicked()), this,
           SLOT(launchNavigation()));
 
-  // Start periodic state checking
+  connect(ui_.enableLcmMonitor, SIGNAL(stateChanged(int)), this,
+          SLOT(changeLcmMonitorState()));
+  connect(ui_.resetLcmOutput, SIGNAL(clicked()), this, SLOT(resetLcmOutput()));
+
+  // start periodic state checking
   connect(&stateCheckingTimer_, SIGNAL(timeout()), this, SLOT(stateChecking()));
   stateCheckingTimer_.setInterval(50);
   stateCheckingTimer_.start();
@@ -109,6 +113,9 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
 
   // initialize status of different modules
   initStateMachineStatus();
+
+  // initialize lcm
+  initLcm();
 }
 
 void StateMachineController::shutdownPlugin()
@@ -116,7 +123,8 @@ void StateMachineController::shutdownPlugin()
   // TODO unregister all publishers here
 
   stateCheckingTimer_.stop();
-  disconnect(&stateCheckingTimer_, SIGNAL(timeout()), this, SLOT(stateChecking()));
+  disconnect(&stateCheckingTimer_, SIGNAL(timeout()), this,
+             SLOT(stateChecking()));
 }
 
 void StateMachineController::saveSettings(
@@ -160,6 +168,19 @@ void StateMachineController::initStateMachineStatus()
   // -- parking
   parking_status_ = StateMachineStatus::ParkingPlanning::IDLE;
   ui_.statusParking->setText("Idle");
+}
+
+// initialize lcm
+void StateMachineController::initLcm()
+{
+  lcm_ = std::shared_ptr<lcm::LCM>(new lcm::LCM());
+
+  if (!lcm_->good())
+  {
+    QMessageBox::warning(widget_, "LCM", "LCM is not ok!");
+  }
+
+  lcmMonitorEnabled = false;
 }
 
 // start running state machine
@@ -638,6 +659,126 @@ void StateMachineController::onVehicleControlEStop()
   return;
 }
 
+void StateMachineController::changeLcmMonitorState()
+{
+  if (ui_.enableLcmMonitor->isChecked())
+  {
+    ui_.status->setText("Status: Enable LCM monitoring.");
+
+    ackermann_cmd_lcm_sub_ =
+        lcm_->subscribe(LCM_CHANNEL_ACKERMANN_CMD,
+                        &StateMachineController::updateAckermannCmdLcm, this);
+
+    ackermann_odom_lcm_sub_ =
+        lcm_->subscribe(LCM_CHANNEL_ACKERMANN_ODOM,
+                        &StateMachineController::updateAckermannOdomLcm, this);
+
+    sensor_sonar_lcm_sub_ =
+        lcm_->subscribe(LCM_CHANNEL_SENSOR_SONAR,
+                        &StateMachineController::updateSensorSonarLcm, this);
+
+    sensor_imu_lcm_sub_ =
+        lcm_->subscribe(LCM_CHANNEL_SENSOR_IMU,
+                        &StateMachineController::updateSensorImuLcm, this);
+
+    sensor_egomotion_lcm_sub_ = lcm_->subscribe(
+        LCM_CHANNEL_SENSOR_EGOMOTION,
+        &StateMachineController::updateSensorEgomotionLcm, this);
+
+    lcmMonitorEnabled = true;
+  }
+  else
+  {
+    ui_.status->setText("Status: Disable LCM monitoring.");
+
+    lcm_->unsubscribe(ackermann_cmd_lcm_sub_);
+    lcm_->unsubscribe(ackermann_odom_lcm_sub_);
+    lcm_->unsubscribe(sensor_sonar_lcm_sub_);
+    lcm_->unsubscribe(sensor_imu_lcm_sub_);
+    lcm_->unsubscribe(sensor_egomotion_lcm_sub_);
+
+    lcmMonitorEnabled = false;
+  }
+}
+
+void StateMachineController::resetLcmOutput()
+{
+  ui_.dataAckermannCmd->setText("");
+  ui_.dataAckermannOdom->setText("");
+  ui_.dataSensorSonar->setText("");
+  ui_.dataSensorImu->setText("");
+  ui_.dataSensorEgomotion->setText("");
+
+  return;
+}
+
+void StateMachineController::updateAckermannCmdLcm(
+    const lcm::ReceiveBuffer* rbuf, const std::string& chan,
+    const vel_conversion::ackermann_cmd* msg)
+{
+  QString data;
+  data += "enable: " + QString::number(msg->ros_planner_enabled, 'f', 0);
+  data += " speed: " + QString::number(msg->speed, 'f', 1);
+  data += " angle: " + QString::number(msg->steering_angle, 'f', 1);
+
+  ui_.dataAckermannCmd->setText(data);
+}
+
+void StateMachineController::updateAckermannOdomLcm(
+    const lcm::ReceiveBuffer* rbuf, const std::string& chan,
+    const vel_conversion::ackermann_odom* msg)
+{
+  QString data;
+  data += "speed: " + QString::number(msg->speed, 'f', 1);
+  data += " left speed: " + QString::number(msg->left_speed, 'f', 1);
+  data += " right speed: " + QString::number(msg->right_speed, 'f', 1);
+  data += " angle: " + QString::number(msg->steering_angle, 'f', 1);
+
+  ui_.dataAckermannCmd->setText(data);
+}
+
+void StateMachineController::updateSensorSonarLcm(
+    const lcm::ReceiveBuffer* rbuf, const std::string& chan,
+    const sensor::sonar* msg)
+{
+  QString data;
+  for (int i = 0; i < 12; i++)
+    data += QString::number(msg->measurement[i], 'f', 1) + ' ';
+
+  ui_.dataAckermannCmd->setText(data);
+}
+
+void StateMachineController::updateSensorImuLcm(const lcm::ReceiveBuffer* rbuf,
+                                                const std::string& chan,
+                                                const sensor::imu* msg)
+{
+  QString data;
+  data += "acc: ";
+  for (int i = 0; i < 3; i++)
+    data += QString::number(msg->acc[i], 'f', 1) + ' ';
+
+  data += " gyro: ";
+  for (int i = 0; i < 3; i++)
+    data += QString::number(msg->gyro[i], 'f', 1) + ' ';
+
+  ui_.dataAckermannCmd->setText(data);
+}
+
+void StateMachineController::updateSensorEgomotionLcm(
+    const lcm::ReceiveBuffer* rbuf, const std::string& chan,
+    const sensor::egomotion_fusion* msg)
+{
+  QString data;
+  data += QString::number(msg->longitude, 'f', 1) + ' ';
+  data += QString::number(msg->latitude, 'f', 1) + ' ';
+  data += "rpy: ";
+  data += QString::number(msg->roll, 'f', 1) + ' ';
+  data += QString::number(msg->pitch, 'f', 1) + ' ';
+  data += QString::number(msg->yaw, 'f', 1);
+
+  ui_.dataAckermannCmd->setText(data);
+}
+
 void StateMachineController::onDeeppsStart()
 {
   state_machine_msgs::ActionControl srv;
@@ -937,6 +1078,10 @@ void StateMachineController::stateChecking()
       ui_.status->setText(ex.what());
     }
   }
+
+  // handle lcm message
+  if (lcmMonitorEnabled)
+    lcm_->handleTimeout(10);
 
   return;
 }
