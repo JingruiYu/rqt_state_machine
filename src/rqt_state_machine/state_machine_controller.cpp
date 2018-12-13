@@ -86,6 +86,7 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   // Start periodic state checking
   connect(&stateCheckingTimer_, SIGNAL(timeout()), this, SLOT(stateChecking()));
   stateCheckingTimer_.setInterval(50);
+  stateCheckingTimer_.start();
 
   // subscribe to ros topics
   parkinglot_status_sub_ =
