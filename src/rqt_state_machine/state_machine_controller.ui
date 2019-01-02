@@ -400,6 +400,20 @@ in Localization</string>
            <string>Record Deepps Pos</string>
           </property>
          </widget>
+         <widget class="QPushButton" name="removeDefaultMapFile">
+          <property name="geometry">
+           <rect>
+            <x>40</x>
+            <y>310</y>
+            <width>131</width>
+            <height>51</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Remove Default 
+ Map File</string>
+          </property>
+         </widget>
         </widget>
         <widget class="QWidget" name="tabFreespace">
          <attribute name="title">

@@ -110,6 +110,7 @@ protected slots:
   virtual void onSlamRecordPathInLocalizationStart();
   virtual void onSlamRecordPathInLocalizationStop();
   virtual void onSlamRecordDeeppsStartPos();
+  virtual void onSlamRemoveDefaultMapFile();
 
   // freespace state control functions
   virtual void onFreespaceStart();

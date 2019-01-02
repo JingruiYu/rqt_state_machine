@@ -42,6 +42,8 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(onSlamResetMapping()));
   connect(ui_.recordDeeppsStartPos, SIGNAL(clicked()), this,
           SLOT(onSlamRecordDeeppsStartPos()));
+  connect(ui_.removeDefaultMapFile, SIGNAL(clicked()), this,
+          SLOT(onSlamRemoveDefaultMapFile()));
 
   connect(ui_.startFreespace, SIGNAL(clicked()), this,
           SLOT(onFreespaceStart()));
@@ -517,6 +519,15 @@ void StateMachineController::onSlamRecordDeeppsStartPos()
         "Failed to call record deepps start position service!");
 
   return;
+}
+
+void StateMachineController::onSlamRemoveDefaultMapFile()
+{
+  std::string package_path = ros::package::getPath(PACKAGE_SLAM);
+  std::string cmd = "rm " + package_path + "/../../ORB_SLAM2/files/1.bin";
+
+  system(cmd.c_str());
+  ui_.status->setText("Status: Remove default map file!");
 }
 
 // navigation state control functions
