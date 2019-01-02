@@ -48,6 +48,9 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   connect(ui_.startFreespace, SIGNAL(clicked()), this,
           SLOT(onFreespaceStart()));
   connect(ui_.stopFreespace, SIGNAL(clicked()), this, SLOT(onFreespaceStop()));
+  connect(ui_.enableTestObstacle, SIGNAL(stateChanged(int)), this,
+          SLOT(changeTestObstacleState()));
+  connect(ui_.updateObstacle, SIGNAL(clicked()), this, SLOT(updateTestObstacle()));
 
   connect(ui_.enableVehicleControlManually, SIGNAL(clicked()), this,
           SLOT(onVehicleControlEnable()));
@@ -601,7 +604,95 @@ void StateMachineController::onFreespaceStop()
   }
   else
     QMessageBox::warning(widget_, "stop",
-                         "Failed to call start freespace service!");
+                         "Failed to call stop freespace service!");
+}
+
+void StateMachineController::onFreespaceTestObstacleEnable()
+{
+  state_machine_msgs::ActionControl srv;
+  srv.request.action.module = 1;
+  srv.request.action.command = 2;
+
+  if (ros::service::call("freespace_state_control", srv))
+  {
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "enable", "Failed to Enable Test Obstacle!");
+    else
+    {
+      ui_.status->setText("Status: Enable test obstacle!");
+    }
+  }
+  else
+    QMessageBox::warning(widget_, "enable",
+                         "Failed to call enable test obstacle service!");
+}
+
+void StateMachineController::onFreespaceTestObstacleDisable()
+{
+  state_machine_msgs::ActionControl srv;
+  srv.request.action.module = 1;
+  srv.request.action.command = 3;
+
+  if (ros::service::call("freespace_state_control", srv))
+  {
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "disalbe", "Failed to Disable Test Obstacle!");
+    else
+    {
+      ui_.status->setText("Status: Disable test obstacle!");
+    }
+  }
+  else
+    QMessageBox::warning(widget_, "disalbe",
+                         "Failed to call disable test obstacle service!");
+}
+
+void StateMachineController::changeTestObstacleState()
+{
+  if (ui_.enableTestObstacle->isChecked())
+  {
+    onFreespaceTestObstacleEnable();
+    ui_.status->setText("Status: Enable obstacles for testing.");
+  }
+  else
+  {
+    onFreespaceTestObstacleDisable();
+    ui_.status->setText("Status: Disable obstacles for testing.");
+  }
+}
+
+void StateMachineController::updateTestObstacle()
+{
+  double obstacle_x, obstacle_y;
+  double obstacle_size, obstacle_resolution;
+
+  if (ui_.inputObstacleX->text().isEmpty() ||
+      ui_.inputObstacleY->text().isEmpty() ||
+      ui_.inputObstacleSize->text().isEmpty() ||
+      ui_.inputObstacleResolution->text().isEmpty())
+  {
+    ui_.status->setText("Status: Not all params of obstacle are given!");
+    return;
+  }
+  else
+  {
+    obstacle_x = ui_.inputObstacleX->text().toDouble();
+    obstacle_y = ui_.inputObstacleY->text().toDouble();
+    obstacle_size = ui_.inputObstacleSize->text().toDouble();
+    obstacle_resolution = ui_.inputObstacleResolution->text().toDouble();
+  }
+
+  std::string param_obstacle_x = FREESPACE_NODE_NAME + std::string("/test_obstacle_x");
+  std::string param_obstacle_y = FREESPACE_NODE_NAME + std::string("/test_obstacle_y");
+  std::string param_obstacle_size = FREESPACE_NODE_NAME + std::string("/test_obstacle_size");
+  std::string param_obstacle_resolution = FREESPACE_NODE_NAME + std::string("/test_obstacle_resolution");
+
+  nh_.setParam(param_obstacle_x, obstacle_x);
+  nh_.setParam(param_obstacle_y, obstacle_y);
+  nh_.setParam(param_obstacle_size, obstacle_size);
+  nh_.setParam(param_obstacle_resolution, obstacle_resolution);
+
+  ui_.status->setText("Status: Test obstacle params are updated!");
 }
 
 // vehicle control state control functions

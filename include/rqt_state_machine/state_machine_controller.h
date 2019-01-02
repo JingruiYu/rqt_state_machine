@@ -32,6 +32,8 @@ static const char* PACKAGE_SLAM = "orb_slam_2_ros";
 static const char* PACKAGE_FREESPACE = "freespace_ros";
 static const char* PACKAGE_NAVIGATION = "navigation_launch";
 
+static const char* FREESPACE_NODE_NAME = "freespace_node";
+
 static const char* LCM_CHANNEL_ACKERMANN_CMD = "ACKERMANN_CMD";
 static const char* LCM_CHANNEL_ACKERMANN_ODOM = "ACKERMANN_ODOM";
 static const char* LCM_CHANNEL_SENSOR_SONAR = "SENSOR_SONAR";
@@ -115,6 +117,10 @@ protected slots:
   // freespace state control functions
   virtual void onFreespaceStart();
   virtual void onFreespaceStop();
+  virtual void onFreespaceTestObstacleEnable();
+  virtual void onFreespaceTestObstacleDisable();
+  virtual void changeTestObstacleState();
+  virtual void updateTestObstacle();
 
   // navigation state control functions
   virtual void onNavigationStart();

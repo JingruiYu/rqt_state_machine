@@ -41,7 +41,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget">
         <property name="currentIndex">
-         <number>3</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="tabLaunch">
          <attribute name="title">
@@ -422,8 +422,8 @@ in Localization</string>
          <widget class="QPushButton" name="startFreespace">
           <property name="geometry">
            <rect>
-            <x>130</x>
-            <y>40</y>
+            <x>80</x>
+            <y>30</y>
             <width>131</width>
             <height>41</height>
            </rect>
@@ -435,14 +435,138 @@ in Localization</string>
          <widget class="QPushButton" name="stopFreespace">
           <property name="geometry">
            <rect>
-            <x>130</x>
-            <y>110</y>
+            <x>290</x>
+            <y>30</y>
             <width>131</width>
             <height>41</height>
            </rect>
           </property>
           <property name="text">
            <string>Stop Freespace</string>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="enableTestObstacle">
+          <property name="geometry">
+           <rect>
+            <x>80</x>
+            <y>100</y>
+            <width>211</width>
+            <height>23</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Add obstacles for testing</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="labelObstacleX">
+          <property name="geometry">
+           <rect>
+            <x>80</x>
+            <y>140</y>
+            <width>21</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>x:</string>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="inputObstacleX">
+          <property name="geometry">
+           <rect>
+            <x>100</x>
+            <y>140</y>
+            <width>51</width>
+            <height>25</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="inputObstacleY">
+          <property name="geometry">
+           <rect>
+            <x>100</x>
+            <y>180</y>
+            <width>51</width>
+            <height>25</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QLabel" name="labelObstacleY">
+          <property name="geometry">
+           <rect>
+            <x>80</x>
+            <y>180</y>
+            <width>21</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>y:</string>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="inputObstacleSize">
+          <property name="geometry">
+           <rect>
+            <x>260</x>
+            <y>140</y>
+            <width>51</width>
+            <height>25</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QLabel" name="labelObstacleSize">
+          <property name="geometry">
+           <rect>
+            <x>210</x>
+            <y>140</y>
+            <width>41</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>size:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="inputObstacleResolution">
+          <property name="geometry">
+           <rect>
+            <x>260</x>
+            <y>180</y>
+            <width>51</width>
+            <height>25</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QLabel" name="labelObstacleResolution">
+          <property name="geometry">
+           <rect>
+            <x>170</x>
+            <y>180</y>
+            <width>81</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>resolution:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="updateObstacle">
+          <property name="geometry">
+           <rect>
+            <x>350</x>
+            <y>150</y>
+            <width>131</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Update Obstacle</string>
           </property>
          </widget>
         </widget>
