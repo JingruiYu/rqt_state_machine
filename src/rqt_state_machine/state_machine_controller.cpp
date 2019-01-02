@@ -50,7 +50,16 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   connect(ui_.stopFreespace, SIGNAL(clicked()), this, SLOT(onFreespaceStop()));
   connect(ui_.enableTestObstacle, SIGNAL(stateChanged(int)), this,
           SLOT(changeTestObstacleState()));
-  connect(ui_.updateObstacle, SIGNAL(clicked()), this, SLOT(updateTestObstacle()));
+  connect(ui_.updateObstacle, SIGNAL(clicked()), this,
+          SLOT(updateTestObstacle()));
+  connect(ui_.enableSurround, SIGNAL(clicked()), this,
+          SLOT(onFreespaceSurroundEnable()));
+  connect(ui_.disableSurround, SIGNAL(clicked()), this,
+          SLOT(onFreespaceSurroundDisable()));
+  connect(ui_.enableFront, SIGNAL(clicked()), this,
+          SLOT(onFreespaceFrontEnable()));
+  connect(ui_.disableFront, SIGNAL(clicked()), this,
+          SLOT(onFreespaceFrontDisable()));
 
   connect(ui_.enableVehicleControlManually, SIGNAL(clicked()), this,
           SLOT(onVehicleControlEnable()));
@@ -616,7 +625,8 @@ void StateMachineController::onFreespaceTestObstacleEnable()
   if (ros::service::call("freespace_state_control", srv))
   {
     if (!srv.response.feedback)
-      QMessageBox::warning(widget_, "enable", "Failed to Enable Test Obstacle!");
+      QMessageBox::warning(widget_, "enable",
+                           "Failed to Enable Test Obstacle!");
     else
     {
       ui_.status->setText("Status: Enable test obstacle!");
@@ -636,7 +646,8 @@ void StateMachineController::onFreespaceTestObstacleDisable()
   if (ros::service::call("freespace_state_control", srv))
   {
     if (!srv.response.feedback)
-      QMessageBox::warning(widget_, "disalbe", "Failed to Disable Test Obstacle!");
+      QMessageBox::warning(widget_, "disalbe",
+                           "Failed to Disable Test Obstacle!");
     else
     {
       ui_.status->setText("Status: Disable test obstacle!");
@@ -682,10 +693,14 @@ void StateMachineController::updateTestObstacle()
     obstacle_resolution = ui_.inputObstacleResolution->text().toDouble();
   }
 
-  std::string param_obstacle_x = FREESPACE_NODE_NAME + std::string("/test_obstacle_x");
-  std::string param_obstacle_y = FREESPACE_NODE_NAME + std::string("/test_obstacle_y");
-  std::string param_obstacle_size = FREESPACE_NODE_NAME + std::string("/test_obstacle_size");
-  std::string param_obstacle_resolution = FREESPACE_NODE_NAME + std::string("/test_obstacle_resolution");
+  std::string param_obstacle_x =
+      FREESPACE_NODE_NAME + std::string("/test_obstacle_x");
+  std::string param_obstacle_y =
+      FREESPACE_NODE_NAME + std::string("/test_obstacle_y");
+  std::string param_obstacle_size =
+      FREESPACE_NODE_NAME + std::string("/test_obstacle_size");
+  std::string param_obstacle_resolution =
+      FREESPACE_NODE_NAME + std::string("/test_obstacle_resolution");
 
   nh_.setParam(param_obstacle_x, obstacle_x);
   nh_.setParam(param_obstacle_y, obstacle_y);
@@ -693,6 +708,90 @@ void StateMachineController::updateTestObstacle()
   nh_.setParam(param_obstacle_resolution, obstacle_resolution);
 
   ui_.status->setText("Status: Test obstacle params are updated!");
+}
+
+void StateMachineController::onFreespaceSurroundEnable()
+{
+  state_machine_msgs::ActionControl srv;
+  srv.request.action.module = 1;
+  srv.request.action.command = 4;
+
+  if (ros::service::call("freespace_state_control", srv))
+  {
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "enable",
+                           "Failed to Enable Surround Obstacle!");
+    else
+    {
+      ui_.status->setText("Status: Enable surround obstacle!");
+    }
+  }
+  else
+    QMessageBox::warning(widget_, "enable",
+                         "Failed to call enable surround obstacle service!");
+}
+
+void StateMachineController::onFreespaceSurroundDisable()
+{
+  state_machine_msgs::ActionControl srv;
+  srv.request.action.module = 1;
+  srv.request.action.command = 5;
+
+  if (ros::service::call("freespace_state_control", srv))
+  {
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "disalbe",
+                           "Failed to Disable Surround Obstacle!");
+    else
+    {
+      ui_.status->setText("Status: Disable surround obstacle!");
+    }
+  }
+  else
+    QMessageBox::warning(widget_, "disalbe",
+                         "Failed to call disable surround obstacle service!");
+}
+
+void StateMachineController::onFreespaceFrontEnable()
+{
+  state_machine_msgs::ActionControl srv;
+  srv.request.action.module = 1;
+  srv.request.action.command = 6;
+
+  if (ros::service::call("freespace_state_control", srv))
+  {
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "enable",
+                           "Failed to Enable Front Obstacle!");
+    else
+    {
+      ui_.status->setText("Status: Enable front obstacle!");
+    }
+  }
+  else
+    QMessageBox::warning(widget_, "enable",
+                         "Failed to call enable front obstacle service!");
+}
+
+void StateMachineController::onFreespaceFrontDisable()
+{
+  state_machine_msgs::ActionControl srv;
+  srv.request.action.module = 1;
+  srv.request.action.command = 7;
+
+  if (ros::service::call("freespace_state_control", srv))
+  {
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "disalbe",
+                           "Failed to Disable Front Obstacle!");
+    else
+    {
+      ui_.status->setText("Status: Disable front obstacle!");
+    }
+  }
+  else
+    QMessageBox::warning(widget_, "disalbe",
+                         "Failed to call disable front obstacle service!");
 }
 
 // vehicle control state control functions

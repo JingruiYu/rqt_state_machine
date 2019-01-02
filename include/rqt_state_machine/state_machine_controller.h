@@ -121,6 +121,10 @@ protected slots:
   virtual void onFreespaceTestObstacleDisable();
   virtual void changeTestObstacleState();
   virtual void updateTestObstacle();
+  virtual void onFreespaceSurroundEnable();
+  virtual void onFreespaceSurroundDisable();
+  virtual void onFreespaceFrontEnable();
+  virtual void onFreespaceFrontDisable();
 
   // navigation state control functions
   virtual void onNavigationStart();

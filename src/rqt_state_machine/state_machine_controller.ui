@@ -449,7 +449,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>80</x>
-            <y>100</y>
+            <y>210</y>
             <width>211</width>
             <height>23</height>
            </rect>
@@ -462,7 +462,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>80</x>
-            <y>140</y>
+            <y>250</y>
             <width>21</width>
             <height>21</height>
            </rect>
@@ -475,7 +475,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>100</x>
-            <y>140</y>
+            <y>250</y>
             <width>51</width>
             <height>25</height>
            </rect>
@@ -485,7 +485,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>100</x>
-            <y>180</y>
+            <y>290</y>
             <width>51</width>
             <height>25</height>
            </rect>
@@ -495,7 +495,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>80</x>
-            <y>180</y>
+            <y>290</y>
             <width>21</width>
             <height>21</height>
            </rect>
@@ -508,7 +508,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>260</x>
-            <y>140</y>
+            <y>250</y>
             <width>51</width>
             <height>25</height>
            </rect>
@@ -518,7 +518,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>210</x>
-            <y>140</y>
+            <y>250</y>
             <width>41</width>
             <height>21</height>
            </rect>
@@ -534,7 +534,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>260</x>
-            <y>180</y>
+            <y>290</y>
             <width>51</width>
             <height>25</height>
            </rect>
@@ -544,7 +544,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>170</x>
-            <y>180</y>
+            <y>290</y>
             <width>81</width>
             <height>21</height>
            </rect>
@@ -560,13 +560,65 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>350</x>
-            <y>150</y>
+            <y>260</y>
             <width>131</width>
             <height>41</height>
            </rect>
           </property>
           <property name="text">
            <string>Update Obstacle</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="enableSurround">
+          <property name="geometry">
+           <rect>
+            <x>80</x>
+            <y>90</y>
+            <width>131</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Enable Surround</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="disableSurround">
+          <property name="geometry">
+           <rect>
+            <x>290</x>
+            <y>90</y>
+            <width>131</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Disable Surround</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="disableFront">
+          <property name="geometry">
+           <rect>
+            <x>290</x>
+            <y>150</y>
+            <width>131</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Disable Front</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="enableFront">
+          <property name="geometry">
+           <rect>
+            <x>80</x>
+            <y>150</y>
+            <width>131</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Enable Front</string>
           </property>
          </widget>
         </widget>
