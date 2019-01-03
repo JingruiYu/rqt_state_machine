@@ -259,7 +259,7 @@
          <widget class="QPushButton" name="launchRviz">
           <property name="geometry">
            <rect>
-            <x>50</x>
+            <x>30</x>
             <y>390</y>
             <width>141</width>
             <height>31</height>
@@ -267,6 +267,32 @@
           </property>
           <property name="text">
            <string>Launch RViz!</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="launchCAN">
+          <property name="geometry">
+           <rect>
+            <x>350</x>
+            <y>390</y>
+            <width>141</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Launch CAN!</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="configLcmCAN">
+          <property name="geometry">
+           <rect>
+            <x>190</x>
+            <y>390</y>
+            <width>141</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Config LCM &amp;&amp; CAN!</string>
           </property>
          </widget>
         </widget>

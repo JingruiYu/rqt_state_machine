@@ -201,6 +201,8 @@ protected slots:
   virtual void launchFreespace();
   virtual void launchNavigation();
   virtual void launchRviz();
+  virtual void configLcmCAN();
+  virtual void launchCAN();
 
   // Comment in to signal that the plugin has a way to configure it
   // bool hasConfiguration() const;

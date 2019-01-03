@@ -122,6 +122,8 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(launchNavigation()));
 
   connect(ui_.launchRviz, SIGNAL(clicked()), this, SLOT(launchRviz()));
+  connect(ui_.configLcmCAN, SIGNAL(clicked()), this, SLOT(configLcmCAN()));
+  connect(ui_.launchCAN, SIGNAL(clicked()), this, SLOT(launchCAN()));
 
   connect(ui_.enableLcmMonitor, SIGNAL(stateChanged(int)), this,
           SLOT(changeLcmMonitorState()));
@@ -1590,6 +1592,19 @@ void StateMachineController::launchRviz()
 {
   int output = system("rviz&");
   ui_.status->setText("Status: RViz launched!");
+}
+
+void StateMachineController::configLcmCAN()
+{
+  int output = system("cd ~; ./lcm.sh");
+  ui_.status->setText("Status: LCM & CAN configed!");
+}
+
+void StateMachineController::launchCAN()
+{
+  int output =
+      system("gnome-terminal -x sh -c 'cd ~/HSS/PlanP2P/bin; ./PlanP2P'");
+  ui_.status->setText("Status: CAN launched!");
 }
 
 /*bool hasConfiguration() const
