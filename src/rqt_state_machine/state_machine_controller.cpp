@@ -565,7 +565,7 @@ void StateMachineController::onSlamRemoveDefaultMapFile()
   std::string package_path = ros::package::getPath(PACKAGE_SLAM);
   std::string cmd = "rm " + package_path + "/../../ORB_SLAM2/files/1.bin";
 
-  system(cmd.c_str());
+  int output = system(cmd.c_str());
   ui_.status->setText("Status: Remove default map file!");
 }
 
@@ -1541,7 +1541,7 @@ void StateMachineController::launchBringup()
   {
     QString cmd = "gnome-terminal -x sh -c 'roslaunch ";
     cmd += path + "'";
-    system(cmd.toLocal8Bit().data());
+    int output = system(cmd.toLocal8Bit().data());
     ui_.status->setText("Status: Bringup launched!");
   }
   return;
@@ -1554,7 +1554,7 @@ void StateMachineController::launchSlam()
   {
     QString cmd = "gnome-terminal -x sh -c 'roslaunch ";
     cmd += path + "'";
-    system(cmd.toLocal8Bit().data());
+    int output = system(cmd.toLocal8Bit().data());
     ui_.status->setText("Status: Slam launched!");
   }
   return;
@@ -1567,7 +1567,7 @@ void StateMachineController::launchFreespace()
   {
     QString cmd = "gnome-terminal -x sh -c 'roslaunch ";
     cmd += path + "'";
-    system(cmd.toLocal8Bit().data());
+    int output = system(cmd.toLocal8Bit().data());
     ui_.status->setText("Status: Freespace launched!");
   }
   return;
@@ -1580,7 +1580,7 @@ void StateMachineController::launchNavigation()
   {
     QString cmd = "gnome-terminal -x sh -c 'roslaunch ";
     cmd += path + "'";
-    system(cmd.toLocal8Bit().data());
+    int output = system(cmd.toLocal8Bit().data());
     ui_.status->setText("Status: Navigation launched!");
   }
   return;
@@ -1588,7 +1588,7 @@ void StateMachineController::launchNavigation()
 
 void StateMachineController::launchRviz()
 {
-  system("rviz&");
+  int output = system("rviz&");
   ui_.status->setText("Status: RViz launched!");
 }
 
