@@ -1,5 +1,8 @@
 #ifndef STATE_MACHINE_CONTROLLER_H
 #define STATE_MACHINE_CONTROLLER_H
+#include <math.h>
+
+// ros
 #include <ros/ros.h>
 #include <ros/package.h>
 #include <tf/transform_datatypes.h>

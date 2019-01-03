@@ -952,7 +952,7 @@ void StateMachineController::keyboardControlPublish()
 
   geometry_msgs::Twist cmd_msg;
   cmd_msg.linear.x = speed;
-  cmd_msg.angular.z = steering;
+  cmd_msg.angular.z = steering / 180.0 * M_PI;
 
   keyboard_control_pub_.publish(cmd_msg);
 }
