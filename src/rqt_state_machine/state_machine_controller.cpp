@@ -909,7 +909,7 @@ void StateMachineController::setSliderSpeed(int speed)
 void StateMachineController::setDialSteering(int steering)
 {
   ui_.dialSteering->setValue(steering);
-  double s = static_cast<double>(steering) / -2.0; // align scale and dir
+  double s = static_cast<double>(steering) / -1.0; // align scale and dir
   ui_.inputKeyboardSteering->setText(QString::number(s, 'f', 1));
 }
 
@@ -948,7 +948,7 @@ void StateMachineController::keyboardControlEnable()
 void StateMachineController::keyboardControlPublish()
 {
   double speed = static_cast<double>(ui_.sliderSpeed->value()) / 10.0;
-  double steering = static_cast<double>(ui_.dialSteering->value()) / -2.0;
+  double steering = static_cast<double>(ui_.dialSteering->value()) / -1.0;
 
   geometry_msgs::Twist cmd_msg;
   cmd_msg.linear.x = speed;
@@ -1428,7 +1428,7 @@ bool StateMachineController::eventFilter(QObject* target, QEvent* event)
       steering -= ui_.dialSteering->singleStep();
       ui_.dialSteering->setValue(steering);
 
-      double s = static_cast<double>(steering) / -2.0; // align scale and dir
+      double s = static_cast<double>(steering) / -1.0; // align scale and dir
       ui_.inputKeyboardSteering->setText(QString::number(s, 'f', 1));
     }
 
@@ -1438,7 +1438,7 @@ bool StateMachineController::eventFilter(QObject* target, QEvent* event)
       steering += ui_.dialSteering->singleStep();
       ui_.dialSteering->setValue(steering);
 
-      double s = static_cast<double>(steering) / -2.0; // align scale and dir
+      double s = static_cast<double>(steering) / -1.0; // align scale and dir
       ui_.inputKeyboardSteering->setText(QString::number(s, 'f', 1));
     }
 
