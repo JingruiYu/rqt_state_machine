@@ -212,12 +212,12 @@
                     <axes>
                         <axes>
                             <x_axis>
-                                <custom_title>n</custom_title>
+                                <custom_title>time</custom_title>
                                 <title_type>1</title_type>
                                 <title_visible>true</title_visible>
                             </x_axis>
                             <y_axis>
-                                <custom_title>speed, angle</custom_title>
+                                <custom_title>speed, steering angle</custom_title>
                                 <title_type>1</title_type>
                                 <title_visible>true</title_visible>
                             </y_axis>
@@ -227,20 +227,20 @@
                         <curve_0>
                             <axes>
                                 <x_axis>
-                                    <field>header/seq</field>
-                                    <field_type>0</field_type>
+                                    <field></field>
+                                    <field_type>1</field_type>
                                     <scale>
-                                        <absolute_maximum>1000</absolute_maximum>
-                                        <absolute_minimum>0</absolute_minimum>
+                                        <absolute_maximum>2</absolute_maximum>
+                                        <absolute_minimum>-0.5</absolute_minimum>
                                         <relative_maximum>0</relative_maximum>
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/odom</topic>
-                                    <type>nav_msgs/Odometry</type>
+                                    <topic>/vehicle_control/vehicle_fdbk</topic>
+                                    <type>geometry_msgs/Twist</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>twist/twist/linear/x</field>
+                                    <field>linear/x</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>2</absolute_maximum>
@@ -249,8 +249,8 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/odom</topic>
-                                    <type>nav_msgs/Odometry</type>
+                                    <topic>/vehicle_control/vehicle_fdbk</topic>
+                                    <type>geometry_msgs/Twist</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -278,7 +278,20 @@
                         <curve_1>
                             <axes>
                                 <x_axis>
-                                    <field>header/seq</field>
+                                    <field></field>
+                                    <field_type>1</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/vehicle_control/vehicle_fdbk</topic>
+                                    <type>geometry_msgs/Twist</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>angular/z</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -287,21 +300,8 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/odom</topic>
-                                    <type>nav_msgs/Odometry</type>
-                                </x_axis>
-                                <y_axis>
-                                    <field>twist/twist/angular/z</field>
-                                    <field_type>0</field_type>
-                                    <scale>
-                                        <absolute_maximum>1</absolute_maximum>
-                                        <absolute_minimum>-1</absolute_minimum>
-                                        <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
-                                    </scale>
-                                    <topic>/odom</topic>
-                                    <type>nav_msgs/Odometry</type>
+                                    <topic>/vehicle_control/vehicle_fdbk</topic>
+                                    <type>geometry_msgs/Twist</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -324,7 +324,7 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>angle</title>
+                            <title>steering angle</title>
                         </curve_1>
                     </curves>
                     <legend>
@@ -337,7 +337,7 @@
                     <axes>
                         <axes>
                             <x_axis>
-                                <custom_title>n</custom_title>
+                                <custom_title>time</custom_title>
                                 <title_type>1</title_type>
                                 <title_visible>true</title_visible>
                             </x_axis>
@@ -449,7 +449,7 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>w</title>
+                            <title>steering angle</title>
                         </curve_1>
                     </curves>
                     <legend>
