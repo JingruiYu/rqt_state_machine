@@ -24,8 +24,14 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   // extend the widget with all attributes and children from UI file
   ui_.setupUi(widget_);
   ui_.tabWidget->setCurrentWidget(ui_.tabLaunch);
+
+  ui_.verticalLayoutSpeed->setAlignment(ui_.sliderSpeed, Qt::AlignCenter);
+
   // add widget to the user interface
   context.addWidget(widget_);
+
+  widget_->installEventFilter(this);
+  widget_->setFocus();
 
   connect(ui_.startSlam, SIGNAL(clicked()), this, SLOT(onSlamStart()));
   connect(ui_.stopSlam, SIGNAL(clicked()), this, SLOT(onSlamStop()));
@@ -67,6 +73,18 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(onVehicleControlDisable()));
   connect(ui_.eStopVehicleControlManually, SIGNAL(clicked()), this,
           SLOT(onVehicleControlEStop()));
+  connect(ui_.sliderSpeed, SIGNAL(valueChanged(int)), this,
+          SLOT(setSliderSpeed(int)));
+  connect(ui_.dialSteering, SIGNAL(valueChanged(int)), this,
+          SLOT(setDialSteering(int)));
+  connect(ui_.stopKeyboardControl, SIGNAL(clicked()), this,
+          SLOT(stopKeyboardControl()));
+  connect(ui_.setKeyboardSpeedZero, SIGNAL(clicked()), this,
+          SLOT(setKeyboardSpeedZero()));
+  connect(ui_.setKeyboardSteeringZero, SIGNAL(clicked()), this,
+          SLOT(setKeyboardSteeringZero()));
+  connect(ui_.enableKeyboardControl, SIGNAL(stateChanged(int)), this,
+          SLOT(keyboardControlEnable()));
 
   connect(ui_.startFollowing, SIGNAL(clicked()), this,
           SLOT(onNavigationStart()));
@@ -122,6 +140,10 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   stateCheckingTimer_.setInterval(20);
   stateCheckingTimer_.start();
 
+  connect(&keyboardControlTimer_, SIGNAL(timeout()), this,
+          SLOT(keyboardControlPublish()));
+  keyboardControlTimer_.setInterval(50);
+
   // subscribe to ros topics
   parkinglot_status_sub_ =
       nh_.subscribe("/deepps/parkinglot_status", 100,
@@ -129,6 +151,9 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   parkinglot_ctrl_sub_ =
       nh_.subscribe("/deepps/parkinglot_ctrl", 100,
                     &StateMachineController::parkinglotCtrlCB, this);
+
+  keyboard_control_pub_ =
+      nh_.advertise<geometry_msgs::Twist>("vehicle_cmd_vel", 30);
 
   // Advertising state control service
   state_feedback_service_ = nh_.advertiseService(
@@ -870,6 +895,64 @@ void StateMachineController::onVehicleControlEStop()
   return;
 }
 
+void StateMachineController::setSliderSpeed(int speed)
+{
+  ui_.sliderSpeed->setValue(speed);
+  double s = static_cast<double>(speed) / 10.0; // align scale
+  ui_.inputKeyboardSpeed->setText(QString::number(s, 'f', 1));
+}
+
+void StateMachineController::setDialSteering(int steering)
+{
+  ui_.dialSteering->setValue(steering);
+  double s = static_cast<double>(steering) / -2.0; // align scale and dir
+  ui_.inputKeyboardSteering->setText(QString::number(s, 'f', 1));
+}
+
+void StateMachineController::stopKeyboardControl()
+{
+  setKeyboardSpeedZero();
+  setKeyboardSteeringZero();
+}
+
+void StateMachineController::setKeyboardSpeedZero()
+{
+  ui_.sliderSpeed->setValue(0.0);
+  ui_.inputKeyboardSpeed->setText(QString::number(0.0, 'f', 1));
+}
+
+void StateMachineController::setKeyboardSteeringZero()
+{
+  ui_.dialSteering->setValue(0.0);
+  ui_.inputKeyboardSteering->setText(QString::number(0.0, 'f', 1));
+}
+
+void StateMachineController::keyboardControlEnable()
+{
+  if (ui_.enableKeyboardControl->isChecked())
+  {
+    keyboardControlTimer_.start();
+    ui_.status->setText("Status: Enable keyboard control.");
+  }
+  else
+  {
+    keyboardControlTimer_.stop();
+    ui_.status->setText("Status: Disable keyboard control.");
+  }
+}
+
+void StateMachineController::keyboardControlPublish()
+{
+  double speed = static_cast<double>(ui_.sliderSpeed->value()) / 10.0;
+  double steering = static_cast<double>(ui_.dialSteering->value()) / -2.0;
+
+  geometry_msgs::Twist cmd_msg;
+  cmd_msg.linear.x = speed;
+  cmd_msg.angular.z = steering;
+
+  keyboard_control_pub_.publish(cmd_msg);
+}
+
 void StateMachineController::changeLcmMonitorState()
 {
   if (ui_.enableLcmMonitor->isChecked())
@@ -1307,6 +1390,58 @@ void StateMachineController::resetStatusUI()
   ui_.statusParking->setText("Idle");
 
   ui_.status->setText("Status: Reset status.");
+}
+
+bool StateMachineController::eventFilter(QObject* target, QEvent* event)
+{
+  if (event->type() == QEvent::KeyPress)
+  {
+    QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
+
+    if (keyEvent->key() == Qt::Key_W)
+    {
+      int speed = ui_.sliderSpeed->value();
+      speed += ui_.sliderSpeed->singleStep();
+      ui_.sliderSpeed->setValue(speed);
+
+      double s = static_cast<double>(speed) / 10.0; // align scale
+      ui_.inputKeyboardSpeed->setText(QString::number(s, 'f', 1));
+    }
+
+    if (keyEvent->key() == Qt::Key_S)
+    {
+      int speed = ui_.sliderSpeed->value();
+      speed -= ui_.sliderSpeed->singleStep();
+      ui_.sliderSpeed->setValue(speed);
+
+      double s = static_cast<double>(speed) / 10.0; // align scale
+      ui_.inputKeyboardSpeed->setText(QString::number(s, 'f', 1));
+    }
+
+    if (keyEvent->key() == Qt::Key_A)
+    {
+      int steering = ui_.dialSteering->value();
+      steering -= ui_.dialSteering->singleStep();
+      ui_.dialSteering->setValue(steering);
+
+      double s = static_cast<double>(steering) / -2.0; // align scale and dir
+      ui_.inputKeyboardSteering->setText(QString::number(s, 'f', 1));
+    }
+
+    if (keyEvent->key() == Qt::Key_D)
+    {
+      int steering = ui_.dialSteering->value();
+      steering += ui_.dialSteering->singleStep();
+      ui_.dialSteering->setValue(steering);
+
+      double s = static_cast<double>(steering) / -2.0; // align scale and dir
+      ui_.inputKeyboardSteering->setText(QString::number(s, 'f', 1));
+    }
+
+    if (keyEvent->key() == Qt::Key_Escape)
+      stopKeyboardControl();
+  }
+  return rqt_gui_cpp::Plugin::eventFilter(target, event);
 }
 
 void StateMachineController::stateChecking()

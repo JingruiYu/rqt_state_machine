@@ -6,9 +6,11 @@
 #include <tf/transform_listener.h>
 #include <rqt_gui_cpp/plugin.h>
 #include <ui_state_machine_controller.h>
+#include <geometry_msgs/Twist.h>
 #include <QWidget>
 #include <QTimer>
 #include <QFileDialog>
+#include <QKeyEvent>
 
 // service server for each module
 #include <state_machine_msgs/ActionControl.h>
@@ -99,6 +101,8 @@ public:
                             qt_gui_cpp::Settings& instance_settings) const;
   virtual void restoreSettings(const qt_gui_cpp::Settings& plugin_settings,
                                const qt_gui_cpp::Settings& instance_settings);
+  bool eventFilter(QObject* target, QEvent* event);
+
 protected slots:
   // slam state control functions
   virtual void onSlamStart();
@@ -134,6 +138,13 @@ protected slots:
   virtual void onVehicleControlEnable();
   virtual void onVehicleControlDisable();
   virtual void onVehicleControlEStop();
+  virtual void setSliderSpeed(int speed);
+  virtual void setDialSteering(int steering);
+  virtual void stopKeyboardControl();
+  virtual void setKeyboardSteeringZero();
+  virtual void setKeyboardSpeedZero();
+  virtual void keyboardControlPublish();
+  virtual void keyboardControlEnable();
 
   virtual void changeLcmMonitorState();
   virtual void changeLcmAckermannCmdState();
@@ -223,6 +234,7 @@ private:
   ros::NodeHandle nh_;
   ros::Subscriber parkinglot_status_sub_;
   ros::Subscriber parkinglot_ctrl_sub_;
+  ros::Publisher keyboard_control_pub_;
 
   // ros service
   ros::ServiceServer state_feedback_service_;
@@ -240,8 +252,9 @@ private:
   // modules related variables
   tf::Point deepps_start_pos_;
 
-  // Timer to check states of some modules
+  // Timers
   QTimer stateCheckingTimer_;
+  QTimer keyboardControlTimer_;
 
   // lcm
   std::shared_ptr<lcm::LCM> lcm_;
@@ -256,7 +269,6 @@ private:
   bool lcmSensorSonarEnabled_;
   bool lcmSensorImuEnabled_;
   bool lcmSensorEgomotionEnabled_;
-
 };
 } // namespace
 
