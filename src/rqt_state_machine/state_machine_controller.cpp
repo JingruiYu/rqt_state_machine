@@ -121,6 +121,8 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   connect(ui_.launchNavigation, SIGNAL(clicked()), this,
           SLOT(launchNavigation()));
 
+  connect(ui_.launchRviz, SIGNAL(clicked()), this, SLOT(launchRviz()));
+
   connect(ui_.enableLcmMonitor, SIGNAL(stateChanged(int)), this,
           SLOT(changeLcmMonitorState()));
   connect(ui_.enableLcmAckermannCmd, SIGNAL(stateChanged(int)), this,
@@ -1582,6 +1584,12 @@ void StateMachineController::launchNavigation()
     ui_.status->setText("Status: Navigation launched!");
   }
   return;
+}
+
+void StateMachineController::launchRviz()
+{
+  system("rviz&");
+  ui_.status->setText("Status: RViz launched!");
 }
 
 /*bool hasConfiguration() const

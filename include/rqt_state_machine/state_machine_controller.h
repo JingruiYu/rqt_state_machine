@@ -200,6 +200,7 @@ protected slots:
   virtual void launchSlam();
   virtual void launchFreespace();
   virtual void launchNavigation();
+  virtual void launchRviz();
 
   // Comment in to signal that the plugin has a way to configure it
   // bool hasConfiguration() const;
