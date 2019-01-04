@@ -28,6 +28,8 @@
 #include <sensor/sonar.hpp>
 #include <sensor/imu.hpp>
 #include <sensor/egomotion_fusion.hpp>
+#include <sensor/esr.hpp>
+#include <sensor/esr_track.hpp>
 
 namespace rqt_state_machine
 {
@@ -44,6 +46,7 @@ static const char* LCM_CHANNEL_ACKERMANN_ODOM = "ACKERMANN_ODOM";
 static const char* LCM_CHANNEL_SENSOR_SONAR = "SENSOR_SONAR";
 static const char* LCM_CHANNEL_SENSOR_IMU = "SENSOR_IMU";
 static const char* LCM_CHANNEL_SENSOR_EGOMOTION = "SENSOR_EGOMOTION";
+static const char* LCM_CHANNEL_SENSOR_ESR_FRONT= "SENSOR_ESR";
 
 class StateMachineStatus
 {
@@ -155,6 +158,7 @@ protected slots:
   virtual void changeLcmSensorSonarState();
   virtual void changeLcmSensorImuState();
   virtual void changeLcmSensorEgomotionState();
+  virtual void changeLcmSensorEsrFrontState();
   virtual void resetLcmOutput();
 
   virtual void updateAckermannCmdLcm(const lcm::ReceiveBuffer* rbuf,
@@ -173,6 +177,9 @@ protected slots:
   virtual void updateSensorEgomotionLcm(const lcm::ReceiveBuffer* rbuf,
                                         const std::string& chan,
                                         const sensor::egomotion_fusion* msg);
+  virtual void updateSensorEsrFrontLcm(const lcm::ReceiveBuffer* rbuf,
+                                       const std::string& chan,
+                                       const sensor::esr* msg);
 
   // deepps state control function
   virtual void onDeeppsStart();
@@ -269,12 +276,14 @@ private:
   lcm::Subscription* sensor_sonar_lcm_sub_;
   lcm::Subscription* sensor_imu_lcm_sub_;
   lcm::Subscription* sensor_egomotion_lcm_sub_;
+  lcm::Subscription* sensor_esr_front_lcm_sub_;
   bool lcmMonitorEnabled_;
   bool lcmAckermannCmdEnabled_;
   bool lcmAckermannOdomEnabled_;
   bool lcmSensorSonarEnabled_;
   bool lcmSensorImuEnabled_;
   bool lcmSensorEgomotionEnabled_;
+  bool lcmSensorEsrFrontEnabled_;
 };
 } // namespace
 

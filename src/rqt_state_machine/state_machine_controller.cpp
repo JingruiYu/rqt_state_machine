@@ -137,6 +137,8 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(changeLcmSensorImuState()));
   connect(ui_.enableLcmSensorEgomotion, SIGNAL(stateChanged(int)), this,
           SLOT(changeLcmSensorEgomotionState()));
+  connect(ui_.enableLcmSensorEsrFront, SIGNAL(stateChanged(int)), this,
+          SLOT(changeLcmSensorEsrFrontState()));
   connect(ui_.resetLcmOutput, SIGNAL(clicked()), this, SLOT(resetLcmOutput()));
 
   // start periodic state checking
@@ -1042,12 +1044,28 @@ void StateMachineController::changeLcmSensorEgomotionState()
     sensor_egomotion_lcm_sub_ = lcm_->subscribe(
         LCM_CHANNEL_SENSOR_EGOMOTION,
         &StateMachineController::updateSensorEgomotionLcm, this);
-    ui_.status->setText("Status: Enable LCM Sensor Egomotion.");
+    ui_.status->setText("Status: Enable LCM Sensor front ESR.");
   }
   else
   {
     lcm_->unsubscribe(sensor_egomotion_lcm_sub_);
-    ui_.status->setText("Status: Disable LCM Sensor Egomotion.");
+    ui_.status->setText("Status: Disable LCM Sensor front ESR.");
+  }
+}
+
+void StateMachineController::changeLcmSensorEsrFrontState()
+{
+  if (ui_.enableLcmSensorEsrFront->isChecked())
+  {
+    sensor_esr_front_lcm_sub_ =
+        lcm_->subscribe(LCM_CHANNEL_SENSOR_ESR_FRONT,
+                        &StateMachineController::updateSensorEsrFrontLcm, this);
+    ui_.status->setText("Status: Enable LCM Sensor front ESR.");
+  }
+  else
+  {
+    lcm_->unsubscribe(sensor_esr_front_lcm_sub_);
+    ui_.status->setText("Status: Disable LCM Sensor front ESR.");
   }
 }
 
@@ -1058,6 +1076,7 @@ void StateMachineController::resetLcmOutput()
   ui_.dataSensorSonar->setText("");
   ui_.dataSensorImu->setText("");
   ui_.dataSensorEgomotion->setText("");
+  ui_.dataSensorEsrFront->setText("");
 
   return;
 }
@@ -1127,6 +1146,24 @@ void StateMachineController::updateSensorEgomotionLcm(
   data += QString::number(msg->yaw, 'f', 2);
 
   ui_.dataSensorEgomotion->setText(data);
+}
+
+void StateMachineController::updateSensorEsrFrontLcm(
+    const lcm::ReceiveBuffer* rbuf, const std::string& chan,
+    const sensor::esr* msg)
+{
+  QString data;
+  for (int i = 0; i < 64; i++)
+  {
+    if (msg->object[i].status != 0)
+    {
+      data += QString::number(i) + ":[";
+      data += QString::number(msg->object[i].angle, 'f', 2) + ',';
+      data += QString::number(msg->object[i].range, 'f', 2) + "] ";
+    }
+  }
+
+  ui_.dataSensorEsrFront->setText(data);
 }
 
 void StateMachineController::onDeeppsStart()
