@@ -342,7 +342,7 @@
                                 <title_visible>true</title_visible>
                             </x_axis>
                             <y_axis>
-                                <custom_title>speed, w</custom_title>
+                                <custom_title>speed, steering angle</custom_title>
                                 <title_type>1</title_type>
                                 <title_visible>true</title_visible>
                             </y_axis>
