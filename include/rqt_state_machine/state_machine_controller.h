@@ -47,8 +47,8 @@ static const char* LCM_CHANNEL_ACKERMANN_ODOM = "ACKERMANN_ODOM";
 static const char* LCM_CHANNEL_SENSOR_SONAR = "SENSOR_SONAR";
 static const char* LCM_CHANNEL_SENSOR_IMU = "SENSOR_IMU";
 static const char* LCM_CHANNEL_SENSOR_EGOMOTION = "SENSOR_EGOMOTION";
-static const char* LCM_CHANNEL_SENSOR_ESR_FRONT = "SENSOR_ESR";
-static const char* LCM_CHANNEL_PARKINGLOT_CTRL = "OFILM_CTRL";
+static const char* LCM_CHANNEL_SENSOR_ESR_FRONT= "SENSOR_ESR";
+static const char* LCM_CHANNEL_PARKINGLOT_CTRL= "OFILM_CTRL";
 
 class StateMachineStatus
 {
@@ -185,7 +185,7 @@ protected slots:
                                        const sensor::esr* msg);
   virtual void updateParkinglotCtrlLcm(const lcm::ReceiveBuffer* rbuf,
                                        const std::string& chan,
-                                       const OFILM_CTRL* msg);
+                                       const OFILM_CTRL *msg);
 
   // deepps state control function
   virtual void onDeeppsStart();
