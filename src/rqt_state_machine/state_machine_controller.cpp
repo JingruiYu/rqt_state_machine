@@ -139,6 +139,8 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(changeLcmSensorEgomotionState()));
   connect(ui_.enableLcmSensorEsrFront, SIGNAL(stateChanged(int)), this,
           SLOT(changeLcmSensorEsrFrontState()));
+  connect(ui_.enableLcmParkinglotCtrl, SIGNAL(stateChanged(int)), this,
+          SLOT(changeLcmParkinglotCtrlState()));
   connect(ui_.resetLcmOutput, SIGNAL(clicked()), this, SLOT(resetLcmOutput()));
 
   // start periodic state checking
@@ -1069,6 +1071,22 @@ void StateMachineController::changeLcmSensorEsrFrontState()
   }
 }
 
+void StateMachineController::changeLcmParkinglotCtrlState()
+{
+  if (ui_.enableLcmParkinglotCtrl->isChecked())
+  {
+    parkinglot_ctrl_lcm_sub_ =
+        lcm_->subscribe(LCM_CHANNEL_PARKINGLOT_CTRL,
+                        &StateMachineController::updateParkinglotCtrlLcm, this);
+    ui_.status->setText("Status: Enable LCM Parkinglot Ctrl.");
+  }
+  else
+  {
+    lcm_->unsubscribe(parkinglot_ctrl_lcm_sub_);
+    ui_.status->setText("Status: Disable LCM Parkinglot Ctrl.");
+  }
+}
+
 void StateMachineController::resetLcmOutput()
 {
   ui_.dataAckermannCmd->setText("");
@@ -1164,6 +1182,19 @@ void StateMachineController::updateSensorEsrFrontLcm(
   }
 
   ui_.dataSensorEsrFront->setText(data);
+}
+
+void StateMachineController::updateParkinglotCtrlLcm(
+    const lcm::ReceiveBuffer* rbuf, const std::string& chan,
+    const OFILM_CTRL* msg)
+{
+  QString data;
+  data += "Search:" + QString::number(msg->isOfilmParkingSearchFuncEnable);
+  data += " Track:" + QString::number(msg->isOfilmParkinglotTrackingFuncEnable);
+  data += " Tracking ID:" + QString::number(msg->isOfilmParkinglotTrackingID);
+  data += " Reckon:" + QString::number(msg->isOfilmLocationFuncEnable);
+
+  ui_.dataParkinglotCtrl->setText(data);
 }
 
 void StateMachineController::onDeeppsStart()
