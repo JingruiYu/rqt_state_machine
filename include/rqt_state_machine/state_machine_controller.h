@@ -278,12 +278,6 @@ private:
   lcm::Subscription* sensor_egomotion_lcm_sub_;
   lcm::Subscription* sensor_esr_front_lcm_sub_;
   bool lcmMonitorEnabled_;
-  bool lcmAckermannCmdEnabled_;
-  bool lcmAckermannOdomEnabled_;
-  bool lcmSensorSonarEnabled_;
-  bool lcmSensorImuEnabled_;
-  bool lcmSensorEgomotionEnabled_;
-  bool lcmSensorEsrFrontEnabled_;
 };
 } // namespace
 
