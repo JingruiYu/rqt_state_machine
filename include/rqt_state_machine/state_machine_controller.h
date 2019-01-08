@@ -138,9 +138,11 @@ protected slots:
   virtual void onFreespaceFrontEnable();
   virtual void onFreespaceFrontDisable();
 
-  // navigation state control functions
+  // navigation & following state control functions
   virtual void onNavigationStart();
-  virtual void onNavigationStop();
+  virtual void onNavigationCancel();
+  virtual void onFollowingStart();
+  virtual void onFollowingStop();
 
   // vehicle control state control functions
   virtual void onVehicleControlEnable();
@@ -254,6 +256,8 @@ private:
   ros::Subscriber parkinglot_status_sub_;
   ros::Subscriber parkinglot_ctrl_sub_;
   ros::Publisher keyboard_control_pub_;
+  ros::Publisher navigation_goal_pub_;
+  ros::Publisher navigation_cancel_pub_;
 
   // ros service
   ros::ServiceServer state_feedback_service_;

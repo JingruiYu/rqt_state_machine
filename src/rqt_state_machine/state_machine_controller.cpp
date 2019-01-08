@@ -86,8 +86,12 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   connect(ui_.enableKeyboardControl, SIGNAL(stateChanged(int)), this,
           SLOT(keyboardControlEnable()));
 
-  connect(ui_.startFollowing, SIGNAL(clicked()), this,
+  connect(ui_.startNavigation, SIGNAL(clicked()), this,
           SLOT(onNavigationStart()));
+  connect(ui_.cancelNavigation, SIGNAL(clicked()), this,
+          SLOT(onNavigationCancel()));
+  connect(ui_.startFollowing, SIGNAL(clicked()), this,
+          SLOT(onFollowingStart()));
 
   connect(ui_.startDeeppsManually, SIGNAL(clicked()), this,
           SLOT(onDeeppsStart()));
@@ -162,6 +166,11 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
 
   keyboard_control_pub_ =
       nh_.advertise<geometry_msgs::Twist>("vehicle_cmd_vel", 30);
+
+  navigation_goal_pub_ =
+      nh_.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal", 10);
+  navigation_cancel_pub_ =
+      nh_.advertise<std_msgs::Empty>("navigation_cancel", 10);
 
   // Advertising state control service
   state_feedback_service_ = nh_.advertiseService(
@@ -266,8 +275,8 @@ void StateMachineController::startStateMachine()
 // stop running state machine
 void StateMachineController::stopStateMachine()
 {
-  // stop navigation
-  onNavigationStop();
+  // stop following
+  onFollowingStop();
 
   // stop slam
   onSlamStop();
@@ -575,8 +584,26 @@ void StateMachineController::onSlamRemoveDefaultMapFile()
   ui_.status->setText("Status: Remove default map file!");
 }
 
-// navigation state control functions
+// navigation & following state control functions
 void StateMachineController::onNavigationStart()
+{
+  // publish topic to start navigation
+  geometry_msgs::PoseStamped msg;
+  msg.header.stamp = ros::Time::now();
+  msg.header.frame_id = "map";
+  navigation_goal_pub_.publish(msg);
+  ui_.status->setText("Status: Navigation goal sent!");
+}
+
+void StateMachineController::onNavigationCancel()
+{
+  // publish topic to stop navigation
+  std_msgs::Empty msg;
+  navigation_cancel_pub_.publish(msg);
+  ui_.status->setText("Status: Navigation cancel sent!");
+}
+
+void StateMachineController::onFollowingStart()
 {
   // enable vehicle control
   onVehicleControlEnable();
@@ -590,7 +617,7 @@ void StateMachineController::onNavigationStart()
   return;
 }
 
-void StateMachineController::onNavigationStop()
+void StateMachineController::onFollowingStop()
 {
   // disable vehicle control
   onVehicleControlDisable();
