@@ -201,6 +201,9 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
 
   // initialize lcm
   initLcm();
+
+  // get deepps start pos
+  getDeeppsStartPos();
 }
 
 void StateMachineController::shutdownPlugin()
@@ -276,17 +279,8 @@ void StateMachineController::startStateMachine()
   // start slam
   onSlamStart();
 
-  // get deepps start position
-  double x, y;
-  if (nh_.getParam("/orb_slam_2_ros_node/deepps_start_pos_x", x) &&
-      nh_.getParam("/orb_slam_2_ros_node/deepps_start_pos_y", y))
-  {
-    deepps_start_pos_.setX(x);
-    deepps_start_pos_.setY(y);
-  }
-  else
-    QMessageBox::warning(widget_, "warning",
-                         "Failed to get deepps start position!");
+  // get deepps start pos
+  getDeeppsStartPos();
 
   return;
 }
@@ -317,7 +311,6 @@ bool StateMachineController::updateStateMachineStates(
   {
   case 0: // slam
   {
-    ui_.status->setText("Status: slam feedback received");
     switch (req.state.state)
     {
     case 0: // tracking status
@@ -611,6 +604,10 @@ void StateMachineController::onNavigationStart()
   msg.header.stamp = ros::Time::now();
   msg.header.frame_id = "map";
   navigation_goal_pub_.publish(msg);
+
+  navi_status_ = StateMachineStatus::Navigation::RUNNING;
+  updateNaviStatusUI();
+
   ui_.status->setText("Status: Navigation goal sent!");
 }
 
@@ -619,6 +616,10 @@ void StateMachineController::onNavigationCancel()
   // publish topic to stop navigation
   std_msgs::Empty msg;
   navigation_cancel_pub_.publish(msg);
+
+  navi_status_ = StateMachineStatus::Navigation::IDLE;
+  updateNaviStatusUI();
+
   ui_.status->setText("Status: Navigation cancel sent!");
 }
 
@@ -1420,6 +1421,20 @@ void StateMachineController::onDeeppsStop()
   return;
 }
 
+void StateMachineController::getDeeppsStartPos()
+{
+  // get deepps start position
+  double x, y;
+  if (nh_.getParam("/orb_slam_2_ros_node/deepps_start_pos_x", x) &&
+      nh_.getParam("/orb_slam_2_ros_node/deepps_start_pos_y", y))
+  {
+    deepps_start_pos_.setX(x);
+    deepps_start_pos_.setY(y);
+  }
+  else
+   ROS_WARN("Failed to get deepps start position!");
+}
+
 void StateMachineController::parkinglotStatusCB(
     const parkinglot_msgs::ParkingLotDetectionStatusStamped::ConstPtr msg)
 {
@@ -1800,11 +1815,10 @@ void StateMachineController::checkDeeppsStartCondition()
   { // check if deepps start position has been reached
 
     // get transform of footprint to map
-    tf::TransformListener tf_listener;
     tf::StampedTransform tf_footprint2map_stamp;
     try
     {
-      tf_listener.lookupTransform("map", "base_footprint", ros::Time(0),
+      tf_listener_.lookupTransform("map", "base_footprint", ros::Time(0),
                                   tf_footprint2map_stamp);
 
       // get current pose
@@ -1814,15 +1828,19 @@ void StateMachineController::checkDeeppsStartCondition()
       // tolerance
       double tol = 1.0;
 
-      if (std::hypot(x, y) < tol)
+      // current distance
+      double dist = std::hypot(x - deepps_start_pos_.x(), y - deepps_start_pos_.y());
+
+      if (dist < tol)
       {
+        ui_.status->setText("Status: Deepps start position arrived!");
         // start deepps
         onDeeppsStart();
       }
     }
     catch (tf::TransformException ex)
     {
-      ui_.status->setText(ex.what());
+      ROS_ERROR_STREAM("checkDeeppsStartCondition: " << ex.what());
     }
   }
 }

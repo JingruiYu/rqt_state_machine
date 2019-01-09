@@ -198,6 +198,7 @@ protected slots:
   // deepps state control function
   virtual void onDeeppsStart();
   virtual void onDeeppsStop();
+  virtual void getDeeppsStartPos();
 
   // state machine
   // -- initialize status of different modules
@@ -286,6 +287,9 @@ private:
 
   // modules related variables
   tf::Point deepps_start_pos_;
+
+  // tf
+  tf::TransformListener tf_listener_;
 
   // Timers
   QTimer stateCheckingTimer_;
