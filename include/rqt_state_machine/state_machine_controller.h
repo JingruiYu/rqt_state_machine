@@ -245,6 +245,12 @@ private:
   void updateDeeppsStatusUI();
   void updateParkingStatusUI();
 
+  // state checking functions for modules
+  void checkSlamMode();
+  void checkSlamStatus();
+  void checkSlamPathRecording();
+  void checkDeeppsStartCondition();
+
   // initialize lcm
   void initLcm();
 

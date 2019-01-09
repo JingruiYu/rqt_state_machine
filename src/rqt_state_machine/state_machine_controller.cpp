@@ -27,6 +27,13 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
 
   ui_.verticalLayoutSpeed->setAlignment(ui_.sliderSpeed, Qt::AlignCenter);
 
+  ui_.radioModeSlam->setEnabled(false);
+  ui_.radioModeLocalization->setEnabled(false);
+  ui_.radioSlamRunning->setEnabled(false);
+  ui_.radioSlamIdle->setEnabled(false);
+  ui_.radioPathRecording->setEnabled(false);
+  ui_.radioPathIdle->setEnabled(false);
+
   // add widget to the user interface
   context.addWidget(widget_);
 
@@ -149,7 +156,7 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
 
   // start periodic state checking
   connect(&stateCheckingTimer_, SIGNAL(timeout()), this, SLOT(stateChecking()));
-  stateCheckingTimer_.setInterval(20);
+  stateCheckingTimer_.setInterval(500);
   stateCheckingTimer_.start();
 
   connect(&keyboardControlTimer_, SIGNAL(timeout()), this,
@@ -1545,6 +1552,112 @@ bool StateMachineController::eventFilter(QObject* target, QEvent* event)
 
 void StateMachineController::stateChecking()
 {
+  // check slam mode
+  checkSlamMode();
+  // check slam status
+  checkSlamStatus();
+  // check slam path recording
+  checkSlamPathRecording();
+
+  // check if time to start deepps
+  checkDeeppsStartCondition();
+
+  // handle lcm message
+  if (lcmMonitorEnabled_)
+    lcm_->handleTimeout(10);
+
+  return;
+}
+
+void StateMachineController::checkSlamStatus()
+{
+  state_machine_msgs::ActionControl srv;
+  srv.request.action.module = 0;
+  srv.request.action.command = 12;
+
+  if (ros::service::call("slam_state_control", srv))
+  {
+    ui_.radioSlamRunning->setEnabled(true);
+    ui_.radioSlamIdle->setEnabled(true);
+
+    if (srv.response.feedback == 1)
+    {
+      ui_.radioSlamRunning->setChecked(true);
+      ui_.radioSlamIdle->setChecked(false);
+    }
+    else
+    {
+      ui_.radioSlamRunning->setChecked(false);
+      ui_.radioSlamIdle->setChecked(true);
+    }
+  }
+  else
+  {
+    ui_.radioSlamRunning->setEnabled(false);
+    ui_.radioSlamIdle->setEnabled(false);
+  }
+}
+
+void StateMachineController::checkSlamMode()
+{
+  state_machine_msgs::ActionControl srv;
+  srv.request.action.module = 0;
+  srv.request.action.command = 11;
+
+  if (ros::service::call("slam_state_control", srv))
+  {
+    ui_.radioModeSlam->setEnabled(true);
+    ui_.radioModeLocalization->setEnabled(true);
+
+    if (srv.response.feedback == 0)
+    {
+      ui_.radioModeSlam->setChecked(true);
+      ui_.radioModeLocalization->setChecked(false);
+    }
+    else
+    {
+      ui_.radioModeSlam->setChecked(false);
+      ui_.radioModeLocalization->setChecked(true);
+    }
+  }
+  else
+  {
+    ui_.radioModeSlam->setEnabled(false);
+    ui_.radioModeLocalization->setEnabled(false);
+  }
+}
+
+void StateMachineController::checkSlamPathRecording()
+{
+  state_machine_msgs::ActionControl srv;
+  srv.request.action.module = 0;
+  srv.request.action.command = 13;
+
+  if (ros::service::call("slam_state_control", srv))
+  {
+    ui_.radioPathRecording->setEnabled(true);
+    ui_.radioPathIdle->setEnabled(true);
+
+    if (srv.response.feedback == 1)
+    {
+      ui_.radioPathRecording->setChecked(true);
+      ui_.radioPathIdle->setChecked(false);
+    }
+    else
+    {
+      ui_.radioPathRecording->setChecked(false);
+      ui_.radioPathIdle->setChecked(true);
+    }
+  }
+  else
+  {
+    ui_.radioPathRecording->setEnabled(false);
+    ui_.radioPathIdle->setEnabled(false);
+  }
+}
+
+void StateMachineController::checkDeeppsStartCondition()
+{
   if (navi_status_ == StateMachineStatus::Navigation::RUNNING &&
       deepps_status_ == StateMachineStatus::Deepps::IDLE)
   { // check if deepps start position has been reached
@@ -1575,12 +1688,6 @@ void StateMachineController::stateChecking()
       ui_.status->setText(ex.what());
     }
   }
-
-  // handle lcm message
-  if (lcmMonitorEnabled_)
-    lcm_->handleTimeout(10);
-
-  return;
 }
 
 void StateMachineController::getLaunchFilePathBringup()

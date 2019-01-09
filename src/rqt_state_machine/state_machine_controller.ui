@@ -47,7 +47,7 @@
          <enum>Qt::NoFocus</enum>
         </property>
         <property name="currentIndex">
-         <number>4</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="tabLaunch">
          <attribute name="title">
@@ -458,6 +458,162 @@ in Localization</string>
            <string>Remove Default 
  Map File</string>
           </property>
+         </widget>
+         <widget class="QGroupBox" name="groupSlamMode">
+          <property name="geometry">
+           <rect>
+            <x>420</x>
+            <y>120</y>
+            <width>131</width>
+            <height>91</height>
+           </rect>
+          </property>
+          <property name="title">
+           <string>Mode</string>
+          </property>
+          <widget class="QWidget" name="verticalLayoutWidget_5">
+           <property name="geometry">
+            <rect>
+             <x>3</x>
+             <y>30</y>
+             <width>121</width>
+             <height>54</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <item>
+             <widget class="QRadioButton" name="radioModeSlam">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Slam</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="radioModeLocalization">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Localization</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+         <widget class="QGroupBox" name="groupPathRecord">
+          <property name="geometry">
+           <rect>
+            <x>420</x>
+            <y>220</y>
+            <width>131</width>
+            <height>91</height>
+           </rect>
+          </property>
+          <property name="title">
+           <string>Path Record</string>
+          </property>
+          <widget class="QWidget" name="verticalLayoutWidget_6">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>30</y>
+             <width>121</width>
+             <height>54</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_6">
+            <item>
+             <widget class="QRadioButton" name="radioPathRecording">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Recording...</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="radioPathIdle">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Idle</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+         <widget class="QGroupBox" name="groupSlamStatus">
+          <property name="geometry">
+           <rect>
+            <x>420</x>
+            <y>20</y>
+            <width>131</width>
+            <height>91</height>
+           </rect>
+          </property>
+          <property name="title">
+           <string>Status</string>
+          </property>
+          <widget class="QWidget" name="verticalLayoutWidget_7">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>30</y>
+             <width>121</width>
+             <height>54</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_7">
+            <item>
+             <widget class="QRadioButton" name="radioSlamRunning">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Running</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="radioSlamIdle">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Idle</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
          </widget>
         </widget>
         <widget class="QWidget" name="tabFreespace">
