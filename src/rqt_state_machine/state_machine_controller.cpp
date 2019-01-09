@@ -1154,10 +1154,7 @@ void StateMachineController::changeLcmParkinglotCtrlState()
   }
 }
 
-void StateMachineController::lcmChecking()
-{
-  lcm_->handleTimeout(10);
-}
+void StateMachineController::lcmChecking() { lcm_->handleTimeout(10); }
 
 void StateMachineController::resetLcmOutput()
 {
