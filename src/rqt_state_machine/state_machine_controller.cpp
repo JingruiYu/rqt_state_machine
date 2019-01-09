@@ -159,6 +159,10 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   stateCheckingTimer_.setInterval(500);
   stateCheckingTimer_.start();
 
+  // set lcm checking
+  connect(&lcmCheckingTimer_, SIGNAL(timeout()), this, SLOT(lcmChecking()));
+  lcmCheckingTimer_.setInterval(20);
+
   connect(&keyboardControlTimer_, SIGNAL(timeout()), this,
           SLOT(keyboardControlPublish()));
   keyboardControlTimer_.setInterval(50);
@@ -1000,11 +1004,13 @@ void StateMachineController::changeLcmMonitorState()
   if (ui_.enableLcmMonitor->isChecked())
   {
     lcmMonitorEnabled_ = true;
+    lcmCheckingTimer_.start();
     ui_.status->setText("Status: Enable LCM monitoring.");
   }
   else
   {
     lcmMonitorEnabled_ = false;
+    lcmCheckingTimer_.stop();
     ui_.status->setText("Status: Disable LCM monitoring.");
   }
 }
@@ -1119,6 +1125,11 @@ void StateMachineController::changeLcmParkinglotCtrlState()
     lcm_->unsubscribe(parkinglot_ctrl_lcm_sub_);
     ui_.status->setText("Status: Disable LCM Parkinglot Ctrl.");
   }
+}
+
+void StateMachineController::lcmChecking()
+{
+  lcm_->handleTimeout(10);
 }
 
 void StateMachineController::resetLcmOutput()
@@ -1561,10 +1572,6 @@ void StateMachineController::stateChecking()
 
   // check if time to start deepps
   checkDeeppsStartCondition();
-
-  // handle lcm message
-  if (lcmMonitorEnabled_)
-    lcm_->handleTimeout(10);
 
   return;
 }

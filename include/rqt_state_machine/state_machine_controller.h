@@ -164,6 +164,7 @@ protected slots:
   virtual void changeLcmSensorEgomotionState();
   virtual void changeLcmSensorEsrFrontState();
   virtual void changeLcmParkinglotCtrlState();
+  virtual void lcmChecking();
   virtual void resetLcmOutput();
 
   virtual void updateAckermannCmdLcm(const lcm::ReceiveBuffer* rbuf,
@@ -283,6 +284,7 @@ private:
 
   // Timers
   QTimer stateCheckingTimer_;
+  QTimer lcmCheckingTimer_;
   QTimer keyboardControlTimer_;
 
   // lcm
