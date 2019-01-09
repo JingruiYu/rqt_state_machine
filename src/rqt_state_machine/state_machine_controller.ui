@@ -47,7 +47,7 @@
          <enum>Qt::NoFocus</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="tabLaunch">
          <attribute name="title">
@@ -833,9 +833,9 @@ in Localization</string>
          <widget class="QWidget" name="horizontalLayoutWidget_8">
           <property name="geometry">
            <rect>
-            <x>40</x>
+            <x>20</x>
             <y>20</y>
-            <width>431</width>
+            <width>541</width>
             <height>41</height>
            </rect>
           </property>
@@ -876,6 +876,19 @@ in Localization</string>
              </property>
              <property name="text">
               <string>E-Stop</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="softStopVehicleControlManually">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Soft Stop</string>
              </property>
             </widget>
            </item>

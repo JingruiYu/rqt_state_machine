@@ -148,6 +148,7 @@ protected slots:
   virtual void onVehicleControlEnable();
   virtual void onVehicleControlDisable();
   virtual void onVehicleControlEStop();
+  virtual void onVehicleControlSoftStop();
   virtual void setSliderSpeed(int speed);
   virtual void setDialSteering(int steering);
   virtual void stopKeyboardControl();

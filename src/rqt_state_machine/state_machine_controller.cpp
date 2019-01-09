@@ -80,6 +80,8 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(onVehicleControlDisable()));
   connect(ui_.eStopVehicleControlManually, SIGNAL(clicked()), this,
           SLOT(onVehicleControlEStop()));
+  connect(ui_.softStopVehicleControlManually, SIGNAL(clicked()), this,
+          SLOT(onVehicleControlSoftStop()));
   connect(ui_.sliderSpeed, SIGNAL(valueChanged(int)), this,
           SLOT(setSliderSpeed(int)));
   connect(ui_.dialSteering, SIGNAL(valueChanged(int)), this,
@@ -937,6 +939,31 @@ void StateMachineController::onVehicleControlEStop()
   else
     QMessageBox::warning(widget_, "diable",
                          "Failed to call E-Stop vehicle_control service!");
+
+  return;
+}
+
+void StateMachineController::onVehicleControlSoftStop()
+{
+  state_machine_msgs::ActionControl srv;
+  srv.request.action.module = 4;
+  srv.request.action.command = 3;
+
+  if (ros::service::call("vehicle_control_state_control", srv))
+  {
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "diable",
+                           "Failed to Soft Stop vehicle_control!");
+    else
+    {
+      vehicle_ctrl_status_ = StateMachineStatus::VehicleControl::IDLE;
+      updateCtrlStatusUI();
+      ui_.status->setText("Status: Soft Stop vehicle control!");
+    }
+  }
+  else
+    QMessageBox::warning(widget_, "diable",
+                         "Failed to call Soft Stop vehicle_control service!");
 
   return;
 }
