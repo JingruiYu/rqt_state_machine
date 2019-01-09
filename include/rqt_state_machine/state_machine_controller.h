@@ -156,6 +156,10 @@ protected slots:
   virtual void setKeyboardSpeedZero();
   virtual void keyboardControlPublish();
   virtual void keyboardControlEnable();
+  virtual void onSonarEnable();
+  virtual void onSonarDisable();
+  virtual void onFrontEsrEnable();
+  virtual void onFrontEsrDisable();
 
   virtual void changeLcmMonitorState();
   virtual void changeLcmAckermannCmdState();

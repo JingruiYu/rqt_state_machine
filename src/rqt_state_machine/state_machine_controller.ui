@@ -833,8 +833,8 @@ in Localization</string>
          <widget class="QWidget" name="horizontalLayoutWidget_8">
           <property name="geometry">
            <rect>
-            <x>20</x>
-            <y>20</y>
+            <x>40</x>
+            <y>10</y>
             <width>541</width>
             <height>41</height>
            </rect>
@@ -898,7 +898,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>30</x>
-            <y>100</y>
+            <y>276</y>
             <width>172</width>
             <height>331</height>
            </rect>
@@ -980,7 +980,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>220</x>
-            <y>100</y>
+            <y>276</y>
             <width>271</width>
             <height>331</height>
            </rect>
@@ -1125,7 +1125,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>30</x>
-            <y>74</y>
+            <y>250</y>
             <width>161</width>
             <height>23</height>
            </rect>
@@ -1138,7 +1138,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>220</x>
-            <y>75</y>
+            <y>251</y>
             <width>121</width>
             <height>21</height>
            </rect>
@@ -1151,7 +1151,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>30</x>
-            <y>428</y>
+            <y>60</y>
             <width>201</width>
             <height>23</height>
            </rect>
@@ -1164,7 +1164,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>44</x>
-            <y>458</y>
+            <y>90</y>
             <width>81</width>
             <height>131</height>
            </rect>
@@ -1233,7 +1233,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>134</x>
-            <y>458</y>
+            <y>90</y>
             <width>61</width>
             <height>131</height>
            </rect>
@@ -1293,7 +1293,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>200</x>
-            <y>510</y>
+            <y>142</y>
             <width>81</width>
             <height>31</height>
            </rect>
@@ -1306,7 +1306,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>60</x>
-            <y>590</y>
+            <y>222</y>
             <width>51</width>
             <height>21</height>
            </rect>
@@ -1319,7 +1319,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>140</x>
-            <y>590</y>
+            <y>222</y>
             <width>51</width>
             <height>21</height>
            </rect>
@@ -1327,6 +1327,46 @@ in Localization</string>
           <property name="text">
            <string>Zero</string>
           </property>
+         </widget>
+         <widget class="QWidget" name="gridLayoutWidget">
+          <property name="geometry">
+           <rect>
+            <x>310</x>
+            <y>100</y>
+            <width>267</width>
+            <height>80</height>
+           </rect>
+          </property>
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="enableSonar">
+             <property name="text">
+              <string>Enable Sonar</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="disableSonar">
+             <property name="text">
+              <string>Disable Sonar</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="enableFrontEsr">
+             <property name="text">
+              <string>Enable Front ESR</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="disableFrontEsr">
+             <property name="text">
+              <string>Disable Front ESR</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </widget>
         <widget class="QWidget" name="tabNavigation">
