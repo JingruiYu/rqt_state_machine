@@ -39,6 +39,7 @@ static const char* PACKAGE_BRINGUP = "saic_bringup";
 static const char* PACKAGE_SLAM = "orb_slam_2_ros";
 static const char* PACKAGE_FREESPACE = "freespace_ros";
 static const char* PACKAGE_NAVIGATION = "navigation_launch";
+static const char* PACKAGE_DEEPPS = "deepps_ros";
 
 static const char* FREESPACE_NODE_NAME = "freespace_node";
 
@@ -219,12 +220,14 @@ protected slots:
   virtual void getLaunchFilePathSlam();
   virtual void getLaunchFilePathFreespace();
   virtual void getLaunchFilePathNavigation();
+  virtual void getLaunchFilePathDeepps();
 
   // launch modules
   virtual void launchBringup();
   virtual void launchSlam();
   virtual void launchFreespace();
   virtual void launchNavigation();
+  virtual void launchDeepps();
   virtual void launchRviz();
   virtual void configLcmCAN();
   virtual void launchCAN();

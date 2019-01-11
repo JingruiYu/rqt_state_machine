@@ -132,6 +132,8 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(getLaunchFilePathFreespace()));
   connect(ui_.launchFileNavigation, SIGNAL(clicked()), this,
           SLOT(getLaunchFilePathNavigation()));
+  connect(ui_.launchFileDeepps, SIGNAL(clicked()), this,
+          SLOT(getLaunchFilePathDeepps()));
 
   connect(ui_.launchBringup, SIGNAL(clicked()), this, SLOT(launchBringup()));
   connect(ui_.launchSlam, SIGNAL(clicked()), this, SLOT(launchSlam()));
@@ -139,6 +141,8 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(launchFreespace()));
   connect(ui_.launchNavigation, SIGNAL(clicked()), this,
           SLOT(launchNavigation()));
+  connect(ui_.launchDeepps, SIGNAL(clicked()), this,
+          SLOT(launchDeepps()));
 
   connect(ui_.launchRviz, SIGNAL(clicked()), this, SLOT(launchRviz()));
   connect(ui_.configLcmCAN, SIGNAL(clicked()), this, SLOT(configLcmCAN()));
@@ -1893,6 +1897,18 @@ void StateMachineController::getLaunchFilePathNavigation()
   return;
 }
 
+void StateMachineController::getLaunchFilePathDeepps()
+{
+  std::string package_path = ros::package::getPath(PACKAGE_DEEPPS);
+  package_path += "/launch";
+
+  QString file = QFileDialog::getOpenFileName(
+        widget_, tr("Open Deepps launch file"),
+        QString::fromStdString(package_path), tr("ROS Launch Files (*.launch)"));
+  ui_.launchFilePathDeepps->setText(file);
+  return;
+}
+
 void StateMachineController::launchBringup()
 {
   QString path = ui_.launchFilePathBringup->text();
@@ -1941,6 +1957,19 @@ void StateMachineController::launchNavigation()
     cmd += path + "'";
     int output = system(cmd.toLocal8Bit().data());
     ui_.status->setText("Status: Navigation launched!");
+  }
+  return;
+}
+
+void StateMachineController::launchDeepps()
+{
+  QString path = ui_.launchFilePathDeepps->text();
+  if (!path.isEmpty())
+  {
+    QString cmd = "gnome-terminal -x sh -c 'roslaunch ";
+    cmd += path + "'";
+    int output = system(cmd.toLocal8Bit().data());
+    ui_.status->setText("Status: Deepps launched!");
   }
   return;
 }
