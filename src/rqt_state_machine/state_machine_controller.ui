@@ -47,7 +47,7 @@
          <enum>Qt::NoFocus</enum>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="tabLaunch">
          <attribute name="title">
@@ -462,9 +462,9 @@ in Localization</string>
          <widget class="QGroupBox" name="groupSlamMode">
           <property name="geometry">
            <rect>
-            <x>420</x>
+            <x>410</x>
             <y>120</y>
-            <width>131</width>
+            <width>141</width>
             <height>91</height>
            </rect>
           </property>
@@ -474,7 +474,7 @@ in Localization</string>
           <widget class="QWidget" name="verticalLayoutWidget_5">
            <property name="geometry">
             <rect>
-             <x>3</x>
+             <x>10</x>
              <y>30</y>
              <width>121</width>
              <height>54</height>
@@ -516,9 +516,9 @@ in Localization</string>
          <widget class="QGroupBox" name="groupPathRecord">
           <property name="geometry">
            <rect>
-            <x>420</x>
+            <x>410</x>
             <y>220</y>
-            <width>131</width>
+            <width>141</width>
             <height>91</height>
            </rect>
           </property>
@@ -528,7 +528,7 @@ in Localization</string>
           <widget class="QWidget" name="verticalLayoutWidget_6">
            <property name="geometry">
             <rect>
-             <x>0</x>
+             <x>10</x>
              <y>30</y>
              <width>121</width>
              <height>54</height>
@@ -567,9 +567,9 @@ in Localization</string>
          <widget class="QGroupBox" name="groupSlamStatus">
           <property name="geometry">
            <rect>
-            <x>420</x>
+            <x>410</x>
             <y>20</y>
-            <width>131</width>
+            <width>141</width>
             <height>91</height>
            </rect>
           </property>
@@ -579,7 +579,7 @@ in Localization</string>
           <widget class="QWidget" name="verticalLayoutWidget_7">
            <property name="geometry">
             <rect>
-             <x>0</x>
+             <x>10</x>
              <y>30</y>
              <width>121</width>
              <height>54</height>
