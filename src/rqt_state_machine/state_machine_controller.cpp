@@ -320,10 +320,9 @@ bool StateMachineController::updateStateMachineStates(
     {
     case 0: // tracking status
     {
-      int8_t traking_status = req.state.data;
-      if (traking_status == 0)
+      if (req.state.data > 0)
         ui_.statusSlam->setText("Tracking succeed");
-      else if (traking_status == 1)
+      else
         ui_.statusSlam->setText("Tracking failed");
       break;
     }
