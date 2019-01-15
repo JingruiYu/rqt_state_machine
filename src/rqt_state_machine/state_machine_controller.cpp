@@ -141,8 +141,7 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(launchFreespace()));
   connect(ui_.launchNavigation, SIGNAL(clicked()), this,
           SLOT(launchNavigation()));
-  connect(ui_.launchDeepps, SIGNAL(clicked()), this,
-          SLOT(launchDeepps()));
+  connect(ui_.launchDeepps, SIGNAL(clicked()), this, SLOT(launchDeepps()));
 
   connect(ui_.launchRviz, SIGNAL(clicked()), this, SLOT(launchRviz()));
   connect(ui_.configLcmCAN, SIGNAL(clicked()), this, SLOT(configLcmCAN()));
@@ -1436,7 +1435,7 @@ void StateMachineController::getDeeppsStartPos()
     deepps_start_pos_.setY(y);
   }
   else
-   ROS_WARN("Failed to get deepps start position!");
+    ROS_WARN("Failed to get deepps start position!");
 }
 
 void StateMachineController::parkinglotStatusCB(
@@ -1823,7 +1822,7 @@ void StateMachineController::checkDeeppsStartCondition()
     try
     {
       tf_listener_.lookupTransform("map", "base_footprint", ros::Time(0),
-                                  tf_footprint2map_stamp);
+                                   tf_footprint2map_stamp);
 
       // get current pose
       double x = tf_footprint2map_stamp.getOrigin().getX();
@@ -1833,7 +1832,8 @@ void StateMachineController::checkDeeppsStartCondition()
       double tol = 1.0;
 
       // current distance
-      double dist = std::hypot(x - deepps_start_pos_.x(), y - deepps_start_pos_.y());
+      double dist =
+          std::hypot(x - deepps_start_pos_.x(), y - deepps_start_pos_.y());
 
       if (dist < tol)
       {
@@ -1903,8 +1903,8 @@ void StateMachineController::getLaunchFilePathDeepps()
   package_path += "/launch";
 
   QString file = QFileDialog::getOpenFileName(
-        widget_, tr("Open Deepps launch file"),
-        QString::fromStdString(package_path), tr("ROS Launch Files (*.launch)"));
+      widget_, tr("Open Deepps launch file"),
+      QString::fromStdString(package_path), tr("ROS Launch Files (*.launch)"));
   ui_.launchFilePathDeepps->setText(file);
   return;
 }
