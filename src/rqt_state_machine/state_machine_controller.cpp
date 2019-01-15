@@ -93,7 +93,7 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   connect(ui_.setKeyboardSteeringZero, SIGNAL(clicked()), this,
           SLOT(setKeyboardSteeringZero()));
   connect(ui_.enableKeyboardControl, SIGNAL(stateChanged(int)), this,
-          SLOT(keyboadControlEnable()));
+          SLOT(keyboardControlEnable()));
   connect(ui_.enableSonar, SIGNAL(clicked()), this, SLOT(onSonarEnable()));
   connect(ui_.disableSonar, SIGNAL(clicked()), this, SLOT(onSonarDisable()));
   connect(ui_.enableFrontEsr, SIGNAL(clicked()), this,
