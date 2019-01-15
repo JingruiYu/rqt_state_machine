@@ -325,6 +325,14 @@ bool StateMachineController::updateStateMachineStates(
         ui_.statusSlam->setText("Tracking failed");
       break;
     }
+    case 1: // map scale
+    {
+      if (req.state.data > 0)
+        ui_.mapScale->setText(QString::number(req.state.data, 'f', 2));
+      else
+        ui_.mapScale->setText("N/A");
+      break;
+    }
     default:
       break;
     }
@@ -1717,6 +1725,8 @@ void StateMachineController::stateChecking()
   checkSlamStatus();
   // check slam path recording
   checkSlamPathRecording();
+  // check slam map scale
+  checkSlamMapScale();
 
   // check if time to start deepps
   checkDeeppsStartCondition();
@@ -1809,6 +1819,16 @@ void StateMachineController::checkSlamPathRecording()
     ui_.radioPathRecording->setEnabled(false);
     ui_.radioPathIdle->setEnabled(false);
   }
+}
+
+void StateMachineController::checkSlamMapScale()
+{
+  state_machine_msgs::ActionControl srv;
+  srv.request.action.module = 0;
+  srv.request.action.command = 14;
+
+  if (!ros::service::call("slam_state_control", srv))
+    ui_.mapScale->setText("");
 }
 
 void StateMachineController::checkDeeppsStartCondition()

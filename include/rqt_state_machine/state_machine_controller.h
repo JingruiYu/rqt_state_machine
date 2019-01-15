@@ -260,6 +260,7 @@ private:
   void checkSlamMode();
   void checkSlamStatus();
   void checkSlamPathRecording();
+  void checkSlamMapScale();
   void checkDeeppsStartCondition();
 
   // initialize lcm

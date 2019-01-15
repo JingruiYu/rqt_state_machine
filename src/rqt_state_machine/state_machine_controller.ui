@@ -615,6 +615,38 @@ in Localization</string>
            </layout>
           </widget>
          </widget>
+         <widget class="QLabel" name="labelMapScale">
+          <property name="geometry">
+           <rect>
+            <x>409</x>
+            <y>330</y>
+            <width>71</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Map scale:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+         <widget class="QLabel" name="mapScale">
+          <property name="geometry">
+           <rect>
+            <x>484</x>
+            <y>330</y>
+            <width>71</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
         </widget>
         <widget class="QWidget" name="tabFreespace">
          <attribute name="title">
