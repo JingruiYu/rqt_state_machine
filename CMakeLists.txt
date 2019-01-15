@@ -8,7 +8,6 @@ find_package(catkin REQUIRED COMPONENTS
   rqt_gui_cpp
   std_msgs
   state_machine_msgs
-  message_generation
   tf
 )
 
@@ -36,16 +35,6 @@ endif()
 
 set(LCM_INCLUDEDIR include)
 set(LCM_LINK_LIBRARAY lib)
-
-add_service_files(
-  FILES
-  StateFeedback.srv
-)
-
-generate_messages(
-  DEPENDENCIES
-  state_machine_msgs
-)
 
 catkin_package(
   INCLUDE_DIRS ${rqt_state_machine_INCLUDE_DIRECTORIES}

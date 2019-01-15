@@ -19,7 +19,7 @@
 #include <state_machine_msgs/ActionControl.h>
 #include <parkinglot_msgs/ParkingLotDetectionStatusStamped.h>
 #include <parkinglot_msgs/ParkingLotDetectionCtrlStamped.h>
-#include <rqt_state_machine/StateFeedback.h>
+#include <state_machine_msgs/StateFeedback.h>
 
 // lcm
 #include <lcm/lcm-cpp.hpp>
@@ -238,8 +238,9 @@ protected slots:
 private:
   // state machine
   // -- update states
-  bool updateStateMachineStates(StateFeedback::Request& req,
-                                StateFeedback::Response& res);
+  bool
+  updateStateMachineStates(state_machine_msgs::StateFeedback::Request& req,
+                           state_machine_msgs::StateFeedback::Response& res);
 
   void parkinglotStatusCB(
       const parkinglot_msgs::ParkingLotDetectionStatusStamped::ConstPtr msg);

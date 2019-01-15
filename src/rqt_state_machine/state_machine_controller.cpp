@@ -309,7 +309,8 @@ void StateMachineController::stopStateMachine()
 
 // update state machine states
 bool StateMachineController::updateStateMachineStates(
-    StateFeedback::Request& req, StateFeedback::Response& res)
+    state_machine_msgs::StateFeedback::Request& req,
+    state_machine_msgs::StateFeedback::Response& res)
 {
   switch (req.state.module)
   {
