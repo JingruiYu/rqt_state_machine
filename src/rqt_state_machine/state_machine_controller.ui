@@ -47,7 +47,7 @@
          <enum>Qt::NoFocus</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>5</number>
         </property>
         <widget class="QWidget" name="tabLaunch">
          <attribute name="title">
@@ -1451,7 +1451,7 @@ in Localization</string>
          <widget class="QPushButton" name="startDeeppsManually">
           <property name="geometry">
            <rect>
-            <x>130</x>
+            <x>100</x>
             <y>40</y>
             <width>131</width>
             <height>41</height>
@@ -1464,8 +1464,8 @@ in Localization</string>
          <widget class="QPushButton" name="stopDeeppsManually">
           <property name="geometry">
            <rect>
-            <x>130</x>
-            <y>90</y>
+            <x>300</x>
+            <y>40</y>
             <width>131</width>
             <height>41</height>
            </rect>
@@ -1477,8 +1477,8 @@ in Localization</string>
          <widget class="QPushButton" name="startParkingManually">
           <property name="geometry">
            <rect>
-            <x>130</x>
-            <y>170</y>
+            <x>100</x>
+            <y>220</y>
             <width>131</width>
             <height>41</height>
            </rect>
@@ -1490,7 +1490,7 @@ in Localization</string>
          <widget class="QPushButton" name="stopParkingManually">
           <property name="geometry">
            <rect>
-            <x>130</x>
+            <x>300</x>
             <y>220</y>
             <width>131</width>
             <height>41</height>
@@ -1498,6 +1498,73 @@ in Localization</string>
           </property>
           <property name="text">
            <string>Stop Parking</string>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="enableParkinglot">
+          <property name="geometry">
+           <rect>
+            <x>100</x>
+            <y>110</y>
+            <width>181</width>
+            <height>23</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Enable Parking Lot:</string>
+          </property>
+         </widget>
+         <widget class="QSpinBox" name="numParkinglot">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="geometry">
+           <rect>
+            <x>260</x>
+            <y>110</y>
+            <width>51</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="minimum">
+           <number>-1</number>
+          </property>
+          <property name="maximum">
+           <number>200</number>
+          </property>
+          <property name="value">
+           <number>-1</number>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="applyParkinglotId">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="geometry">
+           <rect>
+            <x>330</x>
+            <y>108</y>
+            <width>61</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Apply</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="clearParkinglotId">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="geometry">
+           <rect>
+            <x>410</x>
+            <y>108</y>
+            <width>61</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Clear</string>
           </property>
          </widget>
         </widget>

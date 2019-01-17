@@ -112,6 +112,12 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(onDeeppsStart()));
   connect(ui_.stopDeeppsManually, SIGNAL(clicked()), this,
           SLOT(onDeeppsStop()));
+  connect(ui_.enableParkinglot, SIGNAL(stateChanged(int)), this,
+          SLOT(enableParkinglot()));
+  connect(ui_.applyParkinglotId, SIGNAL(clicked()), this,
+          SLOT(applyParkinglotId()));
+  connect(ui_.clearParkinglotId, SIGNAL(clicked()), this,
+          SLOT(clearParkinglotId()));
 
   connect(ui_.startDeepps, SIGNAL(clicked()), this, SLOT(onDeeppsStart()));
 
@@ -1430,6 +1436,53 @@ void StateMachineController::onDeeppsStop()
                          "Failed to call stop deepps service!");
 
   return;
+}
+
+void StateMachineController::enableParkinglot()
+{
+  if (ui_.enableParkinglot->isChecked())
+  {
+    ui_.numParkinglot->setEnabled(true);
+    ui_.applyParkinglotId->setEnabled(true);
+    ui_.clearParkinglotId->setEnabled(true);
+  }
+  else
+  {
+    ui_.numParkinglot->setDisabled(true);
+    ui_.applyParkinglotId->setDisabled(true);
+    ui_.clearParkinglotId->setDisabled(true);
+  }
+
+  return;
+}
+
+void StateMachineController::applyParkinglotId()
+{
+  int id = ui_.numParkinglot->value();
+
+  state_machine_msgs::ActionControl srv;
+  srv.request.action.module = 2;
+  srv.request.action.command = 2;
+  srv.request.action.data = id;
+
+  if (ros::service::call("deepps_state_control", srv))
+  {
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "enable parkinglot",
+                           "Failed to enable parkinglot!");
+    else
+    {
+      ui_.status->setText("Status: Enable parkinglot!");
+    }
+  }
+  else
+    QMessageBox::warning(widget_, "enable parkinglot",
+                         "Failed to call enable parkinglot service!");
+}
+
+void StateMachineController::clearParkinglotId()
+{
+  ui_.numParkinglot->setValue(-1);
 }
 
 void StateMachineController::getDeeppsStartPos()

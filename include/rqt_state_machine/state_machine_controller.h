@@ -200,6 +200,9 @@ protected slots:
   virtual void onDeeppsStart();
   virtual void onDeeppsStop();
   virtual void getDeeppsStartPos();
+  virtual void enableParkinglot();
+  virtual void applyParkinglotId();
+  virtual void clearParkinglotId();
 
   // state machine
   // -- initialize status of different modules
