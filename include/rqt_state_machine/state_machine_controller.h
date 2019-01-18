@@ -41,6 +41,7 @@ static const char* PACKAGE_FREESPACE = "freespace_ros";
 static const char* PACKAGE_NAVIGATION = "navigation_launch";
 static const char* PACKAGE_DEEPPS = "deepps_ros";
 
+static const char* SLAM_NODE_NAME = "orb_slam_2_ros_node";
 static const char* FREESPACE_NODE_NAME = "freespace_node";
 
 static const char* LCM_CHANNEL_ACKERMANN_CMD = "ACKERMANN_CMD";
@@ -203,6 +204,9 @@ protected slots:
   virtual void enableParkinglot();
   virtual void applyParkinglotId();
   virtual void clearParkinglotId();
+  virtual void enableVirtualParkinglot();
+  virtual void applyVirtualParkinglot();
+  virtual void refreshVirtualParkinglot();
 
   // state machine
   // -- initialize status of different modules

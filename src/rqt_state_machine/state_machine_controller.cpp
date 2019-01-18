@@ -118,6 +118,12 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(applyParkinglotId()));
   connect(ui_.clearParkinglotId, SIGNAL(clicked()), this,
           SLOT(clearParkinglotId()));
+  connect(ui_.enableVirtualParkinglot, SIGNAL(stateChanged(int)), this,
+          SLOT(enableVirtualParkinglot()));
+  connect(ui_.applyVirtualParkinglot, SIGNAL(clicked()), this,
+          SLOT(applyVirtualParkinglot()));
+  connect(ui_.refreshVirtualParkinglot, SIGNAL(clicked()), this,
+          SLOT(refreshVirtualParkinglot()));
 
   connect(ui_.startDeepps, SIGNAL(clicked()), this, SLOT(onDeeppsStart()));
 
@@ -1497,6 +1503,86 @@ void StateMachineController::getDeeppsStartPos()
   }
   else
     ROS_WARN("Failed to get deepps start position!");
+}
+
+void StateMachineController::enableVirtualParkinglot()
+{
+  if (ui_.enableVirtualParkinglot->isChecked())
+  {
+    ui_.applyVirtualParkinglot->setEnabled(true);
+    ui_.refreshVirtualParkinglot->setEnabled(true);
+  }
+  else
+  {
+    ui_.applyVirtualParkinglot->setDisabled(true);
+    ui_.refreshVirtualParkinglot->setDisabled(true);
+  }
+
+  return;
+}
+
+void StateMachineController::applyVirtualParkinglot()
+{
+  state_machine_msgs::ActionControl srv;
+  srv.request.action.module = 2;
+  srv.request.action.command = 3;
+
+  if (ros::service::call("deepps_state_control", srv))
+  {
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "enable virtual parkinglot",
+                           "Failed to enable virtual parkinglot!");
+    else
+    {
+      ui_.status->setText("Status: Enable virtual parkinglot!");
+    }
+  }
+  else
+    QMessageBox::warning(widget_, "enable virtual parkinglot",
+                         "Failed to call enable virtual parkinglot service!");
+}
+
+void StateMachineController::refreshVirtualParkinglot()
+{
+  QString virtual_parkinglot_output;
+
+  double p1_x, p1_y, p2_x, p2_y, p3_x, p3_y, p4_x, p4_y;
+
+  const std::string p1_x_name = SLAM_NODE_NAME + std::string("/parkinglot_x1");
+  const std::string p1_y_name = SLAM_NODE_NAME + std::string("/parkinglot_y1");
+  const std::string p2_x_name = SLAM_NODE_NAME + std::string("/parkinglot_x2");
+  const std::string p2_y_name = SLAM_NODE_NAME + std::string("/parkinglot_y2");
+  const std::string p3_x_name = SLAM_NODE_NAME + std::string("/parkinglot_x3");
+  const std::string p3_y_name = SLAM_NODE_NAME + std::string("/parkinglot_y3");
+  const std::string p4_x_name = SLAM_NODE_NAME + std::string("/parkinglot_x4");
+  const std::string p4_y_name = SLAM_NODE_NAME + std::string("/parkinglot_y4");
+
+  if (nh_.getParam(p1_x_name, p1_x) && nh_.getParam(p1_y_name, p1_y) &&
+      nh_.getParam(p2_x_name, p2_x) && nh_.getParam(p2_y_name, p2_y) &&
+      nh_.getParam(p3_x_name, p3_x) && nh_.getParam(p3_y_name, p3_y) &&
+      nh_.getParam(p4_x_name, p4_x) && nh_.getParam(p4_y_name, p4_y))
+  {
+    virtual_parkinglot_output += "p1: (";
+    virtual_parkinglot_output += QString::number(p1_x, 'f', 2) + ", ";
+    virtual_parkinglot_output += QString::number(p1_y, 'f', 2) + ") ";
+    virtual_parkinglot_output += "p2: (";
+    virtual_parkinglot_output += QString::number(p2_x, 'f', 2) + ", ";
+    virtual_parkinglot_output += QString::number(p2_y, 'f', 2) + ")\n";
+    virtual_parkinglot_output += "p3: (";
+    virtual_parkinglot_output += QString::number(p3_x, 'f', 2) + ", ";
+    virtual_parkinglot_output += QString::number(p3_y, 'f', 2) + ") ";
+    virtual_parkinglot_output += "p4: (";
+    virtual_parkinglot_output += QString::number(p4_x, 'f', 2) + ", ";
+    virtual_parkinglot_output += QString::number(p4_y, 'f', 2) + ")";
+  }
+  else
+  {
+    virtual_parkinglot_output += "p1: N/A, p2: N/A \n";
+    virtual_parkinglot_output += "p3: N/A, p4: N/A";
+    ui_.status->setText("Status: Cannot load virtual parkinglot.");
+  }
+
+  ui_.statusVirtualParkinglot->setText(virtual_parkinglot_output);
 }
 
 void StateMachineController::parkinglotStatusCB(
