@@ -1516,6 +1516,27 @@ void StateMachineController::enableVirtualParkinglot()
   {
     ui_.applyVirtualParkinglot->setDisabled(true);
     ui_.refreshVirtualParkinglot->setDisabled(true);
+    ui_.statusVirtualParkinglot->setText("");
+
+    // call deepps to disable virtual parkinglot
+    state_machine_msgs::ActionControl srv;
+    srv.request.action.module = 2;
+    srv.request.action.command = 3;
+    srv.request.action.data = 0;
+
+    if (ros::service::call("deepps_state_control", srv))
+    {
+      if (!srv.response.feedback)
+        QMessageBox::warning(widget_, "disable virtual parkinglot",
+                             "Failed to disable virtual parkinglot!");
+      else
+      {
+        ui_.status->setText("Status: Disable virtual parkinglot!");
+      }
+    }
+    else
+      QMessageBox::warning(widget_, "disable virtual parkinglot",
+                           "Failed to call disable virtual parkinglot service!");
   }
 
   return;
@@ -1526,6 +1547,7 @@ void StateMachineController::applyVirtualParkinglot()
   state_machine_msgs::ActionControl srv;
   srv.request.action.module = 2;
   srv.request.action.command = 3;
+  srv.request.action.data = 1;
 
   if (ros::service::call("deepps_state_control", srv))
   {
