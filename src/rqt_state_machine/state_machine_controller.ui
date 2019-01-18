@@ -1026,6 +1026,9 @@ in Localization</string>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
              <property name="text">
               <string/>
              </property>
@@ -1044,6 +1047,9 @@ in Localization</string>
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
              </property>
              <property name="text">
               <string/>
@@ -1064,6 +1070,9 @@ in Localization</string>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
              <property name="text">
               <string/>
              </property>
@@ -1082,6 +1091,9 @@ in Localization</string>
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
              </property>
              <property name="text">
               <string/>
@@ -1102,6 +1114,9 @@ in Localization</string>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
              <property name="text">
               <string/>
              </property>
@@ -1121,6 +1136,9 @@ in Localization</string>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
              <property name="text">
               <string/>
              </property>
@@ -1139,6 +1157,9 @@ in Localization</string>
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
              </property>
              <property name="text">
               <string/>
@@ -1478,7 +1499,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>100</x>
-            <y>220</y>
+            <y>320</y>
             <width>131</width>
             <height>41</height>
            </rect>
@@ -1491,7 +1512,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>300</x>
-            <y>220</y>
+            <y>320</y>
             <width>131</width>
             <height>41</height>
            </rect>
@@ -1695,6 +1716,9 @@ in Localization</string>
           <layout class="QVBoxLayout" name="statusAuto">
            <item>
             <widget class="QLabel" name="statusSlam">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
              <property name="text">
               <string/>
              </property>
@@ -1702,6 +1726,9 @@ in Localization</string>
            </item>
            <item>
             <widget class="QLabel" name="statusNavi">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
              <property name="text">
               <string/>
              </property>
@@ -1709,6 +1736,9 @@ in Localization</string>
            </item>
            <item>
             <widget class="QLabel" name="statusCtrl">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
              <property name="text">
               <string/>
              </property>
@@ -1716,6 +1746,9 @@ in Localization</string>
            </item>
            <item>
             <widget class="QLabel" name="statusFreespace">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
              <property name="text">
               <string/>
              </property>
@@ -1723,6 +1756,9 @@ in Localization</string>
            </item>
            <item>
             <widget class="QLabel" name="statusSsd">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
              <property name="text">
               <string/>
              </property>
@@ -1730,6 +1766,9 @@ in Localization</string>
            </item>
            <item>
             <widget class="QLabel" name="statusDeepps">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
              <property name="text">
               <string/>
              </property>
@@ -1737,6 +1776,9 @@ in Localization</string>
            </item>
            <item>
             <widget class="QLabel" name="statusParking">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
              <property name="text">
               <string/>
              </property>
