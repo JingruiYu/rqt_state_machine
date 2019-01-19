@@ -199,6 +199,8 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   parkinglot_ctrl_sub_ =
       nh_.subscribe("/deepps/parkinglot_ctrl", 100,
                     &StateMachineController::parkinglotCtrlCB, this);
+  virtual_parkinglot_pub_ = nh_.advertise<geometry_msgs::PolygonStamped>(
+      "/deepps/virtual_parkinglot", 1, true);
 
   keyboard_control_pub_ =
       nh_.advertise<geometry_msgs::Twist>("vehicle_cmd_vel", 30);
@@ -1599,6 +1601,28 @@ void StateMachineController::refreshVirtualParkinglot()
     virtual_parkinglot_output += "p4: (";
     virtual_parkinglot_output += QString::number(p4_x, 'f', 2) + ", ";
     virtual_parkinglot_output += QString::number(p4_y, 'f', 2) + ")";
+
+    // publish virtual parkinglot
+    geometry_msgs::PolygonStamped virtual_parkinglot_msg;
+    virtual_parkinglot_msg.header.frame_id = "map";
+    virtual_parkinglot_msg.header.stamp = ros::Time::now();
+
+    geometry_msgs::Point32 lot_p1, lot_p2, lot_p3, lot_p4;
+    lot_p1.x = p1_x;
+    lot_p1.y = p1_y;
+    lot_p2.x = p2_x;
+    lot_p2.y = p2_y;
+    lot_p3.x = p3_x;
+    lot_p3.y = p3_y;
+    lot_p4.x = p4_x;
+    lot_p4.y = p4_y;
+
+    virtual_parkinglot_msg.polygon.points.push_back(lot_p1);
+    virtual_parkinglot_msg.polygon.points.push_back(lot_p2);
+    virtual_parkinglot_msg.polygon.points.push_back(lot_p3);
+    virtual_parkinglot_msg.polygon.points.push_back(lot_p4);
+
+    virtual_parkinglot_pub_.publish(virtual_parkinglot_msg);
   }
   else
   {

@@ -10,6 +10,7 @@
 #include <rqt_gui_cpp/plugin.h>
 #include <ui_state_machine_controller.h>
 #include <geometry_msgs/Twist.h>
+#include <geometry_msgs/PolygonStamped.h>
 #include <QWidget>
 #include <QTimer>
 #include <QFileDialog>
@@ -284,6 +285,7 @@ private:
   ros::Publisher keyboard_control_pub_;
   ros::Publisher navigation_goal_pub_;
   ros::Publisher navigation_cancel_pub_;
+  ros::Publisher virtual_parkinglot_pub_;
 
   // ros service
   ros::ServiceServer state_feedback_service_;
