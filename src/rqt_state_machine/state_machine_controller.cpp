@@ -124,6 +124,8 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(applyVirtualParkinglot()));
   connect(ui_.refreshVirtualParkinglot, SIGNAL(clicked()), this,
           SLOT(refreshVirtualParkinglot()));
+  connect(ui_.enableFreespaceParkinglot, SIGNAL(stateChanged(int)), this,
+          SLOT(enableFreespaceParkinglot()));
 
   connect(ui_.startDeepps, SIGNAL(clicked()), this, SLOT(onDeeppsStart()));
 
@@ -1535,8 +1537,9 @@ void StateMachineController::enableVirtualParkinglot()
       }
     }
     else
-      QMessageBox::warning(widget_, "disable virtual parkinglot",
-                           "Failed to call disable virtual parkinglot service!");
+      QMessageBox::warning(
+          widget_, "disable virtual parkinglot",
+          "Failed to call disable virtual parkinglot service!");
   }
 
   return;
@@ -1605,6 +1608,28 @@ void StateMachineController::refreshVirtualParkinglot()
   }
 
   ui_.statusVirtualParkinglot->setText(virtual_parkinglot_output);
+}
+
+void StateMachineController::enableFreespaceParkinglot()
+{
+  state_machine_msgs::ActionControl srv;
+  srv.request.action.module = 2;
+  srv.request.action.command = 4;
+  srv.request.action.data = ui_.enableFreespaceParkinglot->isChecked() ? 1 : 0;
+
+  if (ros::service::call("deepps_state_control", srv))
+  {
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "enable virtual parkinglot",
+                           "Failed to enable virtual parkinglot!");
+    else
+    {
+      ui_.status->setText("Status: Enable virtual parkinglot!");
+    }
+  }
+  else
+    QMessageBox::warning(widget_, "enable virtual parkinglot",
+                         "Failed to call enable virtual parkinglot service!");
 }
 
 void StateMachineController::parkinglotStatusCB(
