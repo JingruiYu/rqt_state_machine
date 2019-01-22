@@ -55,6 +55,8 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(onSlamResetMapping()));
   connect(ui_.recordDeeppsStartPos, SIGNAL(clicked()), this,
           SLOT(onSlamRecordDeeppsStartPos()));
+  connect(ui_.recordDeeppsVirtualParkinglot, SIGNAL(clicked()), this,
+          SLOT(onSlamRecordDeeppsVirtualParkinglot()));
   connect(ui_.removeDefaultMapFile, SIGNAL(clicked()), this,
           SLOT(onSlamRemoveDefaultMapFile()));
 
@@ -610,6 +612,28 @@ void StateMachineController::onSlamRecordDeeppsStartPos()
     QMessageBox::warning(
         widget_, "record deepps start position",
         "Failed to call record deepps start position service!");
+
+  return;
+}
+
+void StateMachineController::onSlamRecordDeeppsVirtualParkinglot()
+{
+  state_machine_msgs::ActionControl srv;
+  srv.request.action.module = 0;
+  srv.request.action.command = 15;
+
+  if (ros::service::call("slam_state_control", srv))
+  {
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "record deepps virtual parkinglot",
+                           "Failed to record deepps virtual parkinglot!");
+    else
+      ui_.status->setText("Status: Record deepps virtual parkinglot!");
+  }
+  else
+    QMessageBox::warning(
+        widget_, "record deepps virtual parkinglot",
+        "Failed to call record deepps virtual parkinglot service!");
 
   return;
 }

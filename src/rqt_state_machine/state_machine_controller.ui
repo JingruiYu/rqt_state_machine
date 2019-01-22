@@ -355,21 +355,21 @@
          <widget class="QPushButton" name="saveMapPath">
           <property name="geometry">
            <rect>
-            <x>200</x>
-            <y>110</y>
-            <width>161</width>
+            <x>40</x>
+            <y>170</y>
+            <width>321</width>
             <height>51</height>
            </rect>
           </property>
           <property name="text">
-           <string>Save Map and Path</string>
+           <string>Save Everything (Map, path, ...)</string>
           </property>
          </widget>
          <widget class="QPushButton" name="switchMapping">
           <property name="geometry">
            <rect>
             <x>40</x>
-            <y>170</y>
+            <y>240</y>
             <width>151</width>
             <height>31</height>
            </rect>
@@ -382,7 +382,7 @@
           <property name="geometry">
            <rect>
             <x>200</x>
-            <y>170</y>
+            <y>240</y>
             <width>161</width>
             <height>31</height>
            </rect>
@@ -395,7 +395,7 @@
           <property name="geometry">
            <rect>
             <x>40</x>
-            <y>210</y>
+            <y>280</y>
             <width>321</width>
             <height>31</height>
            </rect>
@@ -408,7 +408,7 @@
           <property name="geometry">
            <rect>
             <x>40</x>
-            <y>250</y>
+            <y>320</y>
             <width>131</width>
             <height>51</height>
            </rect>
@@ -422,7 +422,7 @@
           <property name="geometry">
            <rect>
             <x>230</x>
-            <y>250</y>
+            <y>320</y>
             <width>131</width>
             <height>51</height>
            </rect>
@@ -438,7 +438,7 @@ in Localization</string>
             <x>40</x>
             <y>110</y>
             <width>151</width>
-            <height>51</height>
+            <height>41</height>
            </rect>
           </property>
           <property name="text">
@@ -449,7 +449,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>40</x>
-            <y>310</y>
+            <y>380</y>
             <width>131</width>
             <height>51</height>
            </rect>
@@ -645,6 +645,19 @@ in Localization</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="recordDeeppsVirtualParkinglot">
+          <property name="geometry">
+           <rect>
+            <x>210</x>
+            <y>110</y>
+            <width>151</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Record Virtual Lot</string>
           </property>
          </widget>
         </widget>
