@@ -31,6 +31,8 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   ui_.radioModeLocalization->setEnabled(false);
   ui_.radioSlamRunning->setEnabled(false);
   ui_.radioSlamIdle->setEnabled(false);
+  ui_.radioTrackingSuccessful->setEnabled(false);
+  ui_.radioTrackingFailed->setEnabled(false);
   ui_.radioPathRecording->setEnabled(false);
   ui_.radioPathIdle->setEnabled(false);
 
@@ -2005,21 +2007,40 @@ void StateMachineController::checkSlamStatus()
     ui_.radioSlamRunning->setEnabled(true);
     ui_.radioSlamIdle->setEnabled(true);
 
-    if (srv.response.feedback == 1)
-    {
-      ui_.radioSlamRunning->setChecked(true);
-      ui_.radioSlamIdle->setChecked(false);
-    }
-    else
+    if (srv.response.feedback == 0)
     {
       ui_.radioSlamRunning->setChecked(false);
       ui_.radioSlamIdle->setChecked(true);
+
+      ui_.radioTrackingSuccessful->setEnabled(false);
+      ui_.radioTrackingFailed->setEnabled(false);
+    }
+    else
+    {
+      ui_.radioSlamRunning->setChecked(true);
+      ui_.radioSlamIdle->setChecked(false);
+
+      ui_.radioTrackingSuccessful->setEnabled(true);
+      ui_.radioTrackingFailed->setEnabled(true);
+
+      if (srv.response.feedback == 1)
+      {
+        ui_.radioTrackingSuccessful->setChecked(true);
+        ui_.radioTrackingFailed->setChecked(false);
+      }
+      else
+      {
+        ui_.radioTrackingSuccessful->setChecked(false);
+        ui_.radioTrackingFailed->setChecked(true);
+      }
     }
   }
   else
   {
     ui_.radioSlamRunning->setEnabled(false);
     ui_.radioSlamIdle->setEnabled(false);
+    ui_.radioTrackingSuccessful->setEnabled(false);
+    ui_.radioTrackingFailed->setEnabled(false);
   }
 }
 
