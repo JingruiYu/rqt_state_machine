@@ -128,6 +128,8 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(refreshVirtualParkinglot()));
   connect(ui_.enableFreespaceParkinglot, SIGNAL(stateChanged(int)), this,
           SLOT(enableFreespaceParkinglot()));
+  connect(ui_.enableParkinglotTracking, SIGNAL(stateChanged(int)), this,
+          SLOT(enableParkinglotTracking()));
 
   connect(ui_.startDeepps, SIGNAL(clicked()), this, SLOT(onDeeppsStart()));
 
@@ -1678,6 +1680,30 @@ void StateMachineController::enableFreespaceParkinglot()
   else
     QMessageBox::warning(widget_, "enable virtual parkinglot",
                          "Failed to call enable virtual parkinglot service!");
+}
+
+void StateMachineController::enableParkinglotTracking()
+{
+  state_machine_msgs::ActionControl srv;
+  srv.request.action.module = 4;
+  srv.request.action.command = 8;
+  srv.request.action.data = ui_.enableParkinglotTracking->isChecked() ? 1 : 0;
+
+  if (ros::service::call("vehicle_control_state_control", srv))
+  {
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "enable parkinglot tracking",
+                           "Failed to enable parkinglot tracking!");
+    else
+    {
+      ui_.status->setText("Status: Enable parkinglot tracking!");
+    }
+  }
+  else
+    QMessageBox::warning(widget_, "enable",
+                         "Failed to call enable parkinglot tracking service!");
+
+  return;
 }
 
 void StateMachineController::parkinglotStatusCB(

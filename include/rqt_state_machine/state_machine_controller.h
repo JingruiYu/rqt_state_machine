@@ -210,6 +210,7 @@ protected slots:
   virtual void applyVirtualParkinglot();
   virtual void refreshVirtualParkinglot();
   virtual void enableFreespaceParkinglot();
+  virtual void enableParkinglotTracking();
 
   // state machine
   // -- initialize status of different modules

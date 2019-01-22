@@ -1678,6 +1678,19 @@ in Localization</string>
            <string>Enable Freespace Parking Lot</string>
           </property>
          </widget>
+         <widget class="QCheckBox" name="enableParkinglotTracking">
+          <property name="geometry">
+           <rect>
+            <x>100</x>
+            <y>380</y>
+            <width>231</width>
+            <height>23</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Enable Parking Lot Tracking</string>
+          </property>
+         </widget>
         </widget>
         <widget class="QWidget" name="tabAuto">
          <property name="focusPolicy">
