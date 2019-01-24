@@ -130,6 +130,9 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(refreshVirtualParkinglot()));
   connect(ui_.enableFreespaceParkinglot, SIGNAL(stateChanged(int)), this,
           SLOT(enableFreespaceParkinglot()));
+  connect(ui_.refreshDeeppsStartPos, SIGNAL(clicked()), this,
+          SLOT(getDeeppsStartPos()));
+
   connect(ui_.startParkingManually, SIGNAL(clicked()), this,
           SLOT(onParkingStart()));
   connect(ui_.stopParkingManually, SIGNAL(clicked()), this,
@@ -210,6 +213,9 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   virtual_parkinglot_pub_ = nh_.advertise<geometry_msgs::PolygonStamped>(
       "/deepps/virtual_parkinglot", 1, true);
 
+  deepps_start_pos_pub_ = nh_.advertise<visualization_msgs::Marker>(
+        "deepps/start_position", 1);
+
   keyboard_control_pub_ =
       nh_.advertise<geometry_msgs::Twist>("vehicle_cmd_vel", 30);
 
@@ -228,9 +234,6 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
 
   // initialize lcm
   initLcm();
-
-  // get deepps start pos
-  getDeeppsStartPos();
 }
 
 void StateMachineController::shutdownPlugin()
@@ -1529,14 +1532,40 @@ void StateMachineController::getDeeppsStartPos()
 {
   // get deepps start position
   double x, y;
+  QString deepps_start_pos_string;
   if (nh_.getParam("/orb_slam_2_ros_node/deepps_start_pos_x", x) &&
       nh_.getParam("/orb_slam_2_ros_node/deepps_start_pos_y", y))
   {
     deepps_start_pos_.setX(x);
     deepps_start_pos_.setY(y);
+
+    deepps_start_pos_string = "(" + QString::number(x, 'f', 2) + ", " +
+                              QString::number(y, 'f', 2) + ")";
+
+    visualization_msgs::Marker start_pos_marker;
+    start_pos_marker.header.stamp = ros::Time::now();
+    start_pos_marker.header.frame_id = "map";
+    start_pos_marker.type = visualization_msgs::Marker::SPHERE;
+    start_pos_marker.id = 0;
+    start_pos_marker.pose.position.x = x;
+    start_pos_marker.pose.position.y = y;
+    start_pos_marker.scale.x = 1.2;
+    start_pos_marker.scale.y = 1.2;
+    start_pos_marker.scale.z = 1.2;
+    start_pos_marker.color.r = 1.0;
+    start_pos_marker.color.g = 0.0;
+    start_pos_marker.color.b = 1.0;
+    start_pos_marker.color.a = 0.8;
+
+    deepps_start_pos_pub_.publish(start_pos_marker);
   }
   else
+  {
     ROS_WARN("Failed to get deepps start position!");
+    deepps_start_pos_string = "(N/A, N/A)";
+  }
+
+  ui_.deeppsStartPos->setText(deepps_start_pos_string);
 }
 
 void StateMachineController::enableVirtualParkinglot()
@@ -2012,8 +2041,13 @@ void StateMachineController::stateChecking()
   // check slam map scale
   checkSlamMapScale();
 
-  // check if time to start deepps
-  checkDeeppsStartCondition();
+  if (navi_status_ == StateMachineStatus::Navigation::RUNNING &&
+      deepps_status_ == StateMachineStatus::Deepps::IDLE)
+  {
+    // check if time to start deepps
+    getDeeppsStartPos();
+    checkDeeppsStartCondition();
+  }
 
   return;
 }
@@ -2152,11 +2186,14 @@ void StateMachineController::checkDeeppsStartCondition()
       double y = tf_footprint2map_stamp.getOrigin().getY();
 
       // tolerance
-      double tol = 1.0;
+      double tol = 2.0;
 
       // current distance
       double dist =
           std::hypot(x - deepps_start_pos_.x(), y - deepps_start_pos_.y());
+
+      ROS_DEBUG("Distance to deepps start pos: %f", dist);
+      ui_.deeppsStartPosDist->setText("Dist: " + QString::number(dist, 'f', 2));
 
       if (dist < tol)
       {
@@ -2167,9 +2204,12 @@ void StateMachineController::checkDeeppsStartCondition()
     }
     catch (tf::TransformException ex)
     {
-      ROS_ERROR_STREAM("checkDeeppsStartCondition: " << ex.what());
+      ROS_WARN_STREAM("checkDeeppsStartCondition: " << ex.what());
+      ui_.deeppsStartPosDist->setText("Dist: N/A");
     }
   }
+  else
+    ui_.deeppsStartPosDist->setText("Dist: N/A");
 }
 
 void StateMachineController::getLaunchFilePathBringup()
