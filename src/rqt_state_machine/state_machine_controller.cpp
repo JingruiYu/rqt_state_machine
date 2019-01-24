@@ -130,8 +130,10 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(refreshVirtualParkinglot()));
   connect(ui_.enableFreespaceParkinglot, SIGNAL(stateChanged(int)), this,
           SLOT(enableFreespaceParkinglot()));
-  connect(ui_.enableParkinglotTracking, SIGNAL(stateChanged(int)), this,
-          SLOT(enableParkinglotTracking()));
+  connect(ui_.startParkingManually, SIGNAL(clicked()), this,
+          SLOT(onParkingStart()));
+  connect(ui_.stopParkingManually, SIGNAL(clicked()), this,
+          SLOT(onParkingStop()));
 
   connect(ui_.startDeepps, SIGNAL(clicked()), this, SLOT(onDeeppsStart()));
 
@@ -1684,28 +1686,48 @@ void StateMachineController::enableFreespaceParkinglot()
                          "Failed to call enable virtual parkinglot service!");
 }
 
-void StateMachineController::enableParkinglotTracking()
+void StateMachineController::onParkingStart()
 {
   state_machine_msgs::ActionControl srv;
   srv.request.action.module = 4;
   srv.request.action.command = 8;
-  srv.request.action.data = ui_.enableParkinglotTracking->isChecked() ? 1 : 0;
+  srv.request.action.data = 1;
 
   if (ros::service::call("vehicle_control_state_control", srv))
   {
     if (!srv.response.feedback)
-      QMessageBox::warning(widget_, "enable parkinglot tracking",
-                           "Failed to enable parkinglot tracking!");
+      QMessageBox::warning(widget_, "start parkinglot tracking",
+                           "Failed to start parkinglot tracking!");
     else
     {
-      ui_.status->setText("Status: Enable parkinglot tracking!");
+      ui_.status->setText("Status: Start parkinglot tracking!");
     }
   }
   else
-    QMessageBox::warning(widget_, "enable",
-                         "Failed to call enable parkinglot tracking service!");
+    QMessageBox::warning(widget_, "start",
+                         "Failed to call start parkinglot tracking service!");
+}
 
-  return;
+void StateMachineController::onParkingStop()
+{
+  state_machine_msgs::ActionControl srv;
+  srv.request.action.module = 4;
+  srv.request.action.command = 8;
+  srv.request.action.data = 0;
+
+  if (ros::service::call("vehicle_control_state_control", srv))
+  {
+    if (!srv.response.feedback)
+      QMessageBox::warning(widget_, "stop parkinglot tracking",
+                           "Failed to stop parkinglot tracking!");
+    else
+    {
+      ui_.status->setText("Status: Stop parkinglot tracking!");
+    }
+  }
+  else
+    QMessageBox::warning(widget_, "stop",
+                         "Failed to call stop parkinglot tracking service!");
 }
 
 void StateMachineController::parkinglotStatusCB(

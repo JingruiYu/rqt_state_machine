@@ -210,7 +210,10 @@ protected slots:
   virtual void applyVirtualParkinglot();
   virtual void refreshVirtualParkinglot();
   virtual void enableFreespaceParkinglot();
-  virtual void enableParkinglotTracking();
+
+  // parking state control function
+  virtual void onParkingStart();
+  virtual void onParkingStop();
 
   // state machine
   // -- initialize status of different modules
