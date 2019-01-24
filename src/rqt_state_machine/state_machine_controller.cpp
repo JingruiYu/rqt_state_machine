@@ -213,8 +213,8 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   virtual_parkinglot_pub_ = nh_.advertise<geometry_msgs::PolygonStamped>(
       "/deepps/virtual_parkinglot", 1, true);
 
-  deepps_start_pos_pub_ = nh_.advertise<visualization_msgs::Marker>(
-        "deepps/start_position", 1);
+  deepps_start_pos_pub_ =
+      nh_.advertise<visualization_msgs::Marker>("deepps/start_position", 1);
 
   keyboard_control_pub_ =
       nh_.advertise<geometry_msgs::Twist>("vehicle_cmd_vel", 30);
@@ -2079,13 +2079,17 @@ void StateMachineController::stateChecking()
   // check slam map scale
   checkSlamMapScale();
 
-  if (navi_status_ == StateMachineStatus::Navigation::RUNNING &&
+  // check if time to start deepps
+  if (slam_status_ == StateMachineStatus::Slam::RUNNING &&
+      ui_.radioTrackingSuccessful->isChecked() &&
+      navi_status_ == StateMachineStatus::Navigation::RUNNING &&
       deepps_status_ == StateMachineStatus::Deepps::IDLE)
   {
-    // check if time to start deepps
     getDeeppsStartPos();
     checkDeeppsStartCondition();
   }
+  else
+    ui_.deeppsStartPosDist->setText("Dist: N/A");
 
   return;
 }
