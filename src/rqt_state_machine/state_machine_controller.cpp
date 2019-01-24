@@ -1530,6 +1530,8 @@ void StateMachineController::clearParkinglotId()
 
 void StateMachineController::getDeeppsStartPos()
 {
+  ui_.status->setText("Status: Get deepps start position!");
+
   // get deepps start position
   double x, y;
   QString deepps_start_pos_string;
@@ -1847,6 +1849,34 @@ void StateMachineController::updateFreespaceStatusUI()
   }
 }
 
+void StateMachineController::updateSsdStatusUI()
+{
+  switch (ssd_status_)
+  {
+
+  case StateMachineStatus::Ssd::RUNNING:
+  {
+    ui_.statusSsd->setText("Running...");
+    break;
+  }
+
+  case StateMachineStatus::Ssd::IDLE:
+  {
+    ui_.statusSsd->setText("Idle");
+    break;
+  }
+
+  case StateMachineStatus::Ssd::ERROR:
+  {
+    ui_.statusSsd->setText("ERROR!");
+    break;
+  }
+
+  default:
+    break;
+  }
+}
+
 void StateMachineController::updateNaviStatusUI()
 {
   switch (navi_status_)
@@ -1975,6 +2005,14 @@ void StateMachineController::resetStatusUI()
   ui_.statusDeepps->setText("Idle");
   ui_.statusParking->setText("Idle");
 
+  updateSlamStatusUI();
+  updateNaviStatusUI();
+  updateCtrlStatusUI();
+  updateFreespaceStatusUI();
+  updateSsdStatusUI();
+  updateDeeppsStatusUI();
+  updateParkingStatusUI();
+
   ui_.status->setText("Status: Reset status.");
 }
 
@@ -2065,6 +2103,9 @@ void StateMachineController::checkSlamStatus()
 
     if (srv.response.feedback == 0)
     {
+      slam_status_ = StateMachineStatus::Slam::IDLE;
+      updateSlamStatusUI();
+
       ui_.radioSlamRunning->setChecked(false);
       ui_.radioSlamIdle->setChecked(true);
 
@@ -2073,6 +2114,9 @@ void StateMachineController::checkSlamStatus()
     }
     else
     {
+      slam_status_ = StateMachineStatus::Slam::RUNNING;
+      updateSlamStatusUI();
+
       ui_.radioSlamRunning->setChecked(true);
       ui_.radioSlamIdle->setChecked(false);
 
@@ -2168,48 +2212,42 @@ void StateMachineController::checkSlamMapScale()
     ui_.mapScale->setText("");
 }
 
+  // check if deepps start position has been reached
 void StateMachineController::checkDeeppsStartCondition()
 {
-  if (navi_status_ == StateMachineStatus::Navigation::RUNNING &&
-      deepps_status_ == StateMachineStatus::Deepps::IDLE)
-  { // check if deepps start position has been reached
+  // get transform of footprint to map
+  tf::StampedTransform tf_footprint2map_stamp;
+  try
+  {
+    tf_listener_.lookupTransform("map", "base_footprint", ros::Time(0),
+                                 tf_footprint2map_stamp);
 
-    // get transform of footprint to map
-    tf::StampedTransform tf_footprint2map_stamp;
-    try
+    // get current pose
+    double x = tf_footprint2map_stamp.getOrigin().getX();
+    double y = tf_footprint2map_stamp.getOrigin().getY();
+
+    // tolerance
+    double tol = 2.0;
+
+    // current distance
+    double dist =
+        std::hypot(x - deepps_start_pos_.x(), y - deepps_start_pos_.y());
+
+    ROS_DEBUG("Distance to deepps start pos: %f", dist);
+    ui_.deeppsStartPosDist->setText("Dist: " + QString::number(dist, 'f', 2));
+
+    if (dist < tol)
     {
-      tf_listener_.lookupTransform("map", "base_footprint", ros::Time(0),
-                                   tf_footprint2map_stamp);
-
-      // get current pose
-      double x = tf_footprint2map_stamp.getOrigin().getX();
-      double y = tf_footprint2map_stamp.getOrigin().getY();
-
-      // tolerance
-      double tol = 2.0;
-
-      // current distance
-      double dist =
-          std::hypot(x - deepps_start_pos_.x(), y - deepps_start_pos_.y());
-
-      ROS_DEBUG("Distance to deepps start pos: %f", dist);
-      ui_.deeppsStartPosDist->setText("Dist: " + QString::number(dist, 'f', 2));
-
-      if (dist < tol)
-      {
-        ui_.status->setText("Status: Deepps start position arrived!");
-        // start deepps
-        onDeeppsStart();
-      }
-    }
-    catch (tf::TransformException ex)
-    {
-      ROS_WARN_STREAM("checkDeeppsStartCondition: " << ex.what());
-      ui_.deeppsStartPosDist->setText("Dist: N/A");
+      ui_.status->setText("Status: Deepps start position arrived!");
+      // start deepps
+      onDeeppsStart();
     }
   }
-  else
+  catch (tf::TransformException ex)
+  {
+    ROS_WARN_STREAM("checkDeeppsStartCondition: " << ex.what());
     ui_.deeppsStartPosDist->setText("Dist: N/A");
+  }
 }
 
 void StateMachineController::getLaunchFilePathBringup()
