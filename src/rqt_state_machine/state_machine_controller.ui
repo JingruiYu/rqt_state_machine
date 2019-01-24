@@ -47,7 +47,7 @@
          <enum>Qt::NoFocus</enum>
         </property>
         <property name="currentIndex">
-         <number>5</number>
+         <number>4</number>
         </property>
         <widget class="QWidget" name="tabLaunch">
          <attribute name="title">
@@ -1500,7 +1500,7 @@ in Localization</string>
           <property name="geometry">
            <rect>
             <x>80</x>
-            <y>30</y>
+            <y>36</y>
             <width>151</width>
             <height>39</height>
            </rect>
@@ -1518,8 +1518,8 @@ in Localization</string>
          <widget class="QPushButton" name="cancelNavigation">
           <property name="geometry">
            <rect>
-            <x>290</x>
-            <y>30</y>
+            <x>300</x>
+            <y>36</y>
             <width>151</width>
             <height>39</height>
            </rect>
@@ -1533,6 +1533,143 @@ in Localization</string>
           <property name="text">
            <string>Cancel Navigation</string>
           </property>
+         </widget>
+         <widget class="QLabel" name="pathStartPosDist">
+          <property name="geometry">
+           <rect>
+            <x>320</x>
+            <y>280</y>
+            <width>91</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+         <widget class="QLabel" name="labelCurrentPath">
+          <property name="geometry">
+           <rect>
+            <x>79</x>
+            <y>150</y>
+            <width>101</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Current Path:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+         <widget class="QLabel" name="currentPathFile">
+          <property name="geometry">
+           <rect>
+            <x>80</x>
+            <y>180</y>
+            <width>371</width>
+            <height>71</height>
+           </rect>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="refreshCurrentPath">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="geometry">
+           <rect>
+            <x>360</x>
+            <y>147</y>
+            <width>91</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Refresh</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="labelNaviStartPos">
+          <property name="geometry">
+           <rect>
+            <x>80</x>
+            <y>280</y>
+            <width>111</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Start Position:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+         <widget class="QLabel" name="naviStartPos">
+          <property name="geometry">
+           <rect>
+            <x>190</x>
+            <y>280</y>
+            <width>121</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+         <widget class="QWidget" name="horizontalLayoutWidget_9">
+          <property name="geometry">
+           <rect>
+            <x>80</x>
+            <y>90</y>
+            <width>371</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_9">
+           <item>
+            <widget class="QPushButton" name="getNavigationPathFile">
+             <property name="text">
+              <string>Path</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="navigationPathFile"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="setNavigationPathFile">
+             <property name="text">
+              <string>Set</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </widget>
         <widget class="QWidget" name="tabParking">
@@ -2008,26 +2145,12 @@ in Localization</string>
            <rect>
             <x>70</x>
             <y>110</y>
-            <width>121</width>
+            <width>311</width>
             <height>51</height>
            </rect>
           </property>
           <property name="text">
            <string>Start Following</string>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="startDeepps">
-          <property name="geometry">
-           <rect>
-            <x>260</x>
-            <y>110</y>
-            <width>121</width>
-            <height>51</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Start Parking Lot
- Detection</string>
           </property>
          </widget>
          <widget class="QPushButton" name="statusReset">

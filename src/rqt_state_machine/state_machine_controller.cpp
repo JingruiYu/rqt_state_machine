@@ -137,8 +137,12 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(onParkingStart()));
   connect(ui_.stopParkingManually, SIGNAL(clicked()), this,
           SLOT(onParkingStop()));
-
-  connect(ui_.startDeepps, SIGNAL(clicked()), this, SLOT(onDeeppsStart()));
+  connect(ui_.refreshCurrentPath, SIGNAL(clicked()), this,
+          SLOT(refreshCurrentPath()));
+  connect(ui_.getNavigationPathFile, SIGNAL(clicked()), this,
+          SLOT(getNavigationPathFile()));
+  connect(ui_.setNavigationPathFile, SIGNAL(clicked()), this,
+          SLOT(setNavigationPathFile()));
 
   connect(ui_.startRecordPathInLocalization, SIGNAL(clicked()), this,
           SLOT(onSlamRecordPathInLocalizationStart()));
@@ -216,6 +220,13 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   deepps_start_pos_pub_ =
       nh_.advertise<visualization_msgs::Marker>("deepps/start_position", 1);
 
+  path_pub_ = nh_.advertise<nav_msgs::Path>("path_raw", 1);
+
+  path_start_pos_pub_ =
+      nh_.advertise<visualization_msgs::Marker>("path/start_position", 1);
+  path_end_pos_pub_ =
+      nh_.advertise<visualization_msgs::Marker>("path/end_position", 1);
+
   keyboard_control_pub_ =
       nh_.advertise<geometry_msgs::Twist>("vehicle_cmd_vel", 30);
 
@@ -234,6 +245,9 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
 
   // initialize lcm
   initLcm();
+
+  // initialize flags
+  navi_path_updated_ = false;
 }
 
 void StateMachineController::shutdownPlugin()
@@ -271,6 +285,7 @@ void StateMachineController::initStateMachineStatus()
   // -- navigation
   navi_status_ = StateMachineStatus::Navigation::IDLE;
   ui_.statusNavi->setText("Idle");
+  ui_.startFollowing->setEnabled(false);
   // -- vehicle control
   vehicle_ctrl_status_ = StateMachineStatus::VehicleControl::IDLE;
   ui_.statusCtrl->setText("Idle");
@@ -308,6 +323,10 @@ void StateMachineController::startStateMachine()
 
   // start slam
   onSlamStart();
+
+  // get navigation path
+  if (!navi_path_updated_)
+    refreshCurrentPath();
 
   // get deepps start pos
   getDeeppsStartPos();
@@ -708,6 +727,135 @@ void StateMachineController::onFollowingStop()
     updateNaviStatusUI();
   }
 
+  return;
+}
+
+void StateMachineController::refreshCurrentPath()
+{
+  ui_.status->setText("Status: Refresh current path!");
+
+  std::string path_file_path;
+  if (nh_.getParam("/static_path/path_file", path_file_path))
+  {
+    ui_.currentPathFile->setText(path_file_path.c_str());
+
+    // get waypoints in path file
+    if (path_file_path.empty())
+    {
+      ROS_ERROR("Can not load path from an empty path.");
+      return;
+    }
+
+    std::ifstream path_file;
+    path_file.open(path_file_path);
+    if (!path_file.is_open())
+    {
+      ROS_ERROR("Can not open path file: %s", path_file_path.c_str());
+      return;
+    }
+
+    uint lines_count = 0;
+    std::string line;
+    while (std::getline(path_file, line))
+      ++lines_count;
+
+    ROS_INFO("Total waypoints in path file: %u", lines_count);
+    path_file.close();
+
+    path_file.open(path_file_path);
+    double x = 0.0, y = 0.0, theta = 0.0;
+    uint current_line = 0;
+
+    while (current_line < lines_count)
+    {
+      path_file >> x;
+      path_file >> y;
+      path_file >> theta;
+
+      geometry_msgs::PoseStamped p;
+      p.pose.position.x = x;
+      p.pose.position.y = y;
+      p.pose.orientation = tf::createQuaternionMsgFromYaw(theta);
+      ROS_DEBUG("push back pose (%f, %f, %f) to path", x, y, theta);
+      navi_path_.poses.push_back(p);
+
+      ++current_line;
+    }
+    path_file.close();
+
+    // publish path
+    navi_path_.header.stamp = ros::Time::now();
+    navi_path_.header.frame_id = "map";
+    path_pub_.publish(navi_path_);
+    navi_path_updated_ = true;
+
+    // publish begin and end waypoints
+    double navi_start_pos_x = navi_path_.poses.front().pose.position.x;
+    double navi_start_pos_y = navi_path_.poses.front().pose.position.y;
+
+    QString navi_start_pos_string =
+        "(" + QString::number(navi_start_pos_x, 'f', 2) + ", " +
+        QString::number(navi_start_pos_y, 'f', 2) + ")";
+    ui_.naviStartPos->setText(navi_start_pos_string);
+
+    visualization_msgs::Marker start_marker, end_marker;
+    start_marker.header.stamp = ros::Time::now();
+    start_marker.header.frame_id = "map";
+    start_marker.type = visualization_msgs::Marker::SPHERE;
+    start_marker.id = 0;
+    start_marker.pose = navi_path_.poses.front().pose;
+    start_marker.scale.x = 1.2;
+    start_marker.scale.y = 1.2;
+    start_marker.scale.z = 1.2;
+    start_marker.color.r = 0.0;
+    start_marker.color.g = 1.0;
+    start_marker.color.b = 0.0;
+    start_marker.color.a = 0.8;
+
+    end_marker.header.stamp = ros::Time::now();
+    end_marker.header.frame_id = "map";
+    end_marker.type = visualization_msgs::Marker::CUBE;
+    end_marker.id = 0;
+    end_marker.pose = navi_path_.poses.back().pose;
+    end_marker.scale.x = 1.2;
+    end_marker.scale.y = 1.2;
+    end_marker.scale.z = 1.2;
+    end_marker.color.r = 1.0;
+    end_marker.color.g = 0.0;
+    end_marker.color.b = 0.0;
+    end_marker.color.a = 0.8;
+
+    path_start_pos_pub_.publish(start_marker);
+    path_end_pos_pub_.publish(end_marker);
+  }
+  else
+  {
+    ROS_WARN("Can not get path file in parameter server.");
+    ui_.currentPathFile->setText("N/A");
+    ui_.naviStartPos->setText("(N/A, N/A)");
+  }
+}
+
+void StateMachineController::getNavigationPathFile()
+{
+  std::string package_path = ros::package::getPath(PACKAGE_SLAM);
+  package_path += "/../../ORB_SLAM2/files";
+
+  QString file = QFileDialog::getOpenFileName(
+      widget_, tr("Open path file"),
+      QString::fromStdString(package_path), tr("TXT Files (*.txt)"));
+  ui_.navigationPathFile->setText(file);
+  return;
+}
+
+void StateMachineController::setNavigationPathFile()
+{
+  QString path_file = ui_.navigationPathFile->text();
+  if (!path_file.isEmpty())
+  {
+    ros::param::set("/static_path/path_file", path_file.toStdString());
+    ui_.status->setText("Status: Set navigation path!");
+  }
   return;
 }
 
@@ -2079,6 +2227,18 @@ void StateMachineController::stateChecking()
   // check slam map scale
   checkSlamMapScale();
 
+  // check if time to start navigation
+  if (slam_status_ == StateMachineStatus::Slam::RUNNING &&
+      ui_.radioTrackingSuccessful->isChecked() &&
+      navi_status_ == StateMachineStatus::Navigation::IDLE)
+  {
+    if (!navi_path_updated_)
+      refreshCurrentPath();
+    checkNavigationStartCondition();
+  }
+  else
+    ui_.pathStartPosDist->setText("Dist: N/A");
+
   // check if time to start deepps
   if (slam_status_ == StateMachineStatus::Slam::RUNNING &&
       ui_.radioTrackingSuccessful->isChecked() &&
@@ -2251,6 +2411,47 @@ void StateMachineController::checkDeeppsStartCondition()
   {
     ROS_WARN_STREAM("checkDeeppsStartCondition: " << ex.what());
     ui_.deeppsStartPosDist->setText("Dist: N/A");
+  }
+}
+
+void StateMachineController::checkNavigationStartCondition()
+{
+  // get transform of footprint to map
+  tf::StampedTransform tf_footprint2map_stamp;
+  try
+  {
+    tf_listener_.lookupTransform("map", "base_footprint", ros::Time(0),
+                                 tf_footprint2map_stamp);
+
+    // get current pose
+    double x = tf_footprint2map_stamp.getOrigin().getX();
+    double y = tf_footprint2map_stamp.getOrigin().getY();
+
+    // tolerance
+    double tol = 2.0;
+
+    // current distance to path
+    double dist = std::numeric_limits<double>::max();
+
+    for (auto p : navi_path_.poses)
+    {
+      double tmp_dist = std::hypot(x - p.pose.position.x, y - p.pose.position.y);
+      if (tmp_dist < dist)
+        dist = tmp_dist;
+    }
+
+    ROS_DEBUG("Distance to path: %f", dist);
+    ui_.pathStartPosDist->setText("Dist: " + QString::number(dist, 'f', 2));
+
+    if (dist < tol)
+      ui_.startFollowing->setEnabled(true);
+    else
+      ui_.startFollowing->setEnabled(false);
+  }
+  catch (tf::TransformException ex)
+  {
+    ROS_WARN_STREAM("checkDeeppsStartCondition: " << ex.what());
+    ui_.pathStartPosDist->setText("Dist: N/A");
   }
 }
 

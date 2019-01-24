@@ -1,6 +1,7 @@
 #ifndef STATE_MACHINE_CONTROLLER_H
 #define STATE_MACHINE_CONTROLLER_H
 #include <math.h>
+#include <fstream>
 
 // ros
 #include <ros/ros.h>
@@ -12,6 +13,7 @@
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/PolygonStamped.h>
 #include <visualization_msgs/Marker.h>
+#include <nav_msgs/Path.h>
 #include <QWidget>
 #include <QTimer>
 #include <QFileDialog>
@@ -148,6 +150,9 @@ protected slots:
   virtual void onNavigationCancel();
   virtual void onFollowingStart();
   virtual void onFollowingStop();
+  virtual void refreshCurrentPath();
+  virtual void getNavigationPathFile();
+  virtual void setNavigationPathFile();
 
   // vehicle control state control functions
   virtual void onVehicleControlEnable();
@@ -277,6 +282,7 @@ private:
   void checkSlamPathRecording();
   void checkSlamMapScale();
   void checkDeeppsStartCondition();
+  void checkNavigationStartCondition();
 
   // initialize lcm
   void initLcm();
@@ -293,6 +299,9 @@ private:
   ros::Publisher navigation_cancel_pub_;
   ros::Publisher virtual_parkinglot_pub_;
   ros::Publisher deepps_start_pos_pub_;
+  ros::Publisher path_pub_;
+  ros::Publisher path_start_pos_pub_;
+  ros::Publisher path_end_pos_pub_;
 
   // ros service
   ros::ServiceServer state_feedback_service_;
@@ -309,6 +318,8 @@ private:
 
   // modules related variables
   tf::Point deepps_start_pos_;
+  nav_msgs::Path navi_path_;
+  bool navi_path_updated_;
 
   // tf
   tf::TransformListener tf_listener_;
