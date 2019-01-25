@@ -2230,6 +2230,7 @@ void StateMachineController::stateChecking()
   // check if time to start navigation
   if (slam_status_ == StateMachineStatus::Slam::RUNNING &&
       ui_.radioTrackingSuccessful->isChecked() &&
+      ui_.radioModeLocalization->isChecked() &&
       navi_status_ == StateMachineStatus::Navigation::IDLE)
   {
     if (!navi_path_updated_)
