@@ -151,7 +151,7 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
 
   connect(ui_.startAuto, SIGNAL(clicked()), this, SLOT(startStateMachine()));
   connect(ui_.stopAuto, SIGNAL(clicked()), this, SLOT(stopStateMachine()));
-  connect(ui_.statusReset, SIGNAL(clicked()), this, SLOT(resetStatusUI()));
+  connect(ui_.refreshStatus, SIGNAL(clicked()), this, SLOT(refreshStatusUI()));
 
   connect(ui_.launchFileBringup, SIGNAL(clicked()), this,
           SLOT(getLaunchFilePathBringup()));
@@ -2145,16 +2145,8 @@ void StateMachineController::updateParkingStatusUI()
   }
 }
 
-void StateMachineController::resetStatusUI()
+void StateMachineController::refreshStatusUI()
 {
-  ui_.statusSlam->setText("Idle");
-  ui_.statusNavi->setText("Idle");
-  ui_.statusCtrl->setText("Idle");
-  ui_.statusFreespace->setText("Idle");
-  ui_.statusSsd->setText("Idle");
-  ui_.statusDeepps->setText("Idle");
-  ui_.statusParking->setText("Idle");
-
   updateSlamStatusUI();
   updateNaviStatusUI();
   updateCtrlStatusUI();
@@ -2163,7 +2155,7 @@ void StateMachineController::resetStatusUI()
   updateDeeppsStatusUI();
   updateParkingStatusUI();
 
-  ui_.status->setText("Status: Reset status.");
+  ui_.status->setText("Status: Refresh status.");
 }
 
 bool StateMachineController::eventFilter(QObject* target, QEvent* event)

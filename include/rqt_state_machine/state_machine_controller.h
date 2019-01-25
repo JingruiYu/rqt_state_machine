@@ -233,7 +233,7 @@ protected slots:
   virtual void stateChecking();
 
   // reset the ui status of each module
-  virtual void resetStatusUI();
+  virtual void refreshStatusUI();
 
   // open and get the paths to launch files of modules
   virtual void getLaunchFilePathBringup();
