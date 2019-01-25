@@ -1873,6 +1873,8 @@ void StateMachineController::onParkingStart()
                            "Failed to start parkinglot tracking!");
     else
     {
+      parking_status_ = StateMachineStatus::ParkingPlanning::RUNNING;
+      updateParkingStatusUI();
       ui_.status->setText("Status: Start parkinglot tracking!");
     }
   }
@@ -1895,6 +1897,8 @@ void StateMachineController::onParkingStop()
                            "Failed to stop parkinglot tracking!");
     else
     {
+      parking_status_ = StateMachineStatus::ParkingPlanning::IDLE;
+      updateParkingStatusUI();
       ui_.status->setText("Status: Stop parkinglot tracking!");
     }
   }
@@ -2392,6 +2396,8 @@ void StateMachineController::checkDeeppsStartCondition()
       ui_.status->setText("Status: Deepps start position arrived!");
       // start deepps
       onDeeppsStart();
+      // start parking
+      onParkingStart();
     }
   }
   catch (tf::TransformException ex)
