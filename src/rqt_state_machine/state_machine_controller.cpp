@@ -1197,8 +1197,6 @@ void StateMachineController::onSonarEnable()
       QMessageBox::warning(widget_, "enable", "Failed to enable sonar!");
     else
     {
-      vehicle_ctrl_status_ = StateMachineStatus::VehicleControl::IDLE;
-      updateCtrlStatusUI();
       ui_.status->setText("Status: Enable sonar!");
     }
   }
@@ -1222,8 +1220,6 @@ void StateMachineController::onSonarDisable()
       QMessageBox::warning(widget_, "diable", "Failed to disable sonar!");
     else
     {
-      vehicle_ctrl_status_ = StateMachineStatus::VehicleControl::IDLE;
-      updateCtrlStatusUI();
       ui_.status->setText("Status: Disable sonar!");
     }
   }
@@ -1247,8 +1243,6 @@ void StateMachineController::onFrontEsrEnable()
       QMessageBox::warning(widget_, "enable", "Failed to enable front esr!");
     else
     {
-      vehicle_ctrl_status_ = StateMachineStatus::VehicleControl::IDLE;
-      updateCtrlStatusUI();
       ui_.status->setText("Status: Enable front esr!");
     }
   }
@@ -1272,8 +1266,6 @@ void StateMachineController::onFrontEsrDisable()
       QMessageBox::warning(widget_, "diable", "Failed to disable front esr!");
     else
     {
-      vehicle_ctrl_status_ = StateMachineStatus::VehicleControl::IDLE;
-      updateCtrlStatusUI();
       ui_.status->setText("Status: Disable front esr!");
     }
   }
