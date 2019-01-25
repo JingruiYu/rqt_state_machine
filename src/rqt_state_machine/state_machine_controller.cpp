@@ -1910,15 +1910,15 @@ void StateMachineController::onParkingStop()
 void StateMachineController::parkinglotStatusCB(
     const parkinglot_msgs::ParkingLotDetectionStatusStamped::ConstPtr msg)
 {
-  ui_.status->setText("Status: parking lot status received!");
+//  ui_.status->setText("Status: parking lot status received!");
 
-  if (msg->ParkinglotSearchEnabled)
-    deepps_status_ = StateMachineStatus::Deepps::RUNNING;
-  else
-    deepps_status_ = StateMachineStatus::Deepps::IDLE;
+//  if (msg->ParkinglotSearchEnabled)
+//    deepps_status_ = StateMachineStatus::Deepps::RUNNING;
+//  else
+//    deepps_status_ = StateMachineStatus::Deepps::IDLE;
 
-  // update UI
-  updateDeeppsStatusUI();
+//  // update UI
+//  updateDeeppsStatusUI();
 
   return;
 }
@@ -1926,15 +1926,15 @@ void StateMachineController::parkinglotStatusCB(
 void StateMachineController::parkinglotCtrlCB(
     const parkinglot_msgs::ParkingLotDetectionCtrlStamped::ConstPtr msg)
 {
-  ui_.status->setText("Status: parking lot ctrl received!");
+//  ui_.status->setText("Status: parking lot ctrl received!");
 
-  if (msg->isParkinglotTrackingFuncEnable)
-    parking_status_ = StateMachineStatus::ParkingPlanning::TRACKING;
-  else
-    parking_status_ = StateMachineStatus::ParkingPlanning::IDLE;
+//  if (msg->isParkinglotTrackingFuncEnable)
+//    parking_status_ = StateMachineStatus::ParkingPlanning::TRACKING;
+//  else
+//    parking_status_ = StateMachineStatus::ParkingPlanning::IDLE;
 
-  // update UI
-  updateParkingStatusUI();
+//  // update UI
+//  updateParkingStatusUI();
 
   return;
 }
