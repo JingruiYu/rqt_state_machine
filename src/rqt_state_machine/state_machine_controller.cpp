@@ -766,6 +766,8 @@ void StateMachineController::refreshCurrentPath()
     double x = 0.0, y = 0.0, theta = 0.0;
     uint current_line = 0;
 
+    navi_path_.poses.clear();
+
     while (current_line < lines_count)
     {
       path_file >> x;
