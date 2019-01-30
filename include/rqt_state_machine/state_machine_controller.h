@@ -44,6 +44,7 @@ static const char* PACKAGE_SLAM = "orb_slam_2_ros";
 static const char* PACKAGE_FREESPACE = "freespace_ros";
 static const char* PACKAGE_NAVIGATION = "navigation_launch";
 static const char* PACKAGE_DEEPPS = "deepps_ros";
+static const char* PACKAGE_SSD = "ssd_ros";
 
 static const char* SLAM_NODE_NAME = "orb_slam_2_ros_node";
 static const char* FREESPACE_NODE_NAME = "freespace_node";
@@ -241,6 +242,7 @@ protected slots:
   virtual void getLaunchFilePathFreespace();
   virtual void getLaunchFilePathNavigation();
   virtual void getLaunchFilePathDeepps();
+  virtual void getLaunchFilePathSsd();
 
   // launch modules
   virtual void launchBringup();
@@ -248,6 +250,7 @@ protected slots:
   virtual void launchFreespace();
   virtual void launchNavigation();
   virtual void launchDeepps();
+  virtual void launchSsd();
   virtual void launchRviz();
   virtual void configLcmCAN();
   virtual void launchCAN();

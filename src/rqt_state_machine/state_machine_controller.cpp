@@ -163,6 +163,8 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
           SLOT(getLaunchFilePathNavigation()));
   connect(ui_.launchFileDeepps, SIGNAL(clicked()), this,
           SLOT(getLaunchFilePathDeepps()));
+  connect(ui_.launchFileSsd, SIGNAL(clicked()), this,
+          SLOT(getLaunchFilePathSsd()));
 
   connect(ui_.launchBringup, SIGNAL(clicked()), this, SLOT(launchBringup()));
   connect(ui_.launchSlam, SIGNAL(clicked()), this, SLOT(launchSlam()));
@@ -171,6 +173,7 @@ void StateMachineController::initPlugin(qt_gui_cpp::PluginContext& context)
   connect(ui_.launchNavigation, SIGNAL(clicked()), this,
           SLOT(launchNavigation()));
   connect(ui_.launchDeepps, SIGNAL(clicked()), this, SLOT(launchDeepps()));
+  connect(ui_.launchSsd, SIGNAL(clicked()), this, SLOT(launchSsd()));
 
   connect(ui_.launchRviz, SIGNAL(clicked()), this, SLOT(launchRviz()));
   connect(ui_.configLcmCAN, SIGNAL(clicked()), this, SLOT(configLcmCAN()));
@@ -844,8 +847,8 @@ void StateMachineController::getNavigationPathFile()
   package_path += "/../../ORB_SLAM2/files";
 
   QString file = QFileDialog::getOpenFileName(
-      widget_, tr("Open path file"),
-      QString::fromStdString(package_path), tr("TXT Files (*.txt)"));
+      widget_, tr("Open path file"), QString::fromStdString(package_path),
+      tr("TXT Files (*.txt)"));
   ui_.navigationPathFile->setText(file);
   return;
 }
@@ -1910,15 +1913,15 @@ void StateMachineController::onParkingStop()
 void StateMachineController::parkinglotStatusCB(
     const parkinglot_msgs::ParkingLotDetectionStatusStamped::ConstPtr msg)
 {
-//  ui_.status->setText("Status: parking lot status received!");
+  //  ui_.status->setText("Status: parking lot status received!");
 
-//  if (msg->ParkinglotSearchEnabled)
-//    deepps_status_ = StateMachineStatus::Deepps::RUNNING;
-//  else
-//    deepps_status_ = StateMachineStatus::Deepps::IDLE;
+  //  if (msg->ParkinglotSearchEnabled)
+  //    deepps_status_ = StateMachineStatus::Deepps::RUNNING;
+  //  else
+  //    deepps_status_ = StateMachineStatus::Deepps::IDLE;
 
-//  // update UI
-//  updateDeeppsStatusUI();
+  //  // update UI
+  //  updateDeeppsStatusUI();
 
   return;
 }
@@ -1926,15 +1929,15 @@ void StateMachineController::parkinglotStatusCB(
 void StateMachineController::parkinglotCtrlCB(
     const parkinglot_msgs::ParkingLotDetectionCtrlStamped::ConstPtr msg)
 {
-//  ui_.status->setText("Status: parking lot ctrl received!");
+  //  ui_.status->setText("Status: parking lot ctrl received!");
 
-//  if (msg->isParkinglotTrackingFuncEnable)
-//    parking_status_ = StateMachineStatus::ParkingPlanning::TRACKING;
-//  else
-//    parking_status_ = StateMachineStatus::ParkingPlanning::IDLE;
+  //  if (msg->isParkinglotTrackingFuncEnable)
+  //    parking_status_ = StateMachineStatus::ParkingPlanning::TRACKING;
+  //  else
+  //    parking_status_ = StateMachineStatus::ParkingPlanning::IDLE;
 
-//  // update UI
-//  updateParkingStatusUI();
+  //  // update UI
+  //  updateParkingStatusUI();
 
   return;
 }
@@ -2367,7 +2370,7 @@ void StateMachineController::checkSlamMapScale()
     ui_.mapScale->setText("");
 }
 
-  // check if deepps start position has been reached
+// check if deepps start position has been reached
 void StateMachineController::checkDeeppsStartCondition()
 {
   // get transform of footprint to map
@@ -2428,7 +2431,8 @@ void StateMachineController::checkNavigationStartCondition()
 
     for (auto p : navi_path_.poses)
     {
-      double tmp_dist = std::hypot(x - p.pose.position.x, y - p.pose.position.y);
+      double tmp_dist =
+          std::hypot(x - p.pose.position.x, y - p.pose.position.y);
       if (tmp_dist < dist)
         dist = tmp_dist;
     }
@@ -2508,6 +2512,18 @@ void StateMachineController::getLaunchFilePathDeepps()
   return;
 }
 
+void StateMachineController::getLaunchFilePathSsd()
+{
+  std::string package_path = ros::package::getPath(PACKAGE_SSD);
+  package_path += "/launch";
+
+  QString file = QFileDialog::getOpenFileName(
+      widget_, tr("Open Ssd launch file"), QString::fromStdString(package_path),
+      tr("ROS Launch Files (*.launch)"));
+  ui_.launchFilePathSsd->setText(file);
+  return;
+}
+
 void StateMachineController::launchBringup()
 {
   QString path = ui_.launchFilePathBringup->text();
@@ -2569,6 +2585,19 @@ void StateMachineController::launchDeepps()
     cmd += path + "'";
     int output = system(cmd.toLocal8Bit().data());
     ui_.status->setText("Status: Deepps launched!");
+  }
+  return;
+}
+
+void StateMachineController::launchSsd()
+{
+  QString path = ui_.launchFilePathSsd->text();
+  if (!path.isEmpty())
+  {
+    QString cmd = "gnome-terminal -x sh -c 'roslaunch ";
+    cmd += path + "'";
+    int output = system(cmd.toLocal8Bit().data());
+    ui_.status->setText("Status: Ssd launched!");
   }
   return;
 }
